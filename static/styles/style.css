@@ -1,0 +1,25 @@
+.card-spot {
+    transform: rotate(90deg);
+    padding-left:100px;
+    padding-top: 0px;
+    margin: 0;
+    display:flex
+} 
+td {
+    margin: 0;
+    padding-top: 0px;
+    
+    
+}
+tr {
+    margin: 0;
+    padding-top: 0px;
+    display:block;
+}
+table {
+    border-collapse: collapse;
+}
+
+body {
+    background-color: black;
+}

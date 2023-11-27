@@ -1,6 +1,6 @@
 # Capstone-Project-1
 
-Capstone Project 1 for Sprinboard curriculum. This is a digital clone of the boardgame Sequence.
+Capstone Project 1 for Springboard curriculum. This is a digital clone of the board game Sequence.
 
 ## Roadmap
 
