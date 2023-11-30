@@ -28,4 +28,4 @@ def route_to_home():
 
 @app.route("/gameboard")
 def rout_to_gameboard():
-    return render_template("gameboard.html", board=board)
+    return render_template("gameboard.html", board=board, rownum=0, colnum=0)

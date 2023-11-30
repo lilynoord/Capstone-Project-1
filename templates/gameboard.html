@@ -11,17 +11,31 @@
 <body>
     <table>
         <tbody>
+            {%set ns = namespace(rownum = 0,colnum = 0) %}
+
             {% for row in board %}
+
             <tr>
+                {% set ns.colnum = 0%}
                 {% for card in row %}
                 <td>
-                    <img src="https://deckofcardsapi.com/static/img/{{card}}.png" class="clear">
+                    <button name="{{ns.rownum}}-{{ns.colnum}}">
+                        {% set ns.colnum = ns.colnum + 1 %}
+                        <img src="https://deckofcardsapi.com/static/img/{{card}}.png" class="clear">
                 </td>
+                </button>
+
                 {% endfor %}
+                {% set ns.rownum = ns.rownum + 1 %}
             </tr>
             {% endfor %}
     </table>
     </tbody>
 </body>
+
+
+<script>
+
+</script>
 
 </html>
