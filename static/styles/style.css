@@ -1,23 +1,22 @@
-.card-spot {
-    transform: rotate(90deg);
-    padding-left:100px;
-    padding-top: 0px;
-    margin: 0;
-    display:flex
-} 
-td {
-    margin: 0;
-    padding-top: 0px;
+.green {
+    filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(90deg);
+    border-width: 3px;
     
-    
+
 }
-tr {
-    margin: 0;
-    padding-top: 0px;
-    display:block;
+.red {
+    filter: sepia(100%) saturate(800%) brightness(100%) hue-rotate(300deg);
 }
+.blue {
+    filter:  sepia(100%) saturate(800%) brightness(100%) hue-rotate(180deg);
+}
+.clear {
+    filter:  sepia(0%) saturate(100%) brightness(100%)hue-rotate(0deg)
+}
+
 table {
     border-collapse: collapse;
+
 }
 
 body {
