@@ -22,7 +22,7 @@
                 <td>
                     <button name="{{ns.rownum}}-{{ns.colnum}}" class="card_button">
                         {% set ns.colnum = ns.colnum + 1 %}
-                        <img src="https://deckofcardsapi.com/static/img/{{card}}.png" class="clear">
+                        <img src="https://deckofcardsapi.com/static/img/{{card[0]}}.png" class="{{card[1]}}">
                 </td>
                 </button>
 
