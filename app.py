@@ -21,9 +21,12 @@ board = [[["XX","clear"],["0S","clear"],["QS","clear"],["KS","clear"],["AS","cle
 
 
 @app.route("/")
-def route_to_home():
-    return redirect("/gameboard")
+def redirect_to_home():
+    return redirect("/home")
 
+@app.route("/home")
+def route_to_home():
+    return render_template("home.html")
 
 @app.route("/gameboard")
 def rout_to_gameboard():

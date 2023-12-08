@@ -4,6 +4,7 @@
 		"gameboard",
 		"isdisabled",
 		"rownum",
+		"sqlalchemy",
 		"stackoverflow"
 	]
 }

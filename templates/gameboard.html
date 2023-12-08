@@ -1,38 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+{%extends 'base.html' %}
+{%block title %} Sequence! {%endblock%}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gameboard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+{%block body %}
+<table>
+    <tbody>
+        {%set ns = namespace(rownum = 0,colnum = 0) %}
 
-</head>
+        {% for row in board %}
 
-<body>
-    <table>
-        <tbody>
-            {%set ns = namespace(rownum = 0,colnum = 0) %}
+        <tr>
+            {% set ns.colnum = 0%}
+            {% for card in row %}
+            <td>
+                <button name="{{ns.rownum}}-{{ns.colnum}}" class="card_button">
+                    {% set ns.colnum = ns.colnum + 1 %}
+                    <img src="https://deckofcardsapi.com/static/img/{{card[0]}}.png" class="{{card[1]}}">
+            </td>
+            </button>
 
-            {% for row in board %}
-
-            <tr>
-                {% set ns.colnum = 0%}
-                {% for card in row %}
-                <td>
-                    <button name="{{ns.rownum}}-{{ns.colnum}}" class="card_button">
-                        {% set ns.colnum = ns.colnum + 1 %}
-                        <img src="https://deckofcardsapi.com/static/img/{{card[0]}}.png" class="{{card[1]}}">
-                </td>
-                </button>
-
-                {% endfor %}
-                {% set ns.rownum = ns.rownum + 1 %}
-            </tr>
             {% endfor %}
-    </table>
-    </tbody>
-</body>
-<script src="{{url_for('static', filename='scripts/gameboard.js')}}"></script>
+            {% set ns.rownum = ns.rownum + 1 %}
+        </tr>
+        {% endfor %}
+</table>
+</tbody>
+{%endblock%}
 
-</html>
+<!-- TODO: See if I still need this script. If not, delete it in file structure: <script src="{{url_for('static', filename='scripts/gameboard.js')}}"></script> -->
