@@ -10,12 +10,12 @@ class User(db.Model):
 
     __tablename__ = "user"
 
-    uuid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    uuid = db.Column(db.Integer, primary_key=True, unique=True,autoincrement=True)
     username = db.Column(db.Text,nullable=False)
     passwordUnsecure = db.Column(db.Text,nullable=False) 
     winCount = db.Column(db.Integer)
     lossCount = db.Column(db.Integer)
-    
+
     @property
     def calculateWinLossRatio(self):
         winLossRatio = float(self.winCount / self.lossCount)
@@ -24,8 +24,10 @@ class User(db.Model):
 
 class Game(db.Model):
     __tablename__ = "game"
-    uuid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    player1 = db.Column(db.Text,nullable=False)
+
+    uuid = db.Column(db.Integer, primary_key=True, unique=True,autoincrement=True)
+    player = db.relationship("user")
+   
     #Red tokens
     #Blue Tokens
     #Red Hand
