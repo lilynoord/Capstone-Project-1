@@ -8,7 +8,7 @@ class User(db.Model):
     ! This is not meant to hold any sensitive user info, it's just a way for users to store their win/loss history, if they want to. 
     """
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     uuid = db.Column(db.Integer, primary_key=True, unique=True,autoincrement=True)
     username = db.Column(db.Text,nullable=False)
@@ -23,11 +23,13 @@ class User(db.Model):
 
 
 class Game(db.Model):
-    __tablename__ = "game"
+    __tablename__ = "games"
 
     uuid = db.Column(db.Integer, primary_key=True, unique=True,autoincrement=True)
-    player = db.relationship("user")
-   
+    player_uuid = db.Column(db.Integer,db.ForeignKey('users.uuid'))
+    player = db.relationship('User')
+
+    games = db.relationship("Game")
     #Red tokens
     #Blue Tokens
     #Red Hand
