@@ -35,7 +35,9 @@ class Game(db.Model):
     #Red Hand
     #Blue Hand
     #Deck ID
-    
+
 def connect_db(app):
+    """Connect to database."""
+
     db.app = app
     db.init_app(app)

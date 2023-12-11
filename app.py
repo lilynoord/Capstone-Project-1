@@ -1,9 +1,14 @@
 from flask import Flask, render_template, redirect, request
-from models import db, connect_db
+from models import db, connect_db, User,Game
 
 
 app = Flask(__name__)
+app.app_context().push()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///sequence_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 
+connect_db(app)
 # Global variables to hold various paths and templates so that I can change them easily later on
 homepage = "/gameboard"
 homepageTemplate = "gameboard"
