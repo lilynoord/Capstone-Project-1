@@ -2,16 +2,16 @@
 {%block title %} Sequence! {%endblock%}
 
 {%block body %}
-<table>
-    <tbody>
+<table class="gameboard_table">
+    <tbody class="gameboard_tbody">
         {%set ns = namespace(rownum = 0,colnum = 0) %}
 
         {% for row in board %}
 
-        <tr>
+        <tr class="gameboard_tr">
             {% set ns.colnum = 0%}
             {% for card in row %}
-            <td>
+            <td class="gameboard_td">
                 <button name="{{ns.rownum}}-{{ns.colnum}}" class="card_button">
                     {% set ns.colnum = ns.colnum + 1 %}
                     <img src="https://deckofcardsapi.com/static/img/{{card[0]}}.png" class="{{card[1]}}">

@@ -3,6 +3,16 @@
 	border-width: 3px;
 }
 
+.login_page_td {
+}
+
+.login_page_form input {
+}
+
+.login_page_form {
+	color: #000000;
+}
+
 .red {
 	filter: sepia(100%) saturate(800%) brightness(100%) hue-rotate(300deg);
 }
@@ -20,7 +30,7 @@ table {
 }
 
 body {
-	background-color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 255);
 	color: white;
 	margin: 0;
 }
@@ -28,8 +38,10 @@ body {
 .nav-link {
 	font-size: 27px;
 	margin-right: 30px;
-	text-decoration: underline;
+	text-decoration: none;
+	color: #000000;
 }
+
 
 .nav-right {
 	text-align: right;
@@ -40,7 +52,11 @@ body {
 }
 
 .navbar {
-	background-color: rgba(255, 255, 255, 0.336);
+	background-color: rgba(0, 0, 0, 0.520);
 	font-weight: normal;
 	margin-top: 0;
+	/*+box-shadow: 0 0 105px rgba(0, 0, 0, 0.743);*/
+	-moz-box-shadow: 0 0 105px rgba(0, 0, 0, 0.743);
+	-webkit-box-shadow: 0 0 105px rgba(0, 0, 0, 0.743);
+	box-shadow: 0 0 105px rgba(0, 0, 0, 0.743);
 }

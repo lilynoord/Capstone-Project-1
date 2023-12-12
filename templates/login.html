@@ -2,21 +2,21 @@
 
 {%block body %}
 
-<table>
-    <tbody>
-        <tr>
-            <td>
-                <form action="/login/submit/login" method="post" name="login-form">
-                    <p>Username: <input name="username"></p>
-                    <p>Password: <input name="password"></p>
-                    <input type="submit" value="Login">
+<table class="login_page_table">
+    <tbody class="login_page_tbody">
+        <tr class="login_page_tr">
+            <td class="login_page_td">
+                <form class="login_page_form login_form" action="/login/submit/login" method="post" name="login-form">
+                    <p class="login_form">Username: <input class="login_form" name="username"></p>
+                    <p class="login_form">Password: <input class="login_form" name="password"></p>
+                    <input class="login_form" type="submit" value="Login">
                 </form>
             </td>
-            <td>
-                <form action="/login/submit/signup" method="post" name="login-form">
-                    <p>Username: <input name="username"></p>
-                    <p>Password: <input name="password"></p>
-                    <input type="submit" value="Signup!">
+            <td class="login_page_td">
+                <form class="login_page_form signup_form" action="/login/submit/signup" method="post" name="login-form">
+                    <p class="signup_form">Username: <input class="signup_form" name="username"></p>
+                    <p class="signup_form">Password: <input class="signup_form" name="password"></p>
+                    <input class="signup_form" type="submit" value="Signup!">
                 </form>
             </td>
         </tr>
