@@ -27,9 +27,10 @@ class Game(db.Model):
     __tablename__ = "games"
 
     id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
-    player_uuid = db.Column(db.Integer, db.ForeignKey("users.id"))
+    db.ForeignKey("users.id")
+    player_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     player = db.relationship("User")
-    games = db.relationship("Game")
+
     # Red tokens
     # Blue Tokens
     # Red Hand

@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 
-{%block bodY %}
+{%block body %}
 
 <table>
     <tbody>
         <tr>
             <td>
-
+                <form action="/login/submit/login" method="post" name="login-form">
+                    <p>Username: <input name="username"></p>
+                    <p>Password: <input name="password"></p>
+                    <input type="submit" value="Login">
+                </form>
             </td>
             <td>
-                <form></form>
+                <form action="/login/submit/signup" method="post" name="login-form">
+                    <p>Username: <input name="username"></p>
+                    <p>Password: <input name="password"></p>
+                    <input type="submit" value="Signup!">
+                </form>
             </td>
         </tr>
     </tbody>

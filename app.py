@@ -173,25 +173,30 @@ def route_to_gameboard():
 
 @app.route("/login")
 def route_to_login():
-    return render_template("login.html", username=getUsername())
+    return render_template("login.html", username=(getUsername() + ": "))
 
 
-@app.route("/login/submit", methods=["POST"])
+@app.route("/login/submit/login", methods=["POST"])
 def handle_login():
     username = request.form["username"]
     password = request.form["password"]
-    submitType = request.form["submitType"]
 
-    if submitType == "login":
-        currentUser = db.session.execute(
-            db.select(User).filter_by(username=username)
-        ).scalar_one()
-        return redirect("/home")
-    elif submitType == "signup":
-        newUser = User(username=username, password=password)
-        db.session.add(newUser)
-        db.session.commit()
-        currentUser = db.session.execute(
-            db.select(User).filter_by(username=username)
-        ).scalar_one()
-        return redirect("/home")
+    global currentUser
+    currentUser = db.session.execute(
+        db.select(User).filter_by(username=username)
+    ).scalar_one()
+    return redirect("/home")
+
+
+@app.route("/login/submit/signup", methods=["POST"])
+def handle_signup():
+    username = request.form["username"]
+    password = request.form["password"]
+    newUser = User(username=username, passwordUnsecure=password)
+    db.session.add(newUser)
+    db.session.commit()
+    global currentUser
+    currentUser = db.session.execute(
+        db.select(User).filter_by(username=username)
+    ).scalar_one()
+    return redirect("/home")
