@@ -2,10 +2,14 @@
 
 
 class cardFinder:
-    def __init__(self):
+    def __init__(self, board):
         print("object for finding various cards, etc.")
+        self.board = board
 
     def getCard(self):
+        # Look through the board
+        # Find the two places that the board exists.
+        # Return those two places so that they can be highlighted?
         return
 
     def getJacks(self):
@@ -30,6 +34,9 @@ class gameFunctions:
 
     def drawCard(self, player):
         # function for drawing a new card
+        # Draw card from the api
+        # Make sure it's not joker, discard if it is
+        # Add card to the player's hand
         return
 
     def discardCard(self, player, gameId, cardInfo):
