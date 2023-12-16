@@ -3,6 +3,7 @@
 		"colnum",
 		"gameboard",
 		"isdisabled",
+		"newgame",
 		"rownum",
 		"sqlalchemy",
 		"stackoverflow"

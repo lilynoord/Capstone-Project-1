@@ -200,3 +200,12 @@ def handle_signup():
         db.select(User).filter_by(username=username)
     ).scalar_one()
     return redirect("/home")
+
+
+@app.route("/newgame")
+def handle_new_game():
+    newGame = Game(player_id=currentUser.id)
+    db.session.add(newGame)
+    db.session.commit()
+    gameId = newGame.id
+    return redirect("/gameboard/" + gameId)
