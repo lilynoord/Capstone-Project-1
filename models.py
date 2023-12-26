@@ -31,6 +31,9 @@ class Game(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     player = db.relationship("User")
 
+    redTokens = db.Column(db.ARRAY)
+    blueTokens = db.Column(db.ARRAY)
+    deck_id = db.Column(db.String)
     # Red tokens
     # Blue Tokens
     # Red Hand
