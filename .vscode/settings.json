@@ -1,11 +1,10 @@
 {
 	"cSpell.words": [
-		"colnum",
-		"gameboard",
-		"isdisabled",
-		"newgame",
-		"rownum",
-		"sqlalchemy",
-		"stackoverflow"
+		"debugtoolbar",
+		"magicitems",
+		"nonplayer",
+		"npcs",
+		"spelllist",
+		"SQLALCHEMY"
 	]
 }

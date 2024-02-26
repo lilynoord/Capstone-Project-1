@@ -1,211 +1,196 @@
-from flask import Flask, render_template, redirect, request
-from models import db, connect_db, User, Game
+from __future__ import print_function
+import sys
 
+from flask import Flask, redirect, render_template, flash
+from sqlalchemy import select
+from models import (
+    db,
+    connect_db,
+    User,
+    Game,
+    GameMonster,
+    GamePc,
+    GameNpc,
+    Combat,
+    CombatMonster,
+    CombatPc,
+    CombatNpc,
+    Monster,
+    PlayerCharacter,
+    NonPlayerCharacter,
+    MonsterAction,
+    MonsterBonusAction,
+    MonsterReaction,
+    MonsterLegendaryAction,
+    MonsterSpecialAbility,
+    MonsterSpeed,
+    MonsterSkills,
+    MonsterSpell,
+    PcAction,
+    PcBonusAction,
+    PcReaction,
+    PcSpecialAbility,
+    PcSpeed,
+    PcSkills,
+    PcSpells,
+    NpcAction,
+    NpcBonusAction,
+    NpcReaction,
+    NpcLegendaryAction,
+    NpcSpecialAbility,
+    NpcSpeed,
+    NpcSkills,
+    Action,
+    Speed,
+    Skills,
+    Spell,
+)
+from api_handler import *
 
 app = Flask(__name__)
+
 app.app_context().push()
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///sequence_db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///dnd-utils"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
-app.config["SECRET_KEY"] = "ihaveasecret"
 
 connect_db(app)
-# Global variables to hold various paths and templates so that I can change them easily later on
-homepage = "/gameboard"
-homepageTemplate = "gameboard"
-board = [
-    [
-        ["XX", "clear"],
-        ["0S", "clear"],
-        ["QS", "clear"],
-        ["KS", "clear"],
-        ["AS", "clear"],
-        ["2D", "clear"],
-        ["3D", "clear"],
-        ["4D", "clear"],
-        ["5D", "clear"],
-        ["XX", "clear"],
-    ],
-    [
-        ["9S", "clear"],
-        ["0H", "clear"],
-        ["9H", "clear"],
-        ["8H", "clear"],
-        ["7H", "clear"],
-        ["6H", "clear"],
-        ["5H", "clear"],
-        ["4H", "clear"],
-        ["3H", "clear"],
-        ["6D", "clear"],
-    ],
-    [
-        ["8S", "clear"],
-        ["QH", "clear"],
-        ["7D", "clear"],
-        ["8D", "clear"],
-        ["9D", "clear"],
-        ["0D", "clear"],
-        ["QD", "clear"],
-        ["KD", "clear"],
-        ["2H", "clear"],
-        ["7D", "clear"],
-    ],
-    [
-        ["7S", "clear"],
-        ["KH", "clear"],
-        ["6D", "clear"],
-        ["2C", "clear"],
-        ["AH", "clear"],
-        ["KH", "clear"],
-        ["QH", "clear"],
-        ["AD", "clear"],
-        ["2S", "clear"],
-        ["8D", "clear"],
-    ],
-    [
-        ["6S", "clear"],
-        ["AH", "clear"],
-        ["5D", "clear"],
-        ["3C", "clear"],
-        ["4H", "clear"],
-        ["3H", "clear"],
-        ["0H", "clear"],
-        ["AC", "clear"],
-        ["3S", "clear"],
-        ["9D", "clear"],
-    ],
-    [
-        ["5S", "clear"],
-        ["2C", "clear"],
-        ["4D", "clear"],
-        ["4C", "clear"],
-        ["5H", "clear"],
-        ["2H", "clear"],
-        ["9H", "clear"],
-        ["KC", "clear"],
-        ["4S", "clear"],
-        ["0D", "clear"],
-    ],
-    [
-        ["4S", "clear"],
-        ["3C", "clear"],
-        ["3D", "clear"],
-        ["5C", "clear"],
-        ["6H", "clear"],
-        ["7H", "clear"],
-        ["8H", "clear"],
-        ["QC", "clear"],
-        ["5S", "clear"],
-        ["QD", "clear"],
-    ],
-    [
-        ["3S", "clear"],
-        ["4C", "clear"],
-        ["2D", "clear"],
-        ["6C", "clear"],
-        ["7C", "clear"],
-        ["9C", "clear"],
-        ["9C", "clear"],
-        ["0C", "clear"],
-        ["6S", "clear"],
-        ["KD", "clear"],
-    ],
-    [
-        ["2S", "clear"],
-        ["5C", "clear"],
-        ["AS", "clear"],
-        ["KS", "clear"],
-        ["QS", "clear"],
-        ["0S", "clear"],
-        ["9S", "clear"],
-        ["8S", "clear"],
-        ["7S", "clear"],
-        ["AD", "clear"],
-    ],
-    [
-        ["XX", "clear"],
-        ["6C", "clear"],
-        ["7C", "clear"],
-        ["8C", "clear"],
-        ["9C", "clear"],
-        ["0C", "clear"],
-        ["QC", "clear"],
-        ["KC", "clear"],
-        ["AC", "clear"],
-        ["XX", "clear"],
-    ],
-]
 
-# Useful Globals
-currentUser = None
+current_user_key = ""
+with app.app_context():
+    db.create_all()
+
+app.config["SECRET_KEY"] = "I Have A Secret!"
 
 
-def getUsername():
-    if currentUser != None:
-        return currentUser.username
-    else:
-        return "login/"
-
-
-# app routes
 @app.route("/")
-def redirect_to_home():
-    return redirect("/home")
+def route_home():
+    # if user is logged in, redir to users/games. If not, redir to login/signup
+    if current_user_key == "":
+        return redirect("/login")
+    else:
+        return redirect(f"/games")
 
 
-@app.route("/home")
-def route_to_home():
-    return render_template("home.html", username=getUsername())
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # TODO: form to login or signup
+    form = None
+    if form.is_submitted() and form.validate():
+
+        return redirect("/games")
+    return render_template("login.html")
 
 
-@app.route("/gameboard")
-def route_to_gameboard():
-    return render_template(
-        "gameboard.html",
-        username=getUsername(),
-        board=board,
-        rownum=0,
-        colnum=0,
-        isdisabled="true",
-        gameID=1,
-    )
+@app.route("/logout")
+def logout():
+    global current_user_key
+    current_user_key = ""
+    return redirect("/")
 
 
-@app.route("/login")
-def route_to_login():
-    return render_template("login.html", username=(getUsername() + ": "))
+@app.route("/users/<uuid>/games")
+def games_list(uuid):
+    # TODO: get list of the users games
+    return render_template("games.html")
 
 
-@app.route("/login/submit/login", methods=["POST"])
-def handle_login():
-    username = request.form["username"]
-    password = request.form["password"]
-
-    global currentUser
-    currentUser = db.session.execute(
-        db.select(User).filter_by(username=username)
-    ).scalar_one()
-    return redirect("/home")
+@app.route("/users/<uuid>/new-game")
+def games_list(uuid):
+    # TODO: Form to add a new game
+    return render_template("new-game.html")
 
 
-@app.route("/login/submit/signup", methods=["POST"])
-def handle_signup():
-    username = request.form["username"]
-    password = request.form["password"]
-    newUser = User(username=username, passwordUnsecure=password)
-    db.session.add(newUser)
-    db.session.commit()
-    global currentUser
-    currentUser = db.session.execute(
-        db.select(User).filter_by(username=username)
-    ).scalar_one()
-    return redirect("/home")
+@app.route("/users/<uuid>/games/<gameId>")
+def game_details(uuid, gameId):
+    # TODO: Get list of game's active combats and players, plus options to add to the game or start new combat
+    return render_template("game-details.html")
 
 
-@app.route("/newgame")
-def handle_new_game():
-    newGame = Game(player_id=currentUser.id)
-    db.session.add(newGame)
-    db.session.commit()
-    gameId = newGame.id
-    return redirect("/gameboard/" + gameId)
+@app.route("/users/<uuid>/games/<gameId>/add")
+def add_entity_to_game(uuid, gameId):
+    # TODO: list of options for adding things to the game
+    return render_template("add-to-game-options.html")
+
+
+@app.route("/games/<gameId>/add/creature")
+def add_creature_to_game(gameId):
+    # TODO: Add creature form
+    return render_template("")
+
+
+@app.route("/games/<gameId>/add/pc")
+def add_pc_to_game(gameId):
+    # TODO: add pc form
+    return render_template("")
+
+
+@app.route("/games/<gameId>/add/npc")
+def add_npc_to_game(gameId):
+    # TODO: Add npc form
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>")
+def combat_master(gameId, combatId):
+    # TODO: option to either setup combat or start combat
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/setup/new")
+def combat_setup_new(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/setup/add-pcs")
+def combat_setup_pcs(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/setup/add-npcs")
+def combat_setup_npcs(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/setup/add-creatures")
+def combat_setup_creatures(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/setup/confirm")
+def combat_setup_confirm(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/play/set-initiative")
+def combat_set_initiative(gameId, combatId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/combat/<combatId>/play/<turn>")
+def combat_play(gameId, combatId, turn):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/<pcId>")
+def view_pc(pcId):
+    return render_template("")
+
+
+@app.route("/games/<gameId>/<npcId>")
+def view_npc(npcId):
+    return render_template("")
+
+
+# TODO: Move this to own file?
+def add_new_monster(slug):
+    """_summary_
+
+    Args:
+        slug (str): the unique name to pass to the api to get this monster
+    """
+    monster = get_instance("monsters", slug)  # get monster json from api
+    if slug != monster.slug:
+        return "error: monster slug is not valid"
+
+    name = monster.name
