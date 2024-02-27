@@ -46,6 +46,7 @@ from models import (
     Spell,
 )
 from api_handler import *
+from factories import *
 
 app = Flask(__name__)
 
@@ -180,45 +181,3 @@ def view_pc(pcId):
 @app.route("/games/<gameId>/<npcId>")
 def view_npc(npcId):
     return render_template("")
-
-
-# TODO: Move this to own file?
-def add_new_monster(slug, extras):
-    """_summary_
-
-    Args:
-        slug (str): the unique name to pass to the api to get this monster
-    """
-    monster = get_instance("monsters", slug)  # get monster json from api
-    m = monster  # monster for readability, m for my own sanity.
-    if slug != monster.slug:
-        return "error: monster slug is not valid"
-
-    newMonster = Monster(
-        name=m.name,
-        size=m.size,
-        type=m.type,
-        alignment=m.alignment,
-        armor_class=m.armor_class,
-        armor_desc=m.armor_desc,
-        max_hit_points=m.hit_points,
-        current_hit_points=m.hit_points,
-        hit_dice=m.hit_dice,
-        strength=m.strength,
-        dexterity=m.dexterity,
-        constitution=m.constitution,
-        intelligence=m.intelligence,
-        wisdom=m.wisdom,
-        charisma=m.charisma,
-        strength_save=m.strength_save,
-        dexterity_save=m.dexterity_save,
-        constitution_save=m.constitution_save,
-        intelligence_save=m.intelligence_save,
-        wisdom_save=m.wisdom_save,
-        charisma_save=m.charisma_save,
-        perception=m.perception,
-        damage_vulnerabilities=m.damage_vulnerabilities.split(", "),
-        damage_resistances=m.damage_resistances.split(", "),
-        damage_immunities=m.damage_immunities.split(", "),
-        condition_immunities=m.condition_immunities.split(", "),
-    )
