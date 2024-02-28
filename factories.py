@@ -136,15 +136,15 @@ def skills_factory(skills: str):
     """
 
 
-def spell_factory(slug: str):
+def spell_factory(url):
     """Generates a new Spell object
 
     Args:
-        spell (str): _description_
+        url (str): _spell url_
     """
-    s = get_instance("spells", slug)
+    s = requests.get(url).json()
     return Spell(
-        slug=slug,
+        slug=s["slug"],
         name=s["name"],
         desc=s["desc"],
         higher_level=s["higher_level"],
@@ -153,35 +153,42 @@ def spell_factory(slug: str):
         components=s["components"],
         material=s["material"],
         can_be_cast_as_ritual=s["can_be_cast_as_ritual"],
-        duration = parse_spell_duration(s['duration']),
-        requires_concentration = s['requires_concentration'],
-        casting_time = s['casting_time'],
-        level = s['level'],
-        spell_level = s['spell_level'],
-        school = s['school'],
+        duration=parse_spell_duration(s["duration"]),
+        requires_concentration=s["requires_concentration"],
+        casting_time=s["casting_time"],
+        level=s["level"],
+        spell_level=s["spell_level"],
+        school=s["school"],
     )
+
 
 def parse_spell_duration(duration):
     """
-    parses a plaintext duration into a number of seconds. Returns an int. 
+    parses a plaintext duration into a number of seconds. Returns an int.
     """
     if duration == "Instantaneous":
         return 0
-    else: 
+    else:
         dsplit = duration.split(" ")
         if dsplit[1] == "minute" or dsplit[1] == "minutes":
             return int(dsplit[0]) * 60
         elif dsplit[1] == "hour" or dsplit[1] == "hours":
             return int(dsplit[0]) * 3600
-        else: 
+        else:
             return 6
-    
-def parse_actions(m, monsterId: int):
-    """Loops over actions, generating spells.
+
+
+def parse_spells(m):
+    """Loops over spells, generating new spell objects and returning a list of those objects.
 
     Args:
         m (_type_): _description_
     """
+    spells = []
+
+    for each in m["spell_list"]:
+        spells.append(spell_factory(each))
+    return spells
 
 
 def add_new_monster(slug, extras):
@@ -192,11 +199,11 @@ def add_new_monster(slug, extras):
         slug (str): the unique name to pass to the api to get this monster
     """
     monster_json = get_instance("monsters", slug)  # get monster json from api
-    print(monster_json)
+    # print(monster_json)
     if slug != monster_json["slug"]:
         return "error: monster slug is not valid"
     new_monster = monster_factory(monster_json)
-    print("NEW MONSTER: ", new_monster)
+    spells = parse_spells(monster_json)
 
 
-add_new_monster("adult-black-dragon", 1)
+add_new_monster("solar", 1)
