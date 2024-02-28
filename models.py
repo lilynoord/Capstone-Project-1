@@ -362,7 +362,7 @@ class Spell(db.Model):
     can_be_cast_as_ritual = db.Column(db.Boolean, nullable=True)
     duration = db.Column(db.Integer, nullable=True)
     requires_concentration = db.Column(db.Boolean, nullable=True)
-    casting_time = db.Column(db.Integer, nullable=True)
+    casting_time = db.Column(db.Text, nullable=True)
     level = db.Column(db.Integer, nullable=True)
     spell_level = db.Column(db.Integer, nullable=True)
     school = db.Column(db.Text, nullable=False)

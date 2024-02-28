@@ -153,9 +153,29 @@ def spell_factory(slug: str):
         components=s["components"],
         material=s["material"],
         can_be_cast_as_ritual=s["can_be_cast_as_ritual"],
+        duration = parse_spell_duration(s['duration']),
+        requires_concentration = s['requires_concentration'],
+        casting_time = s['casting_time'],
+        level = s['level'],
+        spell_level = s['spell_level'],
+        school = s['school'],
     )
 
-
+def parse_spell_duration(duration):
+    """
+    parses a plaintext duration into a number of seconds. Returns an int. 
+    """
+    if duration == "Instantaneous":
+        return 0
+    else: 
+        dsplit = duration.split(" ")
+        if dsplit[1] == "minute" or dsplit[1] == "minutes":
+            return int(dsplit[0]) * 60
+        elif dsplit[1] == "hour" or dsplit[1] == "hours":
+            return int(dsplit[0]) * 3600
+        else: 
+            return 6
+    
 def parse_actions(m, monsterId: int):
     """Loops over actions, generating spells.
 
