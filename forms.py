@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, StringField
 from wtforms.validators import DataRequired
 
 
-# signupform
-# signinform
+class SignInForm(FlaskForm):
+    """Form for signing into or making a new (unsecured) account"""
+
+    name = StringField("Username:", validators=[DataRequired()])
+
 
 # addcreatureform
 # addpcform

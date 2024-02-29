@@ -47,6 +47,7 @@ from models import (
 )
 from api_handler import *
 from factories import *
+from forms import *
 
 app = Flask(__name__)
 
@@ -76,11 +77,19 @@ def route_home():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     # TODO: form to login or signup
-    form = None
+    global current_user_key
+    form = SignInForm()
     if form.is_submitted() and form.validate():
-
+        user = User.query.where(User.name == form.name.data).first()
+        if user:
+            current_user_key = user.id
+        else:
+            newUser = User(name=form.name.data)
+            db.session.add(newUser)
+            db.session.commit()
+            current_user_key = User.query.where(User.name == form.name.data).first().id
         return redirect("/games")
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 
 @app.route("/logout")
@@ -90,25 +99,25 @@ def logout():
     return redirect("/")
 
 
-@app.route("/users/<uuid>/games")
-def games_list(uuid):
-    # TODO: get list of the users games
+@app.route("/games")
+def games_list():
+
     return render_template("games.html")
 
 
-@app.route("/users/<uuid>/new-game")
-def new_game(uuid):
+@app.route("/games/new-game")
+def new_game():
     # TODO: Form to add a new game
     return render_template("new-game.html")
 
 
-@app.route("/users/<uuid>/games/<gameId>")
+@app.route("/games/<gameId>")
 def game_details(uuid, gameId):
     # TODO: Get list of game's active combats and players, plus options to add to the game or start new combat
     return render_template("game-details.html")
 
 
-@app.route("/users/<uuid>/games/<gameId>/add")
+@app.route("/games/<gameId>/add")
 def add_entity_to_game(uuid, gameId):
     # TODO: list of options for adding things to the game
     return render_template("add-to-game-options.html")
@@ -116,6 +125,12 @@ def add_entity_to_game(uuid, gameId):
 
 @app.route("/games/<gameId>/add/creature")
 def add_creature_to_game(gameId):
+    # TODO: Add creature form
+    return render_template("")
+
+
+@app.route("/games/<gameId>/add/creature/custom")
+def add_custom_creature_to_game(gameId):
     # TODO: Add creature form
     return render_template("")
 
