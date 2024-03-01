@@ -62,7 +62,6 @@ def monster_factory(m):
         armor_class=m["armor_class"],
         armor_desc=m["armor_desc"],
         max_hit_points=m["hit_points"],
-        current_hit_points=m["hit_points"],
         hit_dice=m["hit_dice"],
         strength=m["strength"],
         dexterity=m["dexterity"],
@@ -87,8 +86,6 @@ def monster_factory(m):
         page_number=m["page_no"],
         environments=m["environments"],
         img=m["img_main"],
-        concentration=False,
-        status_effects=[],
         document__slug=m["document__slug"],
     )
 
