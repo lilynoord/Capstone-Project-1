@@ -1,6 +1,7 @@
 from api_handler import *
 from models import Monster
 from models import (
+    db,
     User,
     Game,
     GameMonster,
@@ -55,6 +56,7 @@ def monster_factory(m):
         `Monster`: new `Monster` object generated using the api json.
     """
     return Monster(
+        slug=m["slug"],
         name=m["name"],
         size=m["size"],
         creature_type=m["type"],
@@ -153,7 +155,7 @@ def spell_factory(url):
         duration=parse_spell_duration(s["duration"]),
         requires_concentration=s["requires_concentration"],
         casting_time=s["casting_time"],
-        level=s["level"],
+        level=s["level_int"],
         spell_level=s["spell_level"],
         school=s["school"],
     )
@@ -186,21 +188,3 @@ def parse_spells(m):
     for each in m["spell_list"]:
         spells.append(spell_factory(each))
     return spells
-
-
-def add_new_monster(slug, extras):
-    """
-    Adds a new monster to the database.
-
-    Args:
-        slug (str): the unique name to pass to the api to get this monster
-    """
-    monster_json = get_instance("monsters", slug)  # get monster json from api
-    # print(monster_json)
-    if slug != monster_json["slug"]:
-        return "error: monster slug is not valid"
-    new_monster = monster_factory(monster_json)
-    spells = parse_spells(monster_json)
-
-
-add_new_monster("solar", 1)

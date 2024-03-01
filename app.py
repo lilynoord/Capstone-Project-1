@@ -196,3 +196,25 @@ def view_pc(pcId):
 @app.route("/games/<gameId>/<npcId>")
 def view_npc(npcId):
     return render_template("")
+
+
+def add_new_monster(slug, extras):
+    """
+    Adds a new monster to the database.
+
+    Args:
+        slug (str): the unique name to pass to the api to get this monster
+    """
+    monster_json = get_instance("monsters", slug)  # get monster json from api
+    # print(monster_json)
+    if slug != monster_json["slug"]:
+        return "error: monster slug is not valid"
+    new_monster = monster_factory(monster_json)
+    db.session.add(new_monster)
+    spells = parse_spells(monster_json)
+    print(spells)
+    for each in spells:
+        db.session.add(each)
+        mtm = MonsterSpell(monster_id=new_monster.id, spell_id=each.id)
+        db.session.add(mtm)
+    db.session.commit()
