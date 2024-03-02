@@ -46,7 +46,7 @@ from models import (
     Spell,
 )
 from api_handler import *
-from factories import *
+from factories.monster_factory import new_monster
 from forms import *
 
 app = Flask(__name__)
@@ -54,7 +54,7 @@ app = Flask(__name__)
 app.app_context().push()
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///dnd-utils"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = True
+# app.config["SQLALCHEMY_ECHO"] = True
 
 connect_db(app)
 
@@ -198,23 +198,24 @@ def view_npc(npcId):
     return render_template("")
 
 
-def add_new_monster(slug, extras):
+def create_new_monster(slug):
     """
-    Adds a new monster to the database.
+    Adds a new monster to the database. Don't forget to add a new games_monsters entry as well.
 
     Args:
         slug (str): the unique name to pass to the api to get this monster
     """
-    monster_json = get_instance("monsters", slug)  # get monster json from api
-    # print(monster_json)
-    if slug != monster_json["slug"]:
-        return "error: monster slug is not valid"
-    new_monster = monster_factory(monster_json)
-    db.session.add(new_monster)
-    spells = parse_spells(monster_json)
-    print(spells)
-    for each in spells:
-        db.session.add(each)
-        mtm = MonsterSpell(monster_id=new_monster.id, spell_id=each.id)
-        db.session.add(mtm)
+
+    db_entries = new_monster(slug)
+    print(db_entries)
+
+    # Go through the list of new db entries and add them to the session.
+    for each in db_entries:
+        print(each)
+        for entry in db_entries[each]:
+            db.session.add(entry)
     db.session.commit()
+    return db_entries["creature"][0]
+
+
+create_new_monster("solar")

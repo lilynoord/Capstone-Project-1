@@ -1,5 +1,5 @@
-from api_handler import *
-from models import Monster
+from api_handler import get_instance
+import requests
 from models import (
     db,
     User,
@@ -127,12 +127,28 @@ def speed_factory(speed: str):
     """
 
 
-def skills_factory(skills: str):
-    """Generates new Skills object
-
-    Args:
-        m (_type_): _description_
-    """
+def skills_factory(skills: dict[str, int]):
+    """Generates new Skills object"""
+    return Skills(
+        athletics=skills.setdefault("athletics", None),
+        acrobatics=skills.setdefault("acrobatics", None),
+        sleight_of_hand=skills.setdefault("sleight_of_hand", None),
+        stealth=skills.setdefault("stealth", None),
+        arcana=skills.setdefault("arcana", None),
+        history=skills.setdefault("history", None),
+        investigation=skills.setdefault("investigation", None),
+        nature=skills.setdefault("nature", None),
+        religion=skills.setdefault("religion", None),
+        animal_handling=skills.setdefault("animal_handling", None),
+        insight=skills.setdefault("insight", None),
+        medicine=skills.setdefault("medicine", None),
+        perception=skills.setdefault("perception", None),
+        survival=skills.setdefault("survival", None),
+        deception=skills.setdefault("deception", None),
+        intimidation=skills.setdefault("intimidation", None),
+        performance=skills.setdefault("performance", None),
+        persuasion=skills.setdefault("persuasion", None),
+    )
 
 
 def spell_factory(url):
@@ -188,3 +204,85 @@ def parse_spells(m):
     for each in m["spell_list"]:
         spells.append(spell_factory(each))
     return spells
+
+
+def parse_actions(m):
+    actions = []
+    bonus_actions = []
+    reactions = []
+    legendary_actions = []
+    special_abilities = []
+    for action in m["actions"]:
+        actions.append(action_factory)
+
+    return {
+        "actions": actions,
+        "bonus_actions": bonus_actions,
+        "reactions": reactions,
+        "legendary_actions": legendary_actions,
+        "special_abilities": special_abilities,
+    }
+
+
+def parse_speeds(m):
+    speeds = []
+    for speed in m["speed"]:
+        speeds.append(Speed(speed_type=speed, distance=m["speed"][speed]))
+    return speeds
+
+
+def parse_skills(m):
+    skills = skills_factory(m["skills"])
+    return skills
+
+
+def new_monster(slug="", custom_monster=False, custom_monster_data=dict[str, str]):
+    """
+    Handles everything involved with adding a new monster to a game, except for adding it to the database. Returns a dictionary of lists of objects, all of which should be added to the database in app.py
+
+    Args:
+        slug (str, optional): api slug. Defaults to "".
+        custom_monster (bool, optional): whether or not you are adding a custom monster. Defaults to False.
+        custom_monster_data (dict[str, str], optional): If adding a custom monster, the data for said monster. Defaults to {}.
+
+    Returns:
+        db_entries (dict[str, list]) : A dictionary of lists of objects, to be added to the database by the calling function.
+    """
+    db_entries = {
+        "creature": [],
+        "spells": [],
+        "actions": [],
+        "skills": [],
+        "speeds": [],
+    }
+
+    # If it's not a custom monster, then it should call the api and create a new set of entries for the database from that.
+    if not custom_monster:
+        # get monster json from api
+        monster_json = get_instance("monsters", slug)
+        if slug != monster_json["slug"]:  # Check to make sure api call was successful
+            return "error: monster slug is not valid"
+
+        new_monster = monster_factory(monster_json)
+        db_entries["creature"] = [new_monster]
+        spells = parse_spells(monster_json)
+        actions = parse_actions(monster_json)
+        speeds = parse_speeds(monster_json)
+        skills = parse_skills(monster_json)
+
+        # Add each object to db_entries, as well as a new relational object for each.
+        for each in spells:
+            db_entries["spells"].append(each)
+            mtm = MonsterSpell(monster_id=new_monster.id, spell_id=each.id)
+            db_entries["spells"].append(mtm)
+
+        for each in speeds:
+            db_entries["speeds"].append(each)
+            mtm = MonsterSpeed(monster_id=new_monster.id, speed_id=each.id)
+            db_entries["speeds"].append(mtm)
+
+        db_entries["skills"].append(skills)
+        db_entries["skills"].append(
+            MonsterSkills(monster_id=new_monster.id, skills_id=each.id)
+        )
+        return db_entries
