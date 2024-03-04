@@ -193,6 +193,16 @@ def view_pc(pcId):
     return render_template("")
 
 
+@app.route("/games/<gameId>/list_monsters")
+def list_monsters(gameId):
+    return render_template("gameMonsters")
+
+
+@app.route("/games/<gameId>/list_monsters/<monsterId>")
+def view_monster(monsterId):
+    return render_template("viewMonster.html")
+
+
 @app.route("/games/<gameId>/<npcId>")
 def view_npc(npcId):
     return render_template("")
@@ -216,6 +226,3 @@ def create_new_monster(slug):
             db.session.add(entry)
     db.session.commit()
     return db_entries["creature"][0]
-
-
-create_new_monster("solar")

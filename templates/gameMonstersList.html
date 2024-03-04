@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{%block title%}My Monsters{%endblock%}
+
+{%block body%}
+<section class="container-fluid">
+    <ul>
+        {% for monster in monsters %}
+        <li href="/{{monster.id}}">
+            {{monster.name}}
+        </li>
+        {%endfor%}
+    </ul>
+</section>
+{%endblock%}

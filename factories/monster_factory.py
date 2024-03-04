@@ -42,8 +42,6 @@ from models import (
     Spell,
 )
 
-# TODO: Move this to own file?
-
 
 def monster_factory(m):
     """
@@ -113,18 +111,39 @@ def senses_parser(senses):
     return senses_dict
 
 
-def action_factory(action: str):
+def action_factory(action: dict, action_type: str):
     """
     Generates new Action object.
     """
+    name_split = action["name"].split("(")
+    recharge = False
+    x = None
+    y = None
+    print(name_split, recharge, x, y)
+    if (
+        len(name_split) > 1
+        and name_split[1].split(" ")[0] == "Recharge"
+        and len(name_split[1].split(" ")[1].split("-")) == 2
+    ):  # If it has a Recharge x-y value, parse it.
+        recharge = True
+        print(name_split, recharge, x, y)
+        name_split = name_split[1].split(" ")[1].split("-")
+        print(name_split, recharge, x, y)
+        x = int(name_split[0])
+        y = int(name_split[1][0])
+    print(name_split, recharge, x, y)
 
-
-def speed_factory(speed: str):
-    """Generates new Speed object
-
-    Args:
-        m (_type_): _description_
-    """
+    return Action(
+        name=action.setdefault("name", None),
+        desc=action.setdefault("desc", None),
+        attack_bonus=action.setdefault("attack_bonus", None),
+        damage_dice=action.setdefault("damage_dice", None),
+        damage_bonus=action.setdefault("damage_bonus", None),
+        action_type=action_type,  # Action, Bonus_Action, Reaction, Legendary_Action, Special
+        recharge=recharge,
+        recharge_x=x,
+        recharge_y=y,
+    )
 
 
 def skills_factory(skills: dict[str, int]):
@@ -212,9 +231,21 @@ def parse_actions(m):
     reactions = []
     legendary_actions = []
     special_abilities = []
-    for action in m["actions"]:
-        actions.append(action_factory)
-
+    if m["actions"]:
+        for action in m["actions"]:
+            actions.append(action_factory(action, "Action"))
+    if m["bonus_actions"]:
+        for action in m["bonus_actions"]:
+            bonus_actions.append(action_factory(action, "Bonus Action"))
+    if m["reactions"]:
+        for action in m["reactions"]:
+            reactions.append(action_factory(action, "Reaction"))
+    if m["legendary_actions"]:
+        for action in m["legendary_actions"]:
+            legendary_actions.append(action_factory(action, "Legendary Action"))
+    if m["special_abilities"]:
+        for action in m["special_abilities"]:
+            special_abilities.append(action_factory(action, "Special"))
     return {
         "actions": actions,
         "bonus_actions": bonus_actions,
@@ -280,9 +311,29 @@ def new_monster(slug="", custom_monster=False, custom_monster_data=dict[str, str
             db_entries["speeds"].append(each)
             mtm = MonsterSpeed(monster_id=new_monster.id, speed_id=each.id)
             db_entries["speeds"].append(mtm)
-
         db_entries["skills"].append(skills)
         db_entries["skills"].append(
             MonsterSkills(monster_id=new_monster.id, skills_id=each.id)
         )
+
+        for each in actions["actions"]:
+            db_entries["actions"].append(each)
+            mtm = MonsterAction(monster_id=new_monster.id, action_id=each.id)
+            db_entries["actions"].append(mtm)
+        for each in actions["bonus_actions"]:
+            db_entries["actions"].append(each)
+            mtm = MonsterBonusAction(monster_id=new_monster.id, action_id=each.id)
+            db_entries["actions"].append(mtm)
+        for each in actions["reactions"]:
+            db_entries["actions"].append(each)
+            mtm = MonsterReaction(monster_id=new_monster.id, action_id=each.id)
+            db_entries["actions"].append(mtm)
+        for each in actions["legendary_actions"]:
+            db_entries["actions"].append(each)
+            mtm = MonsterLegendaryAction(monster_id=new_monster.id, action_id=each.id)
+            db_entries["actions"].append(mtm)
+        for each in actions["special_abilities"]:
+            db_entries["actions"].append(each)
+            mtm = MonsterSpecialAbility(monster_id=new_monster.id, action_id=each.id)
+            db_entries["actions"].append(mtm)
         return db_entries

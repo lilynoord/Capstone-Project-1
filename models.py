@@ -150,7 +150,7 @@ class Monster(db.Model):
     damage_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     condition_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     languages = db.Column(db.ARRAY(db.Text), nullable=True)
-    challenge_rating = db.Column(db.Integer, nullable=False)
+    challenge_rating = db.Column(db.Float, nullable=False)
     page_number = db.Column(db.Integer, nullable=True)
     document__slug = db.Column(db.Text, nullable=True)
     environments = db.Column(db.ARRAY(db.Text), nullable=True)
@@ -191,7 +191,6 @@ class PlayerCharacter(db.Model):
     damage_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     condition_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     languages = db.Column(db.ARRAY(db.Text), nullable=True)
-    challenge_rating = db.Column(db.Integer, nullable=False)
     environments = db.Column(db.ARRAY(db.Text), nullable=True)
     img = db.Column(db.Text, nullable=True)
     senses = db.Column(db.ARRAY(db.Text), nullable=False)
@@ -228,7 +227,7 @@ class NonPlayerCharacter(db.Model):
     damage_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     condition_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     languages = db.Column(db.ARRAY(db.Text), nullable=True)
-    challenge_rating = db.Column(db.Integer, nullable=False)
+    challenge_rating = db.Column(db.Float, nullable=False)
     environments = db.Column(db.ARRAY(db.Text), nullable=True)
     img = db.Column(db.Text, nullable=True)
     senses = db.Column(db.ARRAY(db.Text), nullable=False)
@@ -454,10 +453,9 @@ class Action(db.Model):
     action_type = db.Column(
         db.Text, nullable=False
     )  # Action, Bonus_Action, Reaction, Legendary_Action, Special
-    recharge_type = db.Column(db.Text, nullable=True)  # X/Day, X-Y, Rest
+    recharge = db.Column(db.Boolean, nullable=True)
     recharge_x = db.Column(db.Integer, nullable=True)
-    hit_effect = db.Column(db.Text, nullable=True)
-    miss_effect = db.Column(db.Text, nullable=True)
+    recharge_y = db.Column(db.Integer, nullable=True)
 
 
 class Speed(db.Model):
