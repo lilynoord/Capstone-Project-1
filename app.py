@@ -105,10 +105,18 @@ def games_list():
     return render_template("games.html")
 
 
-@app.route("/games/new-game")
+@app.route("/games/new-game", methods=["GET", "POST"])
 def new_game():
-    # TODO: Form to add a new game
-    return render_template("new-game.html")
+    global current_user_key
+    if current_user_key == "":
+        return redirect("/")
+    form = NewGameForm()
+    if form.is_submitted() and form.validate():
+        newGame = Game(name=form.name.data, user_id=current_user_key)
+        db.session.add(newGame)
+        db.session.commit()
+        return redirect(f"/games/{newGame.id}/add")
+    return render_template("new-game.html", form=form)
 
 
 @app.route("/games/<gameId>")
@@ -118,15 +126,15 @@ def game_details(uuid, gameId):
 
 
 @app.route("/games/<gameId>/add")
-def add_entity_to_game(uuid, gameId):
+def add_entity_to_game(gameId):
     # TODO: list of options for adding things to the game
-    return render_template("add-to-game-options.html")
+    return render_template("add-to-game-options.html", gameId=gameId)
 
 
-@app.route("/games/<gameId>/add/creature")
+@app.route("/games/<gameId>/add/creature", methods=["GET", "POST"])
 def add_creature_to_game(gameId):
     # TODO: Add creature form
-    return render_template("")
+    return render_template("new-monster.html", gameId=gameId)
 
 
 @app.route("/games/<gameId>/add/creature/custom")

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{%block title%}Game Management{%endblock%}
+
+{%block body%}
+<section class="container-fluid">
+    <h3 class="grid"> Add entity to game: </h3>
+    <div class="container-fluid grid">
+        <a class="grid" href="/games/{{gameId}}/add/creature">
+            <button> Monster
+            </button></a>
+
+        <a class="grid" href="/games/{{gameId}}/add/pc">
+            <button>
+                Player Character</button></a>
+
+        <a class="grid" href="/games/{{gameId}}/add/npc">
+            <button>
+                Nonplayer Character</button></a>
+
+    </div>
+</section>
+{%endblock%}

@@ -9,6 +9,10 @@ class SignInForm(FlaskForm):
     name = StringField("Username:", validators=[DataRequired()])
 
 
+class NewGameForm(FlaskForm):
+    name = StringField("Game Name:", validators=[DataRequired()])
+
+
 # addcreatureform
 # addpcform
 # addnpcform

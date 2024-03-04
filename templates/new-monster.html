@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{%block title%}Add Monster{%endblock%}
+{%block body%}
+<section class="container-fluid">
+    <!-- Monster Details -->
+    <!-- Monster Search -->
+    <form method="get" action="/games/{{gameId}}/add/creature" id=monster-search class="grid">
+        <input type="search" id="search" name="search" placeholder="Search Monsters" />
+        <input type="submit">
+    </form>
+    <!-- Monster Search Results-->
+    <section class="container-fluid">
+        {{s_json}}
+    </section>
+</section>

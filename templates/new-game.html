@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{%block title%}New Game{%endblock%}
+
+{%block body%}
+<section class="container-fluid">
+
+    <form id="new-game-form" method="POST">
+        <h1>New Game</h1>
+        {{ form.hidden_tag() }}
+        {% for field in form
+        if field.widget.input_type != 'hidden' %}
+
+
+        {{ field.label }}
+        {{ field }}
+
+        {% for error in field.errors %}
+        {{ error }}
+        {% endfor %}
+
+
+        {% endfor %}
+
+        <button type="submit">Create New Game!</button>
+
+    </form>
+</section>
+{%endblock%}
