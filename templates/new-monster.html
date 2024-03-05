@@ -1,15 +1,78 @@
 {% extends 'base.html' %}
 {%block title%}Add Monster{%endblock%}
 {%block body%}
+
+
 <section class="container-fluid">
     <!-- Monster Details -->
+    <section style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="monster-details">
+        {%if m != ""%}
+        <h1>{{m['name']}}</h1>
+        <p><em>{{m['type']}}, {{m['alignment']}}</em></p>
+        {%endif%}
+        <hr>
+        <p>
+            <b>
+                Armor Class
+            </b>
+            {{m['armor_class']}}
+        </p>
+        <p>
+            <b>
+                Hit Points
+            </b>
+            {{m['hit_points']}} ({{m['hit_dice']}})
+        </p>
+        <p>
+            <b>
+                Speed
+            </b>
+            {%for s in m['speed']%}
+            {{s}} {{m['speed'][s]}}ft.
+            {%endfor%}
+        </p>
+        <hr>
+    </section>
+
     <!-- Monster Search -->
-    <form method="get" action="/games/{{gameId}}/add/creature" id=monster-search class="grid">
-        <input type="search" id="search" name="search" placeholder="Search Monsters" />
-        <input type="submit">
+    <form method="get" action="/games/{{gameId}}/add/creature" id='monster-search' class="grid">
+        <input type="hidden" id="existing-slug" name="existing-slug" value="{{existing_slug}}">
+
+        <input class='search' type="search" id="search" name="search" placeholder="Search Monsters" />
+        <input type="submit" value="Search">
     </form>
     <!-- Monster Search Results-->
+
     <section class="container-fluid">
-        {{s_json}}
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Type</td>
+                    <td>CR</td>
+                    <td>Size</td>
+                    <td>Hit Points</td>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in s_json %}<tr>
+
+                    <td><a
+                            href="/games/{{gameId}}/add/creature?search={{search}}&slug={{i['slug']}}&existing-search={{existing_search}}">
+                            {{i['name']}}
+                        </a></td>
+                    <td>{{i['type']}}</td>
+                    <td>{{i['challenge_rating']}}</td>
+                    <td>{{i['size']}}</td>
+                    <td>{{i['hit_points']}}</td>
+
+                </tr>
+
+
+                {%endfor%}
+            </tbody>
+
+        </table>
     </section>
 </section>
+{%endblock%}

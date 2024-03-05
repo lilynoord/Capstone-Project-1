@@ -1,7 +1,7 @@
 from __future__ import print_function
 import sys
 
-from flask import Flask, redirect, render_template, flash
+from flask import Flask, redirect, render_template, flash, request
 from sqlalchemy import select
 from models import (
     db,
@@ -131,10 +131,57 @@ def add_entity_to_game(gameId):
     return render_template("add-to-game-options.html", gameId=gameId)
 
 
+m_search_store = ""
+m_instance_store = ""
+
+
 @app.route("/games/<gameId>/add/creature", methods=["GET", "POST"])
 def add_creature_to_game(gameId):
-    # TODO: Add creature form
-    return render_template("new-monster.html", gameId=gameId)
+
+    # Logic for displaying the results
+    global m_instance_store
+    global m_search_store
+    s_json = ""
+    monster_data = ""
+    existing_search = False
+    existing_slug = False
+    search = "none"
+    if request.args:
+        if request.args.get("existing-search"):
+            s_json = m_search_store
+            existing_search = True
+        else:
+            search = request.args["search"]
+            if search != "none":
+                results, results_names = get_monsters_by_name(request.args["search"])
+                s_json = results["results"]
+                m_search_store = s_json
+                existing_search = True
+            else:
+
+                results, results_names = get_all_monsters()
+                s_json = results["results"]
+                m_search_store = s_json
+                existing_search = True
+        if request.args.get("slug"):
+            if request.args.get("existing-slug"):
+                existing_slug = True
+                monster_data = m_instance_store
+            else:
+                monster_data = get_instance("monsters", request.args["slug"])
+                existing_slug = True
+                m_instance_store = monster_data
+    else:
+        return redirect(f"/games/{gameId}/add/creature?search=none")
+    return render_template(
+        "new-monster.html",
+        search=search,
+        gameId=gameId,
+        s_json=s_json,
+        m=monster_data,
+        existing_search=existing_search,
+        existing_slug=existing_slug,
+    )
 
 
 @app.route("/games/<gameId>/add/creature/custom")

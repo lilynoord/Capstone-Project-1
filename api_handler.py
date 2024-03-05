@@ -14,6 +14,14 @@ def get_monsters_by_name(keyword_name):
     return results, results_names
 
 
+def get_all_monsters():
+    results = requests.get(f"{api}/monsters/").json()
+    results_names = []
+    for each in results["results"]:
+        results_names.append(each["name"])
+    return results, results_names
+
+
 def get_spells_by_name(keyword_name):
     results = requests.get(f"{api}/spells/?search={keyword_name}").json()
     keyword_name = keyword_name.lower()
