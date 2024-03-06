@@ -3,6 +3,8 @@
 
 {%block body%}
 <section class="container-fluid">
-
+    {%for game in games%}
+    <a href="/games/{{game.id}}">{{game.name}}</a>
+    {%endfor%}
 </section>
 {%endblock%}

@@ -258,7 +258,8 @@ def parse_actions(m):
 def parse_speeds(m):
     speeds = []
     for speed in m["speed"]:
-        speeds.append(Speed(speed_type=speed, distance=m["speed"][speed]))
+        if type(m["speed"][speed]) != bool:
+            speeds.append(Speed(speed_type=speed, distance=m["speed"][speed]))
     return speeds
 
 

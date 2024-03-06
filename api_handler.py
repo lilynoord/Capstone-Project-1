@@ -8,10 +8,12 @@ def get_monsters_by_name(keyword_name):
     results = requests.get(f"{api}/monsters/?search={keyword_name}").json()
     keyword_name = keyword_name.lower()
     results_names = []
+    results_filtered = []
     for each in results["results"]:
         if keyword_name in each["name"].lower():
             results_names.append(each["name"])
-    return results, results_names
+            results_filtered.append(each)
+    return results_filtered, results_names
 
 
 def get_all_monsters():

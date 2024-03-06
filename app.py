@@ -101,8 +101,11 @@ def logout():
 
 @app.route("/games")
 def games_list():
-
-    return render_template("games.html")
+    global current_user_key
+    if current_user_key == "":
+        return redirect("/")
+    games = Game.query.where(Game.user_id == current_user_key)
+    return render_template("games.html", games=games)
 
 
 @app.route("/games/new-game", methods=["GET", "POST"])
@@ -120,14 +123,17 @@ def new_game():
 
 
 @app.route("/games/<gameId>")
-def game_details(uuid, gameId):
+def game_details(gameId):
     # TODO: Get list of game's active combats and players, plus options to add to the game or start new combat
-    return render_template("game-details.html")
+    return render_template("game-details.html", gameId=gameId)
 
 
 @app.route("/games/<gameId>/add")
 def add_entity_to_game(gameId):
     # TODO: list of options for adding things to the game
+    global current_user_key
+    if current_user_key == "":
+        return redirect("/")
     return render_template("add-to-game-options.html", gameId=gameId)
 
 
@@ -135,14 +141,16 @@ m_search_store = ""
 m_instance_store = ""
 
 
-@app.route("/games/<gameId>/add/creature", methods=["GET", "POST"])
+@app.route("/games/<gameId>/add/creature", methods=["GET"])
 def add_creature_to_game(gameId):
-
+    global current_user_key
+    if current_user_key == "":
+        return redirect("/")
     # Logic for displaying the results
     global m_instance_store
     global m_search_store
     s_json = ""
-    monster_data = ""
+    monster_data = "none"
     existing_search = False
     existing_slug = False
     search = "none"
@@ -154,7 +162,7 @@ def add_creature_to_game(gameId):
             search = request.args["search"]
             if search != "none":
                 results, results_names = get_monsters_by_name(request.args["search"])
-                s_json = results["results"]
+                s_json = results
                 m_search_store = s_json
                 existing_search = True
             else:
@@ -186,6 +194,20 @@ def add_creature_to_game(gameId):
     )
 
 
+@app.route("/games/<gameId>/add/creature", methods=["POST"])
+def commit_creature_to_game(gameId):
+    slug = request.args.get("slug")
+    if not slug:
+        flash(f"Error adding monster slug: {slug}")
+    else:
+        new_monster = create_new_monster(slug)
+        new_game_monster = GameMonster(game_id=gameId, monster_id=new_monster.id)
+        db.session.add(new_game_monster)
+        db.session.commit()
+        flash(f"{new_monster.name} added!")
+    return redirect(f"/games/{gameId}/add/creature")
+
+
 def calculate_modifier(score, save=None):
     mod = 0
     if save:
@@ -197,11 +219,11 @@ def calculate_modifier(score, save=None):
     if mod < 0:
         return str(mod)
     else:
-        return "+" + str(mod)
+        return "+" + str(mod) + ","
 
 
-def get_saves(m=""):
-    if m != "":
+def get_saves(m="none"):
+    if m != "none":
         mods = {
             "saves": {
                 "Str": calculate_modifier(

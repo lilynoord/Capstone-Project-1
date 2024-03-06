@@ -18,15 +18,56 @@
         border: 1;
 
     }
+
+    kbd {
+        font-size: 10px;
+        padding: 2px;
+        text-transform: uppercase;
+    }
+
+
+
+
+
+    section.stats {
+        animation: .25s ease-out 0s 1 SlideIn;
+    }
+
+    @keyframes SlideIn {
+        0% {
+            opacity: 0;
+
+
+        }
+
+        100% {
+            opacity: 1;
+
+
+        }
+    }
 </style>
 
 <section class="container-fluid">
+    {% for msg in get_flashed_messages() %}
+    <dialog open onclick="this.close()">
+        {{msg}}
+    </dialog>
+    {% endfor %}
     <!-- Monster Details -->
-    <section style="font-family: Georgia, serif" class=" monster-details">
-        {%if m != ""%}
-        <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
+    {%if m != 'none'%}
+    <section class='stats' style="font-family: Georgia, serif">
+
+
+        <div class="grid">
+            <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
+            <form method="post" action="/games/{{gameId}}/add/creature?slug={{m['slug']}}" id='slug'>
+
+                <input type="submit" value="Add to game!">
+            </form>
+        </div>
         <p><em>{{m['type']}}, {{m['alignment']}}</em></p>
-        {%endif%}
+
         <hr>
         <p>
             <b>
@@ -46,55 +87,106 @@
             </b>
             {%for s in m['speed']%}
             <span>
+                {%if m['speed'][s] != true%}
                 {{s}} {{m['speed'][s]}}ft.
+                {%else%}
+                {{s}},
+                {%endif%}
             </span>
             {%endfor%}
         </p>
         <hr>
+        <table style="width:50%">
+            <tbody>
+                <tr>
+                    <td>STR</td>
+                    <td>DEX</td>
+                    <td>CON</td>
+                    <td>INT</td>
+                    <td>WIS</td>
+                    <td>CHA</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>{{m['strength']}}</td>
+                    <td>{{m['dexterity']}}</td>
+                    <td>{{m['constitution']}}</td>
+                    <td>{{m['intelligence']}}</td>
+                    <td>{{m['wisdom']}}</td>
+                    <td>{{m['charisma']}}</td>
+                </tr>
+            </tfoot>
+        </table>
 
-        <div class="stat-grid">
-            <div>
-                <p><b>STR</b></p>
-                <p>{{m['strength']}}</p>
-            </div>
-            <div>
-                <p><b>DEX</b></p>
-                <p>{{m['dexterity']}}</p>
-            </div>
-            <div>
-                <p><b>CON</b></p>
-                <p>{{m['constitution']}}</p>
-            </div>
-            <div>
-                <p><b>INT</b></p>
-                <p>{{m['intelligence']}}</p>
-            </div>
-            <div>
-                <p><b>WIS</b></p>
-                <p>{{m['wisdom']}}</p>
-            </div>
-            <div>
-                <p><b>CHA</b></p>
-                <p>{{m['charisma']}}</p>
-            </div>
-        </div>
+
         <hr>
         <p>
             <b>Saving Throws</b>
             {%for save in mods['saves']%}
-            {{save}} {{mods['saves'][save]}},
+            {{save}} {{mods['saves'][save]}}
             {%endfor%}
         </p>
         <p>
             <b>Skills</b>
 
             {%for skill in mods['skills']%}
-            {{skill}} {{mods['skills'][skill]}},
+            {{skill}} {{mods['skills'][skill]}}
             {%endfor%}
         </p>
+        {%if m['damage_vulnerabilities'] != ""%}<p></p><b>Damage Vulnerabilities</b> {{m['damage_vulnerabilities']}}</p>
+        {%endif%}
+        {%if m['damage_resistances'] != ""%}<p></p><b>Damage Resistances</b> {{m['damage_resistances']}}</p>
+        {%endif%}
+        {%if m['damage_immunities'] != ""%}<p></p><b>Damage Immunities</b> {{m['damage_immunities']}}</p>
+        {%endif%}
+        {%if m['condition_immunities'] != ""%}<p></p><b>Condition Immunities</b> {{m['condition_immunities']}}</p>
+        {%endif%}
+        {%if m['senses'] != ""%}<p></p><b>Senses</b> {{m['senses']}}</p>
+        {%endif%}
+        {%if m['languages'] != ""%}<p></p><b>Languages</b> {{m['languages']}}</p>
+        {%endif%}
+        <p><b>Challenge</b> {{m['challenge_rating']}}</p>
+        <hr>
+        {% if m['special_abilities']%}
+        {%for s in m['special_abilities']%}
+        <p><b>{{s['name']}}</b> {{s['desc']}}</p>
+        {%endfor%}
+        {%endif%}
 
+        {% if m['actions']%}
+        <h2>Actions</h2>
+        <hr class="hr-bold">
+        {%for s in m['actions']%}
+        <p><b>{{s['name']}}</b> {{s['desc']}}</p>
+        {%endfor%}
+        {%endif%}
+
+        {% if m['reactions']%}
+        <h2>Actions</h2>
+        <hr class="hr-bold">
+        {%for s in m['reactions']%}
+        <p><b>{{s['name']}}</b> {{s['desc']}}</p>
+        {%endfor%}
+        {%endif%}
+
+        {% if m['bonus_actions']%}
+        <h2>Actions</h2>
+        <hr class="hr-bold">
+        {%for s in m['bonus_actions']%}
+        <p><b>{{s['name']}}</b> {{s['desc']}}</p>
+        {%endfor%}
+        {%endif%}
+
+        {% if m['legendary_actions']%}
+        <h2>Actions</h2>
+        <hr class="hr-bold">
+        {%for s in m['legendary_actions']%}
+        <p><b>{{s['name']}}</b> {{s['desc']}}</p>
+        {%endfor%}
+        {%endif%}
     </section>
-
+    {%endif%}
     <!-- Monster Search -->
     <form method="get" action="/games/{{gameId}}/add/creature" id='monster-search' class="grid">
         <input type="hidden" id="existing-slug" name="existing-slug" value="{{existing_slug}}">
@@ -121,7 +213,7 @@
                     <td><a
                             href="/games/{{gameId}}/add/creature?search={{search}}&slug={{i['slug']}}&existing-search={{existing_search}}">
                             {{i['name']}}
-                        </a></td>
+                        </a><kbd>{{i['document__slug']}}</kbd></td>
                     <td>{{i['type']}}</td>
                     <td>{{i['challenge_rating']}}</td>
                     <td>{{i['size']}}</td>
