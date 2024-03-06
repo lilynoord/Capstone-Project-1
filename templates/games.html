@@ -4,7 +4,20 @@
 {%block body%}
 <section class="container-fluid">
     {%for game in games%}
-    <a href="/games/{{game.id}}">{{game.name}}</a>
+    <div class="grid" style="padding:5px">
+        <h5>{{game.name}}</h5>
+        <a class=contrast role="button" href="/games/{{game.id}}">Open</a>
+        <button class="secondary" onclick="document.getElementById('del').showModal()">Delete</button>
+
+        <dialog id="del">
+            <article>
+                <h2>Are you sure?</h2>
+                <footer>
+                    <button onclick="document.getElementById('del').close()" class="secondary">No</button>
+                    <a role="button" href="/games/{{game.id}}/delete-game" </footer>
+            </article>
+        </dialog>
+    </div>
     {%endfor%}
 </section>
 {%endblock%}

@@ -128,6 +128,12 @@ def game_details(gameId):
     return render_template("game-details.html", gameId=gameId)
 
 
+@app.route("/games/<gameId>/delete-game")
+def delete_game(gameId):
+    # TODO: DELETE GAME AND EVERYTHING CONNECTED TO IT, EXCEPT FOR THE USER
+    return redirect("/games")
+
+
 @app.route("/games/<gameId>/add")
 def add_entity_to_game(gameId):
     # TODO: list of options for adding things to the game
