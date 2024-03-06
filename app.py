@@ -1,5 +1,5 @@
 from __future__ import print_function
-import sys
+import math
 
 from flask import Flask, redirect, render_template, flash, request
 from sqlalchemy import select
@@ -173,6 +173,7 @@ def add_creature_to_game(gameId):
                 m_instance_store = monster_data
     else:
         return redirect(f"/games/{gameId}/add/creature?search=none")
+    mods = get_saves(monster_data)
     return render_template(
         "new-monster.html",
         search=search,
@@ -181,7 +182,61 @@ def add_creature_to_game(gameId):
         m=monster_data,
         existing_search=existing_search,
         existing_slug=existing_slug,
+        mods=mods,
     )
+
+
+def calculate_modifier(score, save=None):
+    mod = 0
+    if save:
+        mod = math.floor((save - 10) / 2)
+
+    else:
+        mod = math.floor((score - 10) / 2)
+
+    if mod < 0:
+        return str(mod)
+    else:
+        return "+" + str(mod)
+
+
+def get_saves(m=""):
+    if m != "":
+        mods = {
+            "saves": {
+                "Str": calculate_modifier(
+                    m["strength"],
+                    m["strength_save"],
+                ),
+                "Dex": calculate_modifier(
+                    m["dexterity"],
+                    m["dexterity_save"],
+                ),
+                "Con": calculate_modifier(
+                    m["constitution"],
+                    m["constitution_save"],
+                ),
+                "Int": calculate_modifier(
+                    m["intelligence"],
+                    m["intelligence_save"],
+                ),
+                "Wis": calculate_modifier(
+                    m["wisdom"],
+                    m["wisdom_save"],
+                ),
+                "Cha": calculate_modifier(
+                    m["charisma"],
+                    m["charisma_save"],
+                ),
+            },
+            "skills": {},
+        }
+        for each in m["skills"]:
+
+            mods["skills"][each] = calculate_modifier(m["skills"][each], None)
+
+        return mods
+    return None
 
 
 @app.route("/games/<gameId>/add/creature/custom")

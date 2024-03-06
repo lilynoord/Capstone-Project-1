@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
 {%block title%}Add Monster{%endblock%}
 {%block body%}
+<style>
+    .stat-grid {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+        grid-template-rows: auto auto;
+        grid-column-gap: 0%;
+        grid-row-gap: 0%;
+        justify-items: start;
+        align-items: start
+    }
 
+    hr {
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.842), rgba(0, 0, 0, 0));
+        height: 2px;
+        border: 1;
+
+    }
+</style>
 
 <section class="container-fluid">
     <!-- Monster Details -->
-    <section style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="monster-details">
+    <section style="font-family: Georgia, serif" class=" monster-details">
         {%if m != ""%}
-        <h1>{{m['name']}}</h1>
+        <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
         <p><em>{{m['type']}}, {{m['alignment']}}</em></p>
         {%endif%}
         <hr>
@@ -28,10 +45,54 @@
                 Speed
             </b>
             {%for s in m['speed']%}
-            {{s}} {{m['speed'][s]}}ft.
+            <span>
+                {{s}} {{m['speed'][s]}}ft.
+            </span>
             {%endfor%}
         </p>
         <hr>
+
+        <div class="stat-grid">
+            <div>
+                <p><b>STR</b></p>
+                <p>{{m['strength']}}</p>
+            </div>
+            <div>
+                <p><b>DEX</b></p>
+                <p>{{m['dexterity']}}</p>
+            </div>
+            <div>
+                <p><b>CON</b></p>
+                <p>{{m['constitution']}}</p>
+            </div>
+            <div>
+                <p><b>INT</b></p>
+                <p>{{m['intelligence']}}</p>
+            </div>
+            <div>
+                <p><b>WIS</b></p>
+                <p>{{m['wisdom']}}</p>
+            </div>
+            <div>
+                <p><b>CHA</b></p>
+                <p>{{m['charisma']}}</p>
+            </div>
+        </div>
+        <hr>
+        <p>
+            <b>Saving Throws</b>
+            {%for save in mods['saves']%}
+            {{save}} {{mods['saves'][save]}},
+            {%endfor%}
+        </p>
+        <p>
+            <b>Skills</b>
+
+            {%for skill in mods['skills']%}
+            {{skill}} {{mods['skills'][skill]}},
+            {%endfor%}
+        </p>
+
     </section>
 
     <!-- Monster Search -->
