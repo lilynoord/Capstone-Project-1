@@ -1,6 +1,5 @@
 from __future__ import print_function
-import math
-
+from tools import *
 from flask import Flask, redirect, render_template, flash, request, make_response
 from sqlalchemy import select
 from models import (
@@ -266,59 +265,6 @@ def commit_creature_to_game(gameId):
     return response
 
 
-def calculate_modifier(score, save=None):
-    mod = 0
-    if save:
-        mod = math.floor((save - 10) / 2)
-
-    else:
-        mod = math.floor((score - 10) / 2)
-
-    if mod < 0:
-        return str(mod)
-    else:
-        return "+" + str(mod) + ","
-
-
-def get_saves(m="none"):
-    if m != "none":
-        mods = {
-            "saves": {
-                "Str": calculate_modifier(
-                    m["strength"],
-                    m["strength_save"],
-                ),
-                "Dex": calculate_modifier(
-                    m["dexterity"],
-                    m["dexterity_save"],
-                ),
-                "Con": calculate_modifier(
-                    m["constitution"],
-                    m["constitution_save"],
-                ),
-                "Int": calculate_modifier(
-                    m["intelligence"],
-                    m["intelligence_save"],
-                ),
-                "Wis": calculate_modifier(
-                    m["wisdom"],
-                    m["wisdom_save"],
-                ),
-                "Cha": calculate_modifier(
-                    m["charisma"],
-                    m["charisma_save"],
-                ),
-            },
-            "skills": {},
-        }
-        for each in m["skills"]:
-
-            mods["skills"][each] = calculate_modifier(m["skills"][each], None)
-
-        return mods
-    return None
-
-
 @app.route("/games/<gameId>/add/creature/custom")
 def add_custom_creature_to_game(gameId):
     # TODO: Add creature form
@@ -327,8 +273,10 @@ def add_custom_creature_to_game(gameId):
 
 @app.route("/games/<gameId>/add/pc")
 def add_pc_to_game(gameId):
-    # TODO: add pc form
-    return render_template("")
+    form = AddPcForm()
+    if form.is_submitted() and form.validate():
+        return redirect("/")
+    return render_template("add-pc.html", form=form)
 
 
 @app.route("/games/<gameId>/add/npc")

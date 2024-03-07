@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{%block title%}Add PC{%endblock%}
+
+{%block body%}
+<section class="container-fluid">
+    <form id="new-pc-form" name="new-pc-form" method="Post">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.widget.input_type != 'hidden'%}
+        {{field}}
+        {%endfor%}
+    </form>
+
+
+</section>
+{%endblock%}
