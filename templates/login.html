@@ -6,8 +6,7 @@
 
     <form id="login-form" method="POST">
         <h1>Login/Signup</h1>
-        <p>Note: this is not a secured account, this is merely for the purposes of saving and finding your 5e games and
-            combats.</p>
+
         {{ form.hidden_tag() }}
         {% for field in form
         if field.widget.input_type != 'hidden' %}
@@ -22,9 +21,17 @@
 
 
         {% endfor %}
+        {% for msg in get_flashed_messages() %}
 
+        <p class="pico-color-amber-200">{{msg}}</p>
+
+        {% endfor %}
+        <hr>
         <button type="submit">login/signup</button>
-
+        <hr>
+        <p>Note: this is not a secured account, this is merely for the purposes of saving and finding your 5e games and
+            combats.</p>
     </form>
+
 </section>
 {%endblock%}

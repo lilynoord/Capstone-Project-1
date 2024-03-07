@@ -1,7 +1,7 @@
 from __future__ import print_function
 import math
 
-from flask import Flask, redirect, render_template, flash, request
+from flask import Flask, redirect, render_template, flash, request, make_response
 from sqlalchemy import select
 from models import (
     db,
@@ -65,9 +65,21 @@ with app.app_context():
 app.config["SECRET_KEY"] = "I Have A Secret!"
 
 
+def check_user(request):
+    """Return true if the user is not logged in."""
+    user = request.cookies.get("user_id", False)
+    global current_user_key
+    print(f"check_user - user: {user}, key:{current_user_key} ")
+    if not user:
+        return True
+    current_user_key = user
+    return False
+
+
 @app.route("/")
 def route_home():
     # if user is logged in, redir to users/games. If not, redir to login/signup
+    print("Home")
     if current_user_key == "":
         return redirect("/login")
     else:
@@ -76,19 +88,30 @@ def route_home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # TODO: form to login or signup
     global current_user_key
     form = SignInForm()
     if form.is_submitted() and form.validate():
-        user = User.query.where(User.name == form.name.data).first()
-        if user:
-            current_user_key = user.id
+        if not form.new_account.data:
+            user = User.query.where(User.name == form.name.data).first()
+            print("login", form)
+            if user:
+                if user.password == form.password.data:
+                    current_user_key = user.id
+                else:
+                    flash("Incorrect password", "error")
+                    redirect("/login")
+            else:
+                flash("User not found", "error")
+                redirect("/login")
         else:
-            newUser = User(name=form.name.data)
+            newUser = User(name=form.name.data, password=form.password.data)
             db.session.add(newUser)
             db.session.commit()
             current_user_key = User.query.where(User.name == form.name.data).first().id
-        return redirect("/games")
+        html = redirect("/games")
+        response = make_response(html)
+        response.set_cookie("user_id", str(current_user_key))
+        return response
     return render_template("login.html", form=form)
 
 
@@ -101,18 +124,21 @@ def logout():
 
 @app.route("/games")
 def games_list():
-    global current_user_key
-    if current_user_key == "":
-        return redirect("/")
+    if check_user(request):
+        return redirect("/login")
     games = Game.query.where(Game.user_id == current_user_key)
-    return render_template("games.html", games=games)
+    print("games: ", games)
+    html = render_template("games.html", games=games)
+    response = make_response(html)
+    response.set_cookie("existing_slug", "False")
+    response.set_cookie("existing_search", "False")
+    return response
 
 
 @app.route("/games/new-game", methods=["GET", "POST"])
 def new_game():
-    global current_user_key
-    if current_user_key == "":
-        return redirect("/")
+    if check_user(request):
+        return redirect("/login")
     form = NewGameForm()
     if form.is_submitted() and form.validate():
         newGame = Game(name=form.name.data, user_id=current_user_key)
@@ -137,10 +163,17 @@ def delete_game(gameId):
 @app.route("/games/<gameId>/add")
 def add_entity_to_game(gameId):
     # TODO: list of options for adding things to the game
-    global current_user_key
-    if current_user_key == "":
+    if check_user(request):
         return redirect("/")
-    return render_template("add-to-game-options.html", gameId=gameId)
+    html = render_template("add-to-game-options.html", gameId=gameId)
+    response = make_response(html)
+    response.set_cookie("existing_slug", "False")
+    response.set_cookie("existing_search", "False")
+    global m_instance_store
+    global m_search_store
+    m_search_store = ""
+    m_instance_store = ""
+    return response
 
 
 m_search_store = ""
@@ -149,69 +182,88 @@ m_instance_store = ""
 
 @app.route("/games/<gameId>/add/creature", methods=["GET"])
 def add_creature_to_game(gameId):
-    global current_user_key
-    if current_user_key == "":
+    if check_user(request):
         return redirect("/")
     # Logic for displaying the results
     global m_instance_store
     global m_search_store
     s_json = ""
-    monster_data = "none"
-    existing_search = False
-    existing_slug = False
+    monster_data = request.cookies.get("m", "none")
+    existing_search = bool(request.cookies.get("existing_search", False))
+    existing_slug = bool(request.cookies.get("existing_slug", False))
     search = "none"
+    game = Game.query.where(Game.id == gameId).first()
+    print("Add Creature: ", game, game.name, game.id)
+
     if request.args:
-        if request.args.get("existing-search"):
+        if existing_search and m_search_store != "":
             s_json = m_search_store
-            existing_search = True
         else:
-            search = request.args["search"]
+            search = request.args.get("search", "none")
             if search != "none":
                 results, results_names = get_monsters_by_name(request.args["search"])
                 s_json = results
                 m_search_store = s_json
                 existing_search = True
             else:
-
                 results, results_names = get_all_monsters()
                 s_json = results["results"]
                 m_search_store = s_json
                 existing_search = True
-        if request.args.get("slug"):
-            if request.args.get("existing-slug"):
-                existing_slug = True
-                monster_data = m_instance_store
-            else:
-                monster_data = get_instance("monsters", request.args["slug"])
-                existing_slug = True
-                m_instance_store = monster_data
+        if request.args.get("slug", False):
+            monster_data = get_instance("monsters", request.args["slug"])
+            existing_slug = True
+            m_instance_store = monster_data
+            mods = get_saves(monster_data)
+        elif existing_slug and m_instance_store != "":
+            monster_data = m_instance_store
+            mods = get_saves(monster_data)
+        else:
+            m = "none"
+            existing_slug = False
+            mods = 0
     else:
-        return redirect(f"/games/{gameId}/add/creature?search=none")
-    mods = get_saves(monster_data)
-    return render_template(
+        html = redirect(f"/games/{gameId}/add/creature?search=none")
+        response = make_response(html)
+        response.set_cookie("existing_search", "False")
+        response.set_cookie("existing_slug", "False")
+        return response
+    html = render_template(
         "new-monster.html",
         search=search,
-        gameId=gameId,
+        game=game,
         s_json=s_json,
         m=monster_data,
-        existing_search=existing_search,
-        existing_slug=existing_slug,
         mods=mods,
     )
+    response = make_response(html)
+    response.set_cookie("existing_search", str(existing_search))
+    response.set_cookie("existing_slug", str(existing_slug))
+    return response
 
 
 @app.route("/games/<gameId>/add/creature", methods=["POST"])
 def commit_creature_to_game(gameId):
+
+    game = Game.query.filter(Game.id == gameId).first()
     slug = request.args.get("slug")
     if not slug:
-        flash(f"Error adding monster slug: {slug}")
+        flash(f"Error adding monster slug: {slug}", "error")
     else:
         new_monster = create_new_monster(slug)
         new_game_monster = GameMonster(game_id=gameId, monster_id=new_monster.id)
         db.session.add(new_game_monster)
         db.session.commit()
-        flash(f"{new_monster.name} added!")
-    return redirect(f"/games/{gameId}/add/creature")
+        flash(f"{new_monster.name} added to {game.name}", "info")
+    html = redirect(f"/games/{gameId}/add/creature")
+    response = make_response(html)
+    response.set_cookie("existing_slug", "False")
+    response.set_cookie("existing_search", "False")
+    global m_instance_store
+    global m_search_store
+    m_search_store = ""
+    m_instance_store = ""
+    return response
 
 
 def calculate_modifier(score, save=None):
@@ -355,7 +407,7 @@ def create_new_monster(slug):
     """
 
     db_entries = new_monster(slug)
-    print(db_entries)
+    print("Create_New_Monster: ", db_entries)
 
     # Go through the list of new db entries and add them to the session.
     for each in db_entries:

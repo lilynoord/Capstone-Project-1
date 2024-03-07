@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {%block title%}My Games{%endblock%}
-
+<style>
+    button {
+        padding: 1px
+    }
+</style>
 {%block body%}
 <section class="container-fluid">
     {%for game in games%}
     <div class="grid" style="padding:5px">
         <h5>{{game.name}}</h5>
-        <a class=contrast role="button" href="/games/{{game.id}}">Open</a>
+        <a class=contrast role="button" href="/games/{{game.id}}/add">Open</a>
         <button class="secondary" onclick="document.getElementById('del').showModal()">Delete</button>
 
         <dialog id="del">
@@ -14,10 +18,17 @@
                 <h2>Are you sure?</h2>
                 <footer>
                     <button onclick="document.getElementById('del').close()" class="secondary">No</button>
-                    <a role="button" href="/games/{{game.id}}/delete-game" </footer>
+                    <a role="button" href="/games/{{game.id}}/delete-game">Delete {{game.name}}</a>
+                </footer>
             </article>
         </dialog>
     </div>
     {%endfor%}
+
 </section>
+<div class="container-fluid">
+
+
+    <a style="width:90%;" role="button" href="/games/new-game">Create a new game!</a>
+</div>
 {%endblock%}

@@ -12,7 +12,7 @@
         align-items: start
     }
 
-    hr {
+    hr.stats {
         background: linear-gradient(90deg, rgba(0, 0, 0, 0.842), rgba(0, 0, 0, 0));
         height: 2px;
         border: 1;
@@ -49,26 +49,31 @@
 </style>
 
 <section class="container-fluid">
+    <h1>Add Monsters: {{game.name}}</h1>
+    <p>Use this page to search for monsters you want to add to you game. Click on the monster name to see its stat
+        block, and then click the button to add it to your game. </p>
     {% for msg in get_flashed_messages() %}
     <dialog open onclick="this.close()">
         {{msg}}
     </dialog>
     {% endfor %}
     <!-- Monster Details -->
+    <a role="button" class="secondary" href="/games/{{game.id}}/add">Back to game options</a>
+    <hr>
     {%if m != 'none'%}
     <section class='stats' style="font-family: Georgia, serif">
 
 
         <div class="grid">
             <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
-            <form method="post" action="/games/{{gameId}}/add/creature?slug={{m['slug']}}" id='slug'>
+            <form method="post" action="/games/{{game.id}}/add/creature?slug={{m['slug']}}" id='slug'>
 
                 <input type="submit" value="Add to game!">
             </form>
         </div>
         <p><em>{{m['type']}}, {{m['alignment']}}</em></p>
 
-        <hr>
+        <hr class="stats">
         <p>
             <b>
                 Armor Class
@@ -95,7 +100,7 @@
             </span>
             {%endfor%}
         </p>
-        <hr>
+        <hr class="stats">
         <table style="width:50%">
             <tbody>
                 <tr>
@@ -120,7 +125,7 @@
         </table>
 
 
-        <hr>
+        <hr class="stats">
         <p>
             <b>Saving Throws</b>
             {%for save in mods['saves']%}
@@ -147,7 +152,7 @@
         {%if m['languages'] != ""%}<p></p><b>Languages</b> {{m['languages']}}</p>
         {%endif%}
         <p><b>Challenge</b> {{m['challenge_rating']}}</p>
-        <hr>
+        <hr class="stats">
         {% if m['special_abilities']%}
         {%for s in m['special_abilities']%}
         <p><b>{{s['name']}}</b> {{s['desc']}}</p>
@@ -156,7 +161,7 @@
 
         {% if m['actions']%}
         <h2>Actions</h2>
-        <hr class="hr-bold">
+        <hr class="stats hr-bold">
         {%for s in m['actions']%}
         <p><b>{{s['name']}}</b> {{s['desc']}}</p>
         {%endfor%}
@@ -164,7 +169,7 @@
 
         {% if m['reactions']%}
         <h2>Actions</h2>
-        <hr class="hr-bold">
+        <hr class=" stats hr-bold">
         {%for s in m['reactions']%}
         <p><b>{{s['name']}}</b> {{s['desc']}}</p>
         {%endfor%}
@@ -172,7 +177,7 @@
 
         {% if m['bonus_actions']%}
         <h2>Actions</h2>
-        <hr class="hr-bold">
+        <hr class="stats hr-bold">
         {%for s in m['bonus_actions']%}
         <p><b>{{s['name']}}</b> {{s['desc']}}</p>
         {%endfor%}
@@ -180,17 +185,17 @@
 
         {% if m['legendary_actions']%}
         <h2>Actions</h2>
-        <hr class="hr-bold">
+        <hr class=" stats hr-bold">
         {%for s in m['legendary_actions']%}
         <p><b>{{s['name']}}</b> {{s['desc']}}</p>
         {%endfor%}
         {%endif%}
     </section>
     {%endif%}
+    <hr>
     <!-- Monster Search -->
-    <form method="get" action="/games/{{gameId}}/add/creature" id='monster-search' class="grid">
-        <input type="hidden" id="existing-slug" name="existing-slug" value="{{existing_slug}}">
 
+    <form method="get" action="/games/{{game.id}}/add/creature" id='monster-search' class="grid">
         <input class='search' type="search" id="search" name="search" placeholder="Search Monsters" />
         <input type="submit" value="Search">
     </form>
@@ -210,8 +215,7 @@
             <tbody>
                 {%for i in s_json %}<tr>
 
-                    <td><a
-                            href="/games/{{gameId}}/add/creature?search={{search}}&slug={{i['slug']}}&existing-search={{existing_search}}">
+                    <td><a href="/games/{{game.id}}/add/creature?search={{search}}&slug={{i['slug']}}">
                             {{i['name']}}
                         </a><kbd>{{i['document__slug']}}</kbd></td>
                     <td>{{i['type']}}</td>
