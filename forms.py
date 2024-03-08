@@ -48,45 +48,85 @@ class AbilityForms(FlaskForm):
 
 
 class SavingThrows(FlaskForm):
-    strength = IntegerField("Strength", validators=[DataRequired()], render_kw={})
-    dexterity = IntegerField("Dexterity", validators=[DataRequired()], render_kw={})
+    strength = IntegerField(
+        "Strength", validators=[DataRequired()], render_kw={"class": "save-form"}
+    )
+    dexterity = IntegerField(
+        "Dexterity", validators=[DataRequired()], render_kw={"class": "save-form"}
+    )
     constitution = IntegerField(
-        "Constitution", validators=[DataRequired()], render_kw={}
+        "Constitution", validators=[DataRequired()], render_kw={"class": "save-form"}
     )
     intelligence = IntegerField(
-        "Intelligence", validators=[DataRequired()], render_kw={}
+        "Intelligence", validators=[DataRequired()], render_kw={"class": "save-form"}
     )
-    wisdom = IntegerField("Wisdom", validators=[DataRequired()], render_kw={})
-    charisma = IntegerField("Charisma", validators=[DataRequired()], render_kw={})
+    wisdom = IntegerField(
+        "Wisdom", validators=[DataRequired()], render_kw={"class": "save-form"}
+    )
+    charisma = IntegerField(
+        "Charisma", validators=[DataRequired()], render_kw={"class": "save-form"}
+    )
 
 
 class SkillForms(FlaskForm):
-    acrobatics = IntegerField("Acrobatics", validators=[DataRequired()], render_kw={})
-    animal_handling = IntegerField(
-        "Animal Handling", validators=[DataRequired()], render_kw={}
+    acrobatics = IntegerField(
+        "Acrobatics", validators=[DataRequired()], render_kw={"class": "skill-form"}
     )
-    arcana = IntegerField("Arcana", validators=[DataRequired()], render_kw={})
-    athletics = IntegerField("Athletics", validators=[DataRequired()], render_kw={})
-    deception = IntegerField("Deception", validators=[DataRequired()], render_kw={})
-    history = IntegerField("History", validators=[DataRequired()], render_kw={})
-    insight = IntegerField("Insight", validators=[DataRequired()], render_kw={})
+    animal_handling = IntegerField(
+        "Animal Handling",
+        validators=[DataRequired()],
+        render_kw={"class": "skill-form"},
+    )
+    arcana = IntegerField(
+        "Arcana", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    athletics = IntegerField(
+        "Athletics", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    deception = IntegerField(
+        "Deception", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    history = IntegerField(
+        "History", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    insight = IntegerField(
+        "Insight", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
     intimidation = IntegerField(
-        "Intimidation", validators=[DataRequired()], render_kw={}
+        "Intimidation", validators=[DataRequired()], render_kw={"class": "skill-form"}
     )
     investigation = IntegerField(
-        "Investigation", validators=[DataRequired()], render_kw={}
+        "Investigation", validators=[DataRequired()], render_kw={"class": "skill-form"}
     )
-    medicine = IntegerField("Medicine", validators=[DataRequired()], render_kw={})
-    nature = IntegerField("Nature", validators=[DataRequired()], render_kw={})
-    perception = IntegerField("Perception", validators=[DataRequired()], render_kw={})
-    performance = IntegerField("Performance", validators=[DataRequired()], render_kw={})
-    persuasion = IntegerField("Persuasion", validators=[DataRequired()], render_kw={})
-    religion = IntegerField("Religion", validators=[DataRequired()], render_kw={})
+    medicine = IntegerField(
+        "Medicine", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    nature = IntegerField(
+        "Nature", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    perception = IntegerField(
+        "Perception", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    performance = IntegerField(
+        "Performance", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    persuasion = IntegerField(
+        "Persuasion", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    religion = IntegerField(
+        "Religion", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
     sleight_of_hand = IntegerField(
-        "Sleight of Hand", validators=[DataRequired()], render_kw={}
+        "Sleight of Hand",
+        validators=[DataRequired()],
+        render_kw={"class": "skill-form"},
     )
-    stealth = IntegerField("Stealth", validators=[DataRequired()], render_kw={})
-    survival = IntegerField("Survival", validators=[DataRequired()], render_kw={})
+    stealth = IntegerField(
+        "Stealth", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
+    survival = IntegerField(
+        "Survival", validators=[DataRequired()], render_kw={"class": "skill-form"}
+    )
 
 
 class HeaderForms(FlaskForm):
@@ -103,9 +143,10 @@ class HeaderForms(FlaskForm):
         "Class", validators=[DataRequired()], render_kw={"Placeholder": "Class"}
     )
     alignment = SelectField("Alignment", render_kw={"Placeholder": "Alignment"})
-    experience = IntegerField(
+    size = SelectField(
         "Experience Points", render_kw={"Placeholder": "Experience Points"}
     )
+    creature_type = StringField("Race", validators=[DataRequired()])
 
 
 class MidForms(FlaskForm):
@@ -134,7 +175,7 @@ class DamageForms(FlaskForm):
 class AddPcForm(FlaskForm):
     header_forms = FormField(HeaderForms)
     ability_forms = FormField(AbilityForms)
-    creature_type = StringField("Race", validators=[DataRequired()])
+    mid_forms = FormField(MidForms)
     proficiency_bonus = IntegerField("proficiency_bonus", default=2)
     saving_throws = FormField(SavingThrows)
     skill_forms = FormField(SkillForms)

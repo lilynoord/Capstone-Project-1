@@ -157,7 +157,7 @@ class Monster(db.Model):
     environments = db.Column(db.ARRAY(db.Text), nullable=True)
     img = db.Column(db.Text, nullable=True)
 
-    senses = db.Column(db.ARRAY(db.Text), nullable=False)
+    senses = db.Column(db.ARRAY(db.Text), nullable=True)
 
 
 class PlayerCharacter(db.Model):
@@ -167,11 +167,11 @@ class PlayerCharacter(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     player_name = db.Column(db.Text, nullable=False)
     name = db.Column(db.Text, nullable=False)
-    size = db.Column(db.Text, nullable=False)
-    creature_type = db.Column(db.Text, nullable=False)
-    alignment = db.Column(db.Text, nullable=False)
+    size = db.Column(db.Text, nullable=True)
+    creature_type = db.Column(db.Text, nullable=True)
+    alignment = db.Column(db.Text, nullable=True)
     armor_class = db.Column(db.Integer, nullable=False)
-    armor_desc = db.Column(db.Text, nullable=False)
+    armor_desc = db.Column(db.Text, nullable=True)
     max_hit_points = db.Column(db.Integer, nullable=False)
     hit_dice = db.Column(db.Text, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
@@ -194,7 +194,8 @@ class PlayerCharacter(db.Model):
     languages = db.Column(db.ARRAY(db.Text), nullable=True)
     environments = db.Column(db.ARRAY(db.Text), nullable=True)
     img = db.Column(db.Text, nullable=True)
-    senses = db.Column(db.ARRAY(db.Text), nullable=False)
+    senses = db.Column(db.ARRAY(db.Text), nullable=True)
+    level = db.Column(db.Integer, nullable=True)
 
 
 class NonPlayerCharacter(db.Model):

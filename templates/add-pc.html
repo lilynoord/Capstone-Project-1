@@ -2,14 +2,285 @@
 {%block title%}Add PC{%endblock%}
 
 {%block body%}
+<style>
+    .char-sheet {
+        border: 6px ridge rgba(100, 100, 100, 1);
+        ;
+
+        padding: 5px;
+        overflow: auto;
+    }
+
+    .header-forms {
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    #h-left {
+        justify-content: center;
+        align-items: center;
+    }
+
+    #h-right {
+        display: block;
+    }
+
+    #body-forms {
+        justify-content: center;
+        padding: 5px;
+        overflow: auto;
+    }
+
+    .ability-forms {
+        column-gap: 1px;
+        padding: 5px;
+        overflow: auto;
+        min-width: 10em
+    }
+
+    .mid-forms {
+        padding: 5px;
+        overflow: auto;
+        width: auto;
+    }
+
+    .dmg-forms {
+        padding: 5px;
+        overflow: auto;
+        width: auto;
+    }
+
+    .a-left {
+        justify-content: center;
+        align-items: center;
+        width: auto;
+
+    }
+
+    .a-block {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        display: block;
+        min-height: 10.5em;
+        border: 4px double rgba(100, 100, 100, 1);
+        border-radius: 9px;
+        margin: 10px;
+    }
+
+    .a-right {
+        display: grid;
+        justify-content: center;
+        width: auto;
+        align-items: center;
+
+    }
+
+    .save-div {
+        display: grid;
+        justify-content: center;
+
+    }
+
+    #saving-throws {
+        padding: 8px;
+        border: 4px double rgba(100, 100, 100, 1);
+        border-radius: 9px;
+        width: max-content;
+    }
+
+    #skills {
+        padding: 8px;
+        border: 4px double rgba(100, 100, 100, 1);
+        border-radius: 9px;
+    }
+
+    .skill-form {
+        max-height: 1em
+    }
+
+    .skill-input {
+        height: 1em;
+
+    }
+
+    .save-form {
+        max-height: 1em;
+    }
+
+    .a-modifier {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        align-self: center;
+        border: 4px solid rgba(100, 100, 100, 1);
+        border-radius: 75px;
+        height: 2em;
+        width: 3em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
 <section class="container-fluid">
     <form id="new-pc-form" name="new-pc-form" method="Post">
-        {{ form.hidden_tag() }}
-        {% for field in form if field.widget.input_type != 'hidden'%}
-        {{field}}
-        {%endfor%}
+        <div class="char-sheet header-forms">
+            <div class="hform" id="h-left">
+                {{form.header_forms.character_name()}}
+            </div>
+            <div class="hform" id="h-right">
+                <div class="hform grid" id="h-up">
+                    {{form.header_forms.character_class()}}
+                    {{form.header_forms.level()}}
+                    {{form.header_forms.player_name()}}
+                </div>
+
+                <div class="hform grid" id="h-down">
+                    {{form.header_forms.creature_type()}}
+                    {{form.header_forms.alignment()}}
+                    {{form.header_forms.size()}}
+                </div>
+            </div>
+        </div>
+        <div id="body-forms" class="char-sheet grid ">
+
+
+            <div class="char-sheet ability-forms grid container-fluid">
+                <div class="a-left">
+                    <div class="a-block">
+                        <div class="a-score" id="str">
+                            {{form.ability_forms.strength(class_='skill-input')}}</div>
+                        <div id="str-mod" class="a-modifier"></div>
+                    </div>
+                    <div class="a-block">
+                        <div class="a-score" id="dex">
+
+
+                            {{form.ability_forms.dexterity(class_='skill-input')}}</div>
+                        <div id="dex-mod" class="a-modifier"></div>
+                    </div>
+                    <div class="a-block">
+                        <div class="a-score" id="con">
+
+
+                            {{form.ability_forms.constitution(class_='skill-input')}}</div>
+                        <div id="con-mod" class="a-modifier"></div>
+                    </div>
+                    <div class="a-block">
+                        <div class="a-score" id="int">
+                            {{form.ability_forms.intelligence(class_='skill-input')}}</div>
+                        <div id="int-mod" class="a-modifier"></div>
+                    </div>
+                    <div class="a-block">
+                        <div class="a-score" id="wis">
+
+
+                            {{form.ability_forms.wisdom(class_='skill-input')}}</div>
+                        <div id="wis-mod" class="a-modifier"></div>
+                    </div>
+                    <div class="a-block">
+                        <div class="a-score" id="cha">
+
+
+                            {{form.ability_forms.charisma(class_='skill-input')}}</div>
+                        <div id="cha-mod" class="a-modifier"></div>
+                    </div>
+                </div>
+                <div class="a-right">
+                    <div id="saving-throws">
+                        <div class="save-div grid">{{form.saving_throws.strength()}}
+                            {{form.saving_throws.strength.label}}
+                        </div>
+                        <div class="save-div grid">{{form.saving_throws.dexterity()}}
+                            {{form.saving_throws.dexterity.label}}
+                        </div>
+                        <div class="save-div grid">{{form.saving_throws.constitution()}}
+                            {{form.saving_throws.constitution.label}}
+                        </div>
+                        <div class="save-div grid">{{form.saving_throws.intelligence()}}
+                            {{form.saving_throws.intelligence.label}}
+                        </div>
+                        <div class="save-div grid">{{form.saving_throws.wisdom()}}
+                            {{form.saving_throws.wisdom.label}}
+                        </div>
+                        <div class="save-div grid">{{form.saving_throws.charisma()}}
+                            {{form.saving_throws.charisma.label}}
+                        </div>
+                    </div>
+                    <div id="skills">
+
+
+                        <div class="skill-div grid">{{form.skill_forms.acrobatics()}}
+                            {{form.skill_forms.acrobatics.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.animal_handling()}}
+                            {{form.skill_forms.animal_handling.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.arcana()}}
+                            {{form.skill_forms.arcana.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.athletics()}}
+                            {{form.skill_forms.athletics.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.deception()}}
+                            {{form.skill_forms.deception.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.history()}}
+                            {{form.skill_forms.history.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.insight()}}
+                            {{form.skill_forms.insight.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.intimidation()}}
+                            {{form.skill_forms.intimidation.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.investigation()}}
+                            {{form.skill_forms.investigation.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.medicine()}}
+                            {{form.skill_forms.medicine.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.nature()}}
+                            {{form.skill_forms.nature.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.perception()}}
+                            {{form.skill_forms.perception.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.performance()}}
+                            {{form.skill_forms.performance.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.persuasion()}}
+                            {{form.skill_forms.persuasion.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.religion()}}
+                            {{form.skill_forms.religion.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.sleight_of_hand()}}
+                            {{form.skill_forms.sleight_of_hand.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.stealth()}}
+                            {{form.skill_forms.stealth.label}}
+                        </div>
+                        <div class="skill-div grid">{{form.skill_forms.survival()}}
+                            {{form.skill_forms.survival.label}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="char-sheet mid-forms container-fluid">
+                {{form.mid_forms()}}
+            </div>
+            <div class="char-sheet dmg-forms container-fluid">
+                {{form.damage_forms()}}
+            </div>
+        </div>
+
     </form>
 
 
 </section>
 {%endblock%}
+
+<script>
+
+</script>
