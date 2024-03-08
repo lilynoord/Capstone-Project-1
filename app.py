@@ -276,7 +276,7 @@ def add_pc_to_game(gameId):
     form = AddPcForm()
     if form.is_submitted() and form.validate():
         return redirect("/")
-    return render_template("add-pc.html", form=form)
+    return render_template("test.html", form=form)
 
 
 @app.route("/games/<gameId>/add/npc")

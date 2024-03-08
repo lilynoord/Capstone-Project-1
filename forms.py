@@ -151,18 +151,10 @@ class HeaderForms(FlaskForm):
 
 class MidForms(FlaskForm):
     armor_class = IntegerField("Armor Class", validators=[DataRequired()])
-    initiative = IntegerField("Initiative Bonus", validators=[DataRequired()])
     speed = IntegerField("Speed", validators=[DataRequired()])
     hit_point_maximum = IntegerField("Hit Point Maximum", validators=[DataRequired()])
     hit_dice_count = IntegerField("", validators=[DataRequired()])
     hit_dice_type = IntegerField("", validators=[DataRequired()])
-
-
-class TraitsForm(FlaskForm):
-    personality_traits = TextAreaField("")
-    ideals = TextAreaField("")
-    bonds = TextAreaField("")
-    flaws = TextAreaField("")
 
 
 class DamageForms(FlaskForm):
@@ -177,6 +169,7 @@ class AddPcForm(FlaskForm):
     ability_forms = FormField(AbilityForms)
     mid_forms = FormField(MidForms)
     proficiency_bonus = IntegerField("proficiency_bonus", default=2)
+    inspiration = IntegerField("Inspiration", default=0)
     saving_throws = FormField(SavingThrows)
     skill_forms = FormField(SkillForms)
     damage_forms = FormField(DamageForms)

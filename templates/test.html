@@ -1,0 +1,544 @@
+{% extends 'base.html' %}
+{%block title%}Add PC{%endblock%}
+
+{%block body%}
+<style>
+    .char-sheet {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        grid-template-rows: 0.1fr 2fr 1.3fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+
+        padding: 5px;
+    }
+
+    .grouping {
+        border: 6px double rgb(88, 88, 88);
+        ;
+    }
+
+    .header-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+        grid-area: 1 / 1 / 2 / 4;
+    }
+
+    .h-left {
+        grid-area: 1 / 1 / 2 / 3;
+    }
+
+    .h-up {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .h-right {
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .ability-forms {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: 0.1fr 0.7fr 1.8fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 1 / 3 / 2;
+
+    }
+
+    .a-left {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 4 / 2;
+    }
+
+    .a-block {
+        display: block;
+        align-items: center;
+        text-align: center;
+    }
+
+    .skill-input {
+        height: 10em;
+    }
+
+    .str {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dex {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .con {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .int {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .wis {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .cha {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .a-up {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .Inspiration {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .proficiency {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .saves {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .str-save {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dex-save {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .con-save {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .int-save {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .wis-save {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .cha-save {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .skills {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 3 / 2 / 4 / 3;
+    }
+
+    .acrobatics {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .animal_handling {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .arcana {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .athletics {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .deception {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .history {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .insight {
+        grid-area: 7 / 1 / 8 / 2;
+    }
+
+    .intimidation {
+        grid-area: 8 / 1 / 9 / 2;
+    }
+
+    .investigation {
+        grid-area: 9 / 1 / 10 / 2;
+    }
+
+    .medicine {
+        grid-area: 10 / 1 / 11 / 2;
+    }
+
+    .nature {
+        grid-area: 11 / 1 / 12 / 2;
+    }
+
+    .perception {
+        grid-area: 12 / 1 / 13 / 2;
+    }
+
+    .performance {
+        grid-area: 13 / 1 / 14 / 2;
+    }
+
+    .persuasion {
+        grid-area: 14 / 1 / 15 / 2;
+    }
+
+    .religion {
+        grid-area: 15 / 1 / 16 / 2;
+    }
+
+    .sleight_of_hand {
+        grid-area: 16 / 1 / 17 / 2;
+    }
+
+    .stealth {
+        grid-area: 17 / 1 / 18 / 2;
+    }
+
+    .survival {
+        grid-area: 18 / 1 / 19 / 2;
+    }
+
+    .mid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 0.4fr 1.6fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .mid-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1.1fr 0.9fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .ac {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .speed {
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .hit_point_maximum {
+        grid-area: 2 / 1 / 3 / 3;
+    }
+
+    .hit_dice {
+        grid-area: 3 / 1 / 4 / 3;
+    }
+
+    .actions {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .right {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 3 / 3 / 4;
+    }
+
+    .dmg {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dmg_vuln {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dmg_resist {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .dmg_immune {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .condition_immune {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .special {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+</style>
+<section class="container-fluid">
+    <form>
+        <div class="char-sheet">
+            <div class="header-forms grouping">
+                <div class="h-left">{{form.header_forms.character_name()}}</div>
+                <div class="h-up grid">
+                    {{form.header_forms.character_class()}}
+                    {{form.header_forms.level()}}
+                    {{form.header_forms.player_name()}}</div>
+                <div class="h-right grid">{{form.header_forms.creature_type()}}
+                    {{form.header_forms.alignment()}}
+                    {{form.header_forms.size()}}</div>
+            </div>
+            <div class="ability-forms">
+                <div class="a-left ">
+                    <div class="str grouping a-block">
+                        <h2>Strength</h2>{{form.ability_forms.strength(class_='skill-input')}}
+                    </div>
+                    <div class="dex grouping a-block">
+                        <h2>Dexterity</h2>{{form.ability_forms.dexterity(class_='skill-input')}}
+                    </div>
+                    <div class="con grouping a-block">
+                        <h2>Constitution</h2>{{form.ability_forms.constitution(class_='skill-input')}}
+                    </div>
+                    <div class="int grouping a-block">
+                        <h2>Intelligence</h2>{{form.ability_forms.intelligence(class_='skill-input')}}
+                    </div>
+                    <div class="wis grouping a-block">
+                        <h2>Wisdom</h2>{{form.ability_forms.wisdom(class_='skill-input')}}
+                    </div>
+                    <div class="cha grouping a-block">
+                        <h2>Charisma</h2> {{form.ability_forms.charisma(class_='skill-input')}}
+                    </div>
+                </div>
+                <div class="a-up grouping">
+                    <div class="Inspiration">{{form.inspiration()}}</div>
+                    <div class="proficiency">{{form.proficiency_bonus()}}</div>
+                </div>
+                <div class="saves grouping">
+                    <div class="str-save grid">{{form.saving_throws.strength()}}
+                        {{form.saving_throws.strength.label}}</div>
+                    <div class="dex-save grid">{{form.saving_throws.dexterity()}}
+                        {{form.saving_throws.dexterity.label}}</div>
+                    <div class="con-save grid">{{form.saving_throws.constitution()}}
+                        {{form.saving_throws.constitution.label}}</div>
+                    <div class="int-save grid">{{form.saving_throws.intelligence()}}
+                        {{form.saving_throws.intelligence.label}}</div>
+                    <div class="wis-save grid">{{form.saving_throws.wisdom()}}
+                        {{form.saving_throws.wisdom.label}}</div>
+                    <div class="cha-save grid"> {{form.saving_throws.charisma()}}
+                        {{form.saving_throws.charisma.label}}</div>
+                </div>
+                <div class="skills grouping">
+                    <div class="acrobatics grid">{{form.skill_forms.acrobatics()}}
+                        {{form.skill_forms.acrobatics.label}}</div>
+                    <div class="animal_handling grid">{{form.skill_forms.animal_handling()}}
+                        {{form.skill_forms.animal_handling.label}}</div>
+                    <div class="arcana grid">{{form.skill_forms.arcana()}}
+                        {{form.skill_forms.arcana.label}}</div>
+                    <div class="athletics grid">{{form.skill_forms.athletics()}}
+                        {{form.skill_forms.athletics.label}}</div>
+                    <div class="deception grid">{{form.skill_forms.deception()}}
+                        {{form.skill_forms.deception.label}}</div>
+                    <div class="history grid">{{form.skill_forms.history()}}
+                        {{form.skill_forms.history.label}}</div>
+                    <div class="insight grid">{{form.skill_forms.insight()}}
+                        {{form.skill_forms.insight.label}}</div>
+                    <div class="intimidation grid">{{form.skill_forms.intimidation()}}
+                        {{form.skill_forms.intimidation.label}}</div>
+                    <div class="investigation grid">{{form.skill_forms.investigation()}}
+                        {{form.skill_forms.investigation.label}}</div>
+                    <div class="medicine grid">{{form.skill_forms.medicine()}}
+                        {{form.skill_forms.medicine.label}}</div>
+                    <div class="nature grid">{{form.skill_forms.nature()}}
+                        {{form.skill_forms.nature.label}}</div>
+                    <div class="perception grid">{{form.skill_forms.perception()}}
+                        {{form.skill_forms.perception.label}}</div>
+                    <div class="performance grid">{{form.skill_forms.performance()}}
+                        {{form.skill_forms.performance.label}}
+                    </div>
+                    <div class="persuasion grid">{{form.skill_forms.persuasion()}}
+                        {{form.skill_forms.persuasion.label}}</div>
+                    <div class="religion grid">{{form.skill_forms.religion()}}
+                        {{form.skill_forms.religion.label}}</div>
+                    <div class="sleight_of_hand grid">{{form.skill_forms.sleight_of_hand()}}
+                        {{form.skill_forms.sleight_of_hand.label}}</div>
+                    <div class="stealth grid"> {{form.skill_forms.stealth()}}
+                        {{form.skill_forms.stealth.label}}</div>
+                    <div class="survival grid">{{form.skill_forms.survival()}}
+                        {{form.skill_forms.survival.label}}</div>
+                </div>
+            </div>
+            <div class="mid">
+                <div class="mid-forms">
+                    <div class="ac">{{form.mid_forms.armor_class()}} {{form.mid_forms.armor_class.label}}</div>
+                    <div class="speed">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
+                    <div class="hit_point_maximum">
+                        {{form.mid_forms.hit_point_maximum()}}{{form.mid_forms.hit_point_maximum.label}}</div>
+                    <div class="hit_dice" {{form.mid_forms.hit_point_maximum()}}></div>
+                </div>
+                <div class="actions"></div>
+            </div>
+            <div class="right">
+                <div class="dmg">
+                    <div class="dmg_vuln">
+                        {{form.damage_forms.damage_vulnerabilities()}}{{form.damage_forms.damage_vulnerabilities.label}}
+                    </div>
+                    <div class="dmg_resist">
+                        {{form.damage_forms.damage_resistances()}}{{form.damage_forms.damage_resistances.label}}</div>
+                    <div class="dmg_immune">
+                        {{form.damage_forms.damage_immunities()}}{{form.damage_forms.damage_immunities.label}}</div>
+                    <div class="condition_immune">
+                        {{form.damage_forms.condition_immunities()}}{{form.damage_forms.condition_immunities.label}}
+                    </div>
+                </div>
+                <div class="special"></div>
+            </div>
+        </div>
+
+
+
+
+    </form>
+
+
+</section>
+{%endblock%}
+
+<script>
+
+</script>
+
+<!-- {{form.header_forms.character_name()}}
+
+
+    {{form.header_forms.character_class()}}
+    {{form.header_forms.level()}}
+    {{form.header_forms.player_name()}}
+
+
+
+    {{form.header_forms.creature_type()}}
+    {{form.header_forms.alignment()}}
+    {{form.header_forms.size()}}
+
+
+    {{form.ability_forms.strength(class_='skill-input')}}
+
+    {{form.ability_forms.dexterity(class_='skill-input')}}
+
+    {{form.ability_forms.constitution(class_='skill-input')}}
+
+    {{form.ability_forms.intelligence(class_='skill-input')}}
+
+    {{form.ability_forms.wisdom(class_='skill-input')}}
+
+
+    {{form.ability_forms.charisma(class_='skill-input')}}
+
+    {{form.saving_throws.strength()}}
+    {{form.saving_throws.strength.label}}
+
+    {{form.saving_throws.dexterity()}}
+    {{form.saving_throws.dexterity.label}}
+
+    {{form.saving_throws.constitution()}}
+    {{form.saving_throws.constitution.label}}
+
+    {{form.saving_throws.intelligence()}}
+    {{form.saving_throws.intelligence.label}}
+
+    {{form.saving_throws.wisdom()}}
+    {{form.saving_throws.wisdom.label}}
+
+    {{form.saving_throws.charisma()}}
+    {{form.saving_throws.charisma.label}}
+
+
+
+
+
+    {{form.skill_forms.acrobatics()}}
+    {{form.skill_forms.acrobatics.label}}
+
+    {{form.skill_forms.animal_handling()}}
+    {{form.skill_forms.animal_handling.label}}
+
+    {{form.skill_forms.arcana()}}
+    {{form.skill_forms.arcana.label}}
+
+    {{form.skill_forms.athletics()}}
+    {{form.skill_forms.athletics.label}}
+
+    {{form.skill_forms.deception()}}
+    {{form.skill_forms.deception.label}}
+
+    {{form.skill_forms.history()}}
+    {{form.skill_forms.history.label}}
+
+    {{form.skill_forms.insight()}}
+    {{form.skill_forms.insight.label}}
+
+    {{form.skill_forms.intimidation()}}
+    {{form.skill_forms.intimidation.label}}
+
+    {{form.skill_forms.investigation()}}
+    {{form.skill_forms.investigation.label}}
+
+    {{form.skill_forms.medicine()}}
+    {{form.skill_forms.medicine.label}}
+
+    {{form.skill_forms.nature()}}
+    {{form.skill_forms.nature.label}}
+
+    {{form.skill_forms.perception()}}
+    {{form.skill_forms.perception.label}}
+
+    {{form.skill_forms.performance()}}
+    {{form.skill_forms.performance.label}}
+
+    {{form.skill_forms.persuasion()}}
+    {{form.skill_forms.persuasion.label}}
+
+    {{form.skill_forms.religion()}}
+    {{form.skill_forms.religion.label}}
+
+    {{form.skill_forms.sleight_of_hand()}}
+    {{form.skill_forms.sleight_of_hand.label}}
+
+    {{form.skill_forms.stealth()}}
+    {{form.skill_forms.stealth.label}}
+
+    {{form.skill_forms.survival()}}
+    {{form.skill_forms.survival.label}}
+
+
+
+
+
+    {{form.mid_forms.armor_class()}}
+    {{form.mid_forms.speed()}}
+    {{form.mid_forms.max_hit_points}}
+
+    {{form.damage_forms()}} -->
