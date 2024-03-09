@@ -5,12 +5,9 @@
 <style>
     .char-sheet {
         display: grid;
-        grid-template-columns: 1.4fr 1fr 1fr;
-        grid-template-rows: 0.1fr 2fr 1.3fr;
+        grid-template-columns: 1.3fr 0.7fr 0.7fr;
+        grid-template-rows: 0.1fr 0.9fr 2.4fr;
         gap: 0px 0px;
-        grid-auto-flow: row;
-
-        padding: 5px;
     }
 
     .grouping {
@@ -40,12 +37,11 @@
 
     .ability-forms {
         display: grid;
-        grid-template-columns: 1fr 2fr;
-        grid-template-rows: 0.1fr 0.7fr 1.8fr;
+        grid-template-columns: 0.8fr 1.3fr;
+        grid-template-rows: 0.5fr 0.6fr 1.9fr;
         gap: 0px 0px;
-        grid-auto-flow: row;
         grid-area: 2 / 1 / 3 / 2;
-
+        word-wrap: break-word;
     }
 
     .a-left {
@@ -61,6 +57,13 @@
         display: block;
         align-items: center;
         text-align: center;
+        overflow: auto;
+        min-width: 100%;
+    }
+
+    h3 {
+        word-wrap: normal;
+        font-size: 1.2em;
     }
 
     .skill-input {
@@ -297,6 +300,16 @@
     .special {
         grid-area: 2 / 1 / 3 / 2;
     }
+
+    .save-div {
+        max-height: 10em;
+        word-wrap: normal;
+    }
+
+    .skill-div {
+        max-height: 10em;
+        word-wrap: normal;
+    }
 </style>
 <section class="container-fluid">
     <form>
@@ -314,22 +327,22 @@
             <div class="ability-forms">
                 <div class="a-left ">
                     <div class="str grouping a-block">
-                        <h2>Strength</h2>{{form.ability_forms.strength(class_='skill-input')}}
+                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input')}}
                     </div>
                     <div class="dex grouping a-block">
-                        <h2>Dexterity</h2>{{form.ability_forms.dexterity(class_='skill-input')}}
+                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input')}}
                     </div>
                     <div class="con grouping a-block">
-                        <h2>Constitution</h2>{{form.ability_forms.constitution(class_='skill-input')}}
+                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input')}}
                     </div>
                     <div class="int grouping a-block">
-                        <h2>Intelligence</h2>{{form.ability_forms.intelligence(class_='skill-input')}}
+                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input')}}
                     </div>
                     <div class="wis grouping a-block">
-                        <h2>Wisdom</h2>{{form.ability_forms.wisdom(class_='skill-input')}}
+                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input')}}
                     </div>
                     <div class="cha grouping a-block">
-                        <h2>Charisma</h2> {{form.ability_forms.charisma(class_='skill-input')}}
+                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input')}}
                     </div>
                 </div>
                 <div class="a-up grouping">
@@ -337,64 +350,64 @@
                     <div class="proficiency">{{form.proficiency_bonus()}}</div>
                 </div>
                 <div class="saves grouping">
-                    <div class="str-save grid">{{form.saving_throws.strength()}}
+                    <div class="str-save save-div grid">{{form.saving_throws.strength()}}
                         {{form.saving_throws.strength.label}}</div>
-                    <div class="dex-save grid">{{form.saving_throws.dexterity()}}
+                    <div class="dex-save save-div grid">{{form.saving_throws.dexterity()}}
                         {{form.saving_throws.dexterity.label}}</div>
-                    <div class="con-save grid">{{form.saving_throws.constitution()}}
+                    <div class="con-save save-div grid">{{form.saving_throws.constitution()}}
                         {{form.saving_throws.constitution.label}}</div>
-                    <div class="int-save grid">{{form.saving_throws.intelligence()}}
+                    <div class="int-save save-div grid">{{form.saving_throws.intelligence()}}
                         {{form.saving_throws.intelligence.label}}</div>
-                    <div class="wis-save grid">{{form.saving_throws.wisdom()}}
+                    <div class="wis-save save-div grid">{{form.saving_throws.wisdom()}}
                         {{form.saving_throws.wisdom.label}}</div>
-                    <div class="cha-save grid"> {{form.saving_throws.charisma()}}
+                    <div class="cha-save save-div grid"> {{form.saving_throws.charisma()}}
                         {{form.saving_throws.charisma.label}}</div>
                 </div>
                 <div class="skills grouping">
-                    <div class="acrobatics grid">{{form.skill_forms.acrobatics()}}
+                    <div class="acrobatics skill-div grid">{{form.skill_forms.acrobatics()}}
                         {{form.skill_forms.acrobatics.label}}</div>
-                    <div class="animal_handling grid">{{form.skill_forms.animal_handling()}}
+                    <div class="animal_handling skill-div grid">{{form.skill_forms.animal_handling()}}
                         {{form.skill_forms.animal_handling.label}}</div>
-                    <div class="arcana grid">{{form.skill_forms.arcana()}}
+                    <div class="arcana skill-div grid">{{form.skill_forms.arcana()}}
                         {{form.skill_forms.arcana.label}}</div>
-                    <div class="athletics grid">{{form.skill_forms.athletics()}}
+                    <div class="athletics skill-div grid">{{form.skill_forms.athletics()}}
                         {{form.skill_forms.athletics.label}}</div>
-                    <div class="deception grid">{{form.skill_forms.deception()}}
+                    <div class="deception skill-div grid">{{form.skill_forms.deception()}}
                         {{form.skill_forms.deception.label}}</div>
-                    <div class="history grid">{{form.skill_forms.history()}}
+                    <div class="history skill-div grid">{{form.skill_forms.history()}}
                         {{form.skill_forms.history.label}}</div>
-                    <div class="insight grid">{{form.skill_forms.insight()}}
+                    <div class="insight skill-div grid">{{form.skill_forms.insight()}}
                         {{form.skill_forms.insight.label}}</div>
-                    <div class="intimidation grid">{{form.skill_forms.intimidation()}}
+                    <div class="intimidation skill-div grid">{{form.skill_forms.intimidation()}}
                         {{form.skill_forms.intimidation.label}}</div>
-                    <div class="investigation grid">{{form.skill_forms.investigation()}}
+                    <div class="investigation skill-div grid">{{form.skill_forms.investigation()}}
                         {{form.skill_forms.investigation.label}}</div>
-                    <div class="medicine grid">{{form.skill_forms.medicine()}}
+                    <div class="medicine skill-div grid">{{form.skill_forms.medicine()}}
                         {{form.skill_forms.medicine.label}}</div>
-                    <div class="nature grid">{{form.skill_forms.nature()}}
+                    <div class="nature skill-div grid">{{form.skill_forms.nature()}}
                         {{form.skill_forms.nature.label}}</div>
-                    <div class="perception grid">{{form.skill_forms.perception()}}
+                    <div class="perception skill-div grid">{{form.skill_forms.perception()}}
                         {{form.skill_forms.perception.label}}</div>
-                    <div class="performance grid">{{form.skill_forms.performance()}}
+                    <div class="performance skill-div grid">{{form.skill_forms.performance()}}
                         {{form.skill_forms.performance.label}}
                     </div>
-                    <div class="persuasion grid">{{form.skill_forms.persuasion()}}
+                    <div class="persuasion skill-div grid">{{form.skill_forms.persuasion()}}
                         {{form.skill_forms.persuasion.label}}</div>
-                    <div class="religion grid">{{form.skill_forms.religion()}}
+                    <div class="religion skill-div grid">{{form.skill_forms.religion()}}
                         {{form.skill_forms.religion.label}}</div>
-                    <div class="sleight_of_hand grid">{{form.skill_forms.sleight_of_hand()}}
+                    <div class="sleight_of_hand skill-div grid">{{form.skill_forms.sleight_of_hand()}}
                         {{form.skill_forms.sleight_of_hand.label}}</div>
-                    <div class="stealth grid"> {{form.skill_forms.stealth()}}
+                    <div class="stealth skill-div grid"> {{form.skill_forms.stealth()}}
                         {{form.skill_forms.stealth.label}}</div>
-                    <div class="survival grid">{{form.skill_forms.survival()}}
+                    <div class="survival skill-div grid">{{form.skill_forms.survival()}}
                         {{form.skill_forms.survival.label}}</div>
                 </div>
             </div>
             <div class="mid">
                 <div class="mid-forms">
-                    <div class="ac">{{form.mid_forms.armor_class()}} {{form.mid_forms.armor_class.label}}</div>
-                    <div class="speed">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
-                    <div class="hit_point_maximum">
+                    <div class="ac grouping">{{form.mid_forms.armor_class()}} {{form.mid_forms.armor_class.label}}</div>
+                    <div class="speed grouping">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
+                    <div class="hit_point_maximum grouping">
                         {{form.mid_forms.hit_point_maximum()}}{{form.mid_forms.hit_point_maximum.label}}</div>
                     <div class="hit_dice" {{form.mid_forms.hit_point_maximum()}}></div>
                 </div>
@@ -402,14 +415,14 @@
             </div>
             <div class="right">
                 <div class="dmg">
-                    <div class="dmg_vuln">
+                    <div class="dmg_vuln grouping">
                         {{form.damage_forms.damage_vulnerabilities()}}{{form.damage_forms.damage_vulnerabilities.label}}
                     </div>
-                    <div class="dmg_resist">
+                    <div class="dmg_resist grouping">
                         {{form.damage_forms.damage_resistances()}}{{form.damage_forms.damage_resistances.label}}</div>
-                    <div class="dmg_immune">
+                    <div class="dmg_immune grouping">
                         {{form.damage_forms.damage_immunities()}}{{form.damage_forms.damage_immunities.label}}</div>
-                    <div class="condition_immune">
+                    <div class="condition_immune grouping">
                         {{form.damage_forms.condition_immunities()}}{{form.damage_forms.condition_immunities.label}}
                     </div>
                 </div>
