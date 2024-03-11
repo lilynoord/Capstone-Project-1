@@ -2,17 +2,25 @@
 {%block title%}Add PC{%endblock%}
 
 {%block body%}
+
 <style>
     .char-sheet {
         display: grid;
         grid-template-columns: 1.3fr 0.7fr 0.7fr;
         grid-template-rows: 0.1fr 0.9fr 2.4fr;
         gap: 0px 0px;
+        border: 6px ridge rgb(88, 88, 88);
+        ;
     }
 
     .grouping {
         border: 6px double rgb(88, 88, 88);
         ;
+
+    }
+
+    select[multiple] {
+        margin: 0em
     }
 
     .header-forms {
@@ -59,6 +67,10 @@
         text-align: center;
         overflow: auto;
         min-width: 100%;
+    }
+
+    div {
+        padding: 5px;
     }
 
     h3 {
@@ -266,7 +278,7 @@
     .right {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1.5fr .5fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-area: 2 / 3 / 3 / 4;
@@ -279,10 +291,13 @@
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-area: 1 / 1 / 2 / 2;
+
     }
 
     .dmg_vuln {
         grid-area: 1 / 1 / 2 / 2;
+        padding-bottom: 0;
+        margin-bottom: 0;
     }
 
     .dmg_resist {
@@ -302,22 +317,27 @@
     }
 
     .save-div {
-        max-height: 10em;
+        max-height: 8em;
         word-wrap: normal;
     }
 
     .skill-div {
-        max-height: 10em;
+        max-height: 8em;
         word-wrap: normal;
     }
+
+    select[multiple] option:checked {
+        background-color: rgb(184, 184, 184);
+    }
 </style>
-<section class="container-fluid">
+<!-- Todo: Work on the styling of this.  -->
+<section class="container">
     <form>
         <div class="char-sheet">
             <div class="header-forms grouping">
                 <div class="h-left">{{form.header_forms.character_name()}}</div>
                 <div class="h-up grid">
-                    {{form.header_forms.character_class()}}
+                    {{form.header_forms.character_class(placeholder="class")}}
                     {{form.header_forms.level()}}
                     {{form.header_forms.player_name()}}</div>
                 <div class="h-right grid">{{form.header_forms.creature_type()}}
@@ -409,21 +429,24 @@
                     <div class="speed grouping">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
                     <div class="hit_point_maximum grouping">
                         {{form.mid_forms.hit_point_maximum()}}{{form.mid_forms.hit_point_maximum.label}}</div>
-                    <div class="hit_dice" {{form.mid_forms.hit_point_maximum()}}></div>
+                    <div class="hit_dice grid"> {{form.mid_forms.hit_dice_count()}}<h4>d</h4>
+                        {{form.mid_forms.hit_dice_type()}}</div>
                 </div>
                 <div class="actions"></div>
             </div>
             <div class="right">
                 <div class="dmg">
                     <div class="dmg_vuln grouping">
-                        {{form.damage_forms.damage_vulnerabilities()}}{{form.damage_forms.damage_vulnerabilities.label}}
+                        {{form.damage_forms.damage_vulnerabilities.label}}{{form.damage_forms.damage_vulnerabilities(size='10')}}
                     </div>
                     <div class="dmg_resist grouping">
-                        {{form.damage_forms.damage_resistances()}}{{form.damage_forms.damage_resistances.label}}</div>
+                        {{form.damage_forms.damage_resistances.label}}{{form.damage_forms.damage_resistances(size='10')}}
+                    </div>
                     <div class="dmg_immune grouping">
-                        {{form.damage_forms.damage_immunities()}}{{form.damage_forms.damage_immunities.label}}</div>
+                        {{form.damage_forms.damage_immunities.label}}{{form.damage_forms.damage_immunities(size='10')}}
+                    </div>
                     <div class="condition_immune grouping">
-                        {{form.damage_forms.condition_immunities()}}{{form.damage_forms.condition_immunities.label}}
+                        {{form.damage_forms.condition_immunities.label}}{{form.damage_forms.condition_immunities(size='10')}}
                     </div>
                 </div>
                 <div class="special"></div>
@@ -437,11 +460,30 @@
 
 
 </section>
-{%endblock%}
+
 
 <script>
+    //From stack exchange: https://stackoverflow.com/questions/8641729/how-to-avoid-the-need-for-ctrl-click-in-a-multi-select-box-using-javascript
+    window.onmousedown = function (e) {
+        var el = e.target;
+        if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+            e.preventDefault();
+
+            // toggle selection
+            if (el.hasAttribute('selected')) el.removeAttribute('selected');
+            else el.setAttribute('selected', '');
+
+            // hack to correct buggy behavior
+            var select = el.parentNode.cloneNode(true);
+            el.parentNode.parentNode.replaceChild(select, el.parentNode);
+
+        }
+    }
 
 </script>
+{%endblock%}
+
+
 
 <!-- {{form.header_forms.character_name()}}
 

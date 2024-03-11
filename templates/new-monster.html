@@ -193,6 +193,7 @@
     </section>
     {%endif%}
     <hr>
+
     <!-- Monster Search -->
 
     <form method="get" action="/games/{{game.id}}/add/creature" id='monster-search' class="grid">
@@ -215,7 +216,7 @@
             <tbody>
                 {%for i in s_json %}<tr>
 
-                    <td><a href="/games/{{game.id}}/add/creature?search={{search}}&slug={{i['slug']}}">
+                    <td><a href="/games/{{game.id}}/add/creature?slug={{i['slug']}}">
                             {{i['name']}}
                         </a><kbd>{{i['document__slug']}}</kbd></td>
                     <td>{{i['type']}}</td>

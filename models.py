@@ -196,6 +196,7 @@ class PlayerCharacter(db.Model):
     img = db.Column(db.Text, nullable=True)
     senses = db.Column(db.ARRAY(db.Text), nullable=True)
     level = db.Column(db.Integer, nullable=True)
+    character_class = db.Column(db.Text, nullable=True)
 
 
 class NonPlayerCharacter(db.Model):

@@ -193,22 +193,21 @@ def add_creature_to_game(gameId):
     search = "none"
     game = Game.query.where(Game.id == gameId).first()
     print("Add Creature: ", game, game.name, game.id)
-
+    search = request.args.get("search", "none")
     if request.args:
-        if existing_search and m_search_store != "":
+        if search != "none":
+
+            results, results_names = get_monsters_by_name(request.args["search"])
+            s_json = results
+            m_search_store = s_json
+            existing_search = True
+        elif existing_search and m_search_store != "":
             s_json = m_search_store
         else:
-            search = request.args.get("search", "none")
-            if search != "none":
-                results, results_names = get_monsters_by_name(request.args["search"])
-                s_json = results
-                m_search_store = s_json
-                existing_search = True
-            else:
-                results, results_names = get_all_monsters()
-                s_json = results["results"]
-                m_search_store = s_json
-                existing_search = True
+            results, results_names = get_all_monsters()
+            s_json = results["results"]
+            m_search_store = s_json
+            existing_search = True
         if request.args.get("slug", False):
             monster_data = get_instance("monsters", request.args["slug"])
             existing_slug = True
@@ -271,9 +270,86 @@ def add_custom_creature_to_game(gameId):
     return render_template("")
 
 
+class_choices = [
+    ("Barbarian", "Barbarian"),
+    ("Bard", "Bard"),
+    ("Cleric", "Cleric"),
+    ("Druid", "Druid"),
+    ("Fighter", "Fighter"),
+    ("Monk", "Monk"),
+    ("Paladin", "Paladin"),
+    ("Ranger", "Ranger"),
+    ("Rogue", "Rogue"),
+    ("Sorcerer", "Sorcerer"),
+    ("Warlock", "Warlock"),
+    ("Wizard", "Wizard"),
+    ("Artificer", "Artificer"),
+    ("Blood Hunter", "Blood Hunter"),
+]
+alignment_choices = [
+    ("Lawful Good"),
+    ("Neutral Good"),
+    ("Chaotic Good"),
+    ("Lawful Neutral"),
+    ("True Neutral"),
+    ("Chaotic Neutral"),
+    ("Lawful Evil"),
+    ("Neutral Evil"),
+    ("Chaotic Evil"),
+]
+size_choices = [
+    ("Tiny"),
+    ("Small"),
+    ("Medium"),
+    ("Large"),
+    ("Huge"),
+    ("Gargantuan"),
+]
+dmg_choices = [
+    ("Acid"),
+    ("Bludgeoning"),
+    ("Cold"),
+    ("Fire"),
+    ("Force"),
+    ("Lightning"),
+    ("Necrotic"),
+    ("Piercing"),
+    ("Poison"),
+    ("Psychic"),
+    ("Radiant"),
+    ("Slashing"),
+    ("Thunder"),
+]
+condition_choices = [
+    ("Blinded"),
+    ("Charmed"),
+    ("Deafened"),
+    ("Exhaustion"),
+    ("Frightened"),
+    ("Grappled"),
+    ("Incapacitated"),
+    ("Invisible"),
+    ("Paralyzed"),
+    ("Petrified"),
+    ("Poisoned"),
+    ("Prone"),
+    ("Restrained"),
+    ("Stunned"),
+    ("Unconscious"),
+]
+
+
 @app.route("/games/<gameId>/add/pc")
 def add_pc_to_game(gameId):
     form = AddPcForm()
+    form.header_forms.character_class.choices = class_choices
+    form.header_forms.alignment.choices = alignment_choices
+    form.header_forms.size.choices = size_choices
+
+    form.damage_forms.damage_vulnerabilities.choices = dmg_choices
+    form.damage_forms.damage_resistances.choices = dmg_choices
+    form.damage_forms.damage_immunities.choices = dmg_choices
+    form.damage_forms.condition_immunities.choices = condition_choices
     if form.is_submitted() and form.validate():
         return redirect("/")
     return render_template("test.html", form=form)

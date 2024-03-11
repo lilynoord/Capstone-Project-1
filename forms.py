@@ -8,6 +8,7 @@ from wtforms import (
     FormField,
     TextAreaField,
     SelectMultipleField,
+    RadioField,
 )
 from wtforms.validators import DataRequired
 
@@ -135,18 +136,20 @@ class HeaderForms(FlaskForm):
         validators=[DataRequired()],
         render_kw={"Placeholder": "Character Name"},
     )
-    player_name = StringField("Class", render_kw={"Placeholder": "Player Name"})
+    player_name = StringField("Player Name", render_kw={"Placeholder": "Player Name"})
     level = IntegerField(
         "Level", validators=[DataRequired()], render_kw={"Placeholder": "Level"}
     )
     character_class = SelectField(
-        "Class", validators=[DataRequired()], render_kw={"Placeholder": "Class"}
+        "Class", validators=[DataRequired()], render_kw={"aria-label": "Class"}
     )
     alignment = SelectField("Alignment", render_kw={"Placeholder": "Alignment"})
     size = SelectField(
         "Experience Points", render_kw={"Placeholder": "Experience Points"}
     )
-    creature_type = StringField("Race", validators=[DataRequired()])
+    creature_type = StringField(
+        "Race", validators=[DataRequired()], render_kw={"Placeholder": "Character Race"}
+    )
 
 
 class MidForms(FlaskForm):
