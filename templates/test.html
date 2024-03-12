@@ -347,26 +347,34 @@
             <div class="ability-forms">
                 <div class="a-left ">
                     <div class="str grouping a-block">
-                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input')}}
+                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input')}}<h4 class="a-bonus"
+                            id="str-bonus"></h4>
                     </div>
                     <div class="dex grouping a-block">
-                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input')}}
+                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input')}}<h4 class="a-bonus"
+                            id="dex-bonus"></h4>
                     </div>
                     <div class="con grouping a-block">
-                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input')}}
+                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input')}}<h4
+                            class="a-bonus" id="con-bonus"></h4>
                     </div>
                     <div class="int grouping a-block">
-                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input')}}
+                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input')}}<h4
+                            class="a-bonus" id="int-bonus"></h4>
                     </div>
                     <div class="wis grouping a-block">
-                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input')}}
+                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input')}}<h4 class="a-bonus"
+                            id="wis-bonus"></h4>
                     </div>
                     <div class="cha grouping a-block">
-                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input')}}
+                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input')}}<h4 class="a-bonus"
+                            id="cha-bonus"></h4>
                     </div>
                 </div>
                 <div class="a-up grouping">
-                    <div class="Inspiration">{{form.inspiration()}}</div>
+                    <div class="Inspiration">
+                        <h4>proficiency bonus</h4>
+                    </div>
                     <div class="proficiency">{{form.proficiency_bonus()}}</div>
                 </div>
                 <div class="saves grouping">
@@ -463,6 +471,22 @@
 
 
 <script>
+    function update_ability_modifier(e) {
+        let n = Math.floor((e.target.value - 10) / 2);
+        let sign = "";
+        if (n >= 0) {
+            sign = "+";
+        }
+
+        e.target.nextElementSibling.innerText = sign + n;
+
+    }
+
+
+
+
+
+
     //From stack exchange: https://stackoverflow.com/questions/8641729/how-to-avoid-the-need-for-ctrl-click-in-a-multi-select-box-using-javascript
     window.onmousedown = function (e) {
         var el = e.target;

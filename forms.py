@@ -36,21 +36,45 @@ class NewGameForm(FlaskForm):
 
 
 class AbilityForms(FlaskForm):
-    strength = IntegerField("Strength", validators=[DataRequired()], render_kw={})
-    dexterity = IntegerField("Dexterity", validators=[DataRequired()], render_kw={})
+    strength = IntegerField(
+        "Strength",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
+    )
+    dexterity = IntegerField(
+        "Dexterity",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
+    )
     constitution = IntegerField(
-        "Constitution", validators=[DataRequired()], render_kw={}
+        "Constitution",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
     )
     intelligence = IntegerField(
-        "Intelligence", validators=[DataRequired()], render_kw={}
+        "Intelligence",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
     )
-    wisdom = IntegerField("Wisdom", validators=[DataRequired()], render_kw={})
-    charisma = IntegerField("Charisma", validators=[DataRequired()], render_kw={})
+    wisdom = IntegerField(
+        "Wisdom",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
+    )
+    charisma = IntegerField(
+        "Charisma",
+        validators=[DataRequired()],
+        render_kw={"oninput": "update_ability_modifier(event)"},
+    )
 
 
 class SavingThrows(FlaskForm):
     strength = IntegerField(
-        "Strength", validators=[DataRequired()], render_kw={"class": "save-form"}
+        "Strength",
+        validators=[DataRequired()],
+        render_kw={
+            "class": "save-form",
+        },
     )
     dexterity = IntegerField(
         "Dexterity", validators=[DataRequired()], render_kw={"class": "save-form"}
