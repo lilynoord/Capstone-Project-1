@@ -2,285 +2,586 @@
 {%block title%}Add PC{%endblock%}
 
 {%block body%}
+
 <style>
     .char-sheet {
-        border: 6px ridge rgba(100, 100, 100, 1);
+        display: grid;
+        grid-template-columns: 1.3fr 0.7fr 0.7fr;
+        grid-template-rows: 0.1fr 0.9fr 2.4fr;
+        gap: 0px 0px;
+        border: 6px ridge rgb(88, 88, 88);
+        ;
+    }
+
+    .grouping {
+        border: 6px double rgb(88, 88, 88);
         ;
 
-        padding: 5px;
-        overflow: auto;
+    }
+
+    select[multiple] {
+        margin: 0em
     }
 
     .header-forms {
-        justify-content: center;
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+        grid-area: 1 / 1 / 2 / 4;
     }
 
-
-    #h-left {
-        justify-content: center;
-        align-items: center;
+    .h-left {
+        grid-area: 1 / 1 / 2 / 3;
     }
 
-    #h-right {
-        display: block;
+    .h-up {
+        grid-area: 2 / 1 / 3 / 2;
     }
 
-    #body-forms {
-        justify-content: center;
-        padding: 5px;
-        overflow: auto;
+    .h-right {
+        grid-area: 2 / 2 / 3 / 3;
     }
 
     .ability-forms {
-        column-gap: 1px;
-        padding: 5px;
-        overflow: auto;
-        min-width: 10em
-    }
-
-    .mid-forms {
-        padding: 5px;
-        overflow: auto;
-        width: auto;
-    }
-
-    .dmg-forms {
-        padding: 5px;
-        overflow: auto;
-        width: auto;
+        display: grid;
+        grid-template-columns: 0.8fr 1.3fr;
+        grid-template-rows: 0.5fr 0.6fr 1.9fr;
+        gap: 0px 0px;
+        grid-area: 2 / 1 / 3 / 2;
+        word-wrap: break-word;
     }
 
     .a-left {
-        justify-content: center;
-        align-items: center;
-        width: auto;
-
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 4 / 2;
     }
 
     .a-block {
-        justify-content: center;
+        display: block;
         align-items: center;
         text-align: center;
-        display: block;
-        min-height: 10.5em;
-        border: 4px double rgba(100, 100, 100, 1);
-        border-radius: 9px;
-        margin: 10px;
+        overflow: auto;
+        min-width: 100%;
     }
 
-    .a-right {
-        display: grid;
-        justify-content: center;
-        width: auto;
-        align-items: center;
-
+    div {
+        padding: 5px;
     }
 
-    .save-div {
-        display: grid;
-        justify-content: center;
-
-    }
-
-    #saving-throws {
-        padding: 8px;
-        border: 4px double rgba(100, 100, 100, 1);
-        border-radius: 9px;
-        width: max-content;
-    }
-
-    #skills {
-        padding: 8px;
-        border: 4px double rgba(100, 100, 100, 1);
-        border-radius: 9px;
-    }
-
-    .skill-form {
-        max-height: 1em
+    h3 {
+        word-wrap: normal;
+        font-size: 1.2em;
     }
 
     .skill-input {
-        height: 1em;
+        height: 10em;
+    }
+
+    .str {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dex {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .con {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .int {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .wis {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .cha {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .a-up {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .Inspiration {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .proficiency {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .saves {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .str-save {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .dex-save {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .con-save {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .int-save {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .wis-save {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .cha-save {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .skills {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 3 / 2 / 4 / 3;
+    }
+
+    .acrobatics {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .animal_handling {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .arcana {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .athletics {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .deception {
+        grid-area: 5 / 1 / 6 / 2;
+    }
+
+    .history {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    .insight {
+        grid-area: 7 / 1 / 8 / 2;
+    }
+
+    .intimidation {
+        grid-area: 8 / 1 / 9 / 2;
+    }
+
+    .investigation {
+        grid-area: 9 / 1 / 10 / 2;
+    }
+
+    .medicine {
+        grid-area: 10 / 1 / 11 / 2;
+    }
+
+    .nature {
+        grid-area: 11 / 1 / 12 / 2;
+    }
+
+    .perception {
+        grid-area: 12 / 1 / 13 / 2;
+    }
+
+    .performance {
+        grid-area: 13 / 1 / 14 / 2;
+    }
+
+    .persuasion {
+        grid-area: 14 / 1 / 15 / 2;
+    }
+
+    .religion {
+        grid-area: 15 / 1 / 16 / 2;
+    }
+
+    .sleight_of_hand {
+        grid-area: 16 / 1 / 17 / 2;
+    }
+
+    .stealth {
+        grid-area: 17 / 1 / 18 / 2;
+    }
+
+    .survival {
+        grid-area: 18 / 1 / 19 / 2;
+    }
+
+    .mid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 0.4fr 1.6fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .mid-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1.1fr 0.9fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .ac {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .speed {
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .hit_point_maximum {
+        grid-area: 2 / 1 / 3 / 3;
+    }
+
+    .hit_dice {
+        grid-area: 3 / 1 / 4 / 3;
+    }
+
+    .actions {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .right {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1.5fr .5fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 2 / 3 / 3 / 4;
+    }
+
+    .dmg {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 2 / 2;
 
     }
 
-    .save-form {
-        max-height: 1em;
+    .dmg_vuln {
+        grid-area: 1 / 1 / 2 / 2;
+        padding-bottom: 0;
+        margin-bottom: 0;
     }
 
-    .a-modifier {
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        align-self: center;
-        border: 4px solid rgba(100, 100, 100, 1);
-        border-radius: 75px;
-        height: 2em;
-        width: 3em;
-        margin-left: auto;
-        margin-right: auto;
+    .dmg_resist {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .dmg_immune {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .condition_immune {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    .special {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .save-div {
+        max-height: 8em;
+        word-wrap: normal;
+    }
+
+    .skill-div {
+        max-height: 8em;
+        word-wrap: normal;
+    }
+
+    select[multiple] option:checked {
+        background-color: rgb(184, 184, 184);
     }
 </style>
-<section class="container-fluid">
-    <form id="new-pc-form" name="new-pc-form" method="Post">
-        <div class="char-sheet header-forms">
-            <div class="hform" id="h-left">
-                {{form.header_forms.character_name()}}
-            </div>
-            <div class="hform" id="h-right">
-                <div class="hform grid" id="h-up">
-                    {{form.header_forms.character_class()}}
+<!-- Todo: Work on the styling of this.  -->
+<section class="container">
+    <form id="character-form" method="POST">
+        {% for field in form
+        if field.widget.input_type != 'hidden' %}
+        {{ form.hidden_tag() }}
+        {% for error in field.errors %}
+        {{ error }}
+        {% endfor %} {% endfor %}
+        <div class="char-sheet">
+            <div class="header-forms grouping">
+                <div class="h-left">{{form.header_forms.character_name()}}</div>
+                <div class="h-up grid">
+                    {{form.header_forms.character_class(placeholder="class")}}
                     {{form.header_forms.level()}}
-                    {{form.header_forms.player_name()}}
-                </div>
-
-                <div class="hform grid" id="h-down">
-                    {{form.header_forms.creature_type()}}
+                    {{form.header_forms.player_name()}}</div>
+                <div class="h-right grid">{{form.header_forms.creature_type()}}
                     {{form.header_forms.alignment()}}
-                    {{form.header_forms.size()}}
+                    {{form.header_forms.size()}}</div>
+            </div>
+            <div class="ability-forms">
+                <div class="a-left ">
+                    <div class="str grouping a-block">
+                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input')}}<h4 class="a-bonus"
+                            id="str-bonus"></h4>
+                    </div>
+                    <div class="dex grouping a-block">
+                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input')}}<h4 class="a-bonus"
+                            id="dex-bonus"></h4>
+                    </div>
+                    <div class="con grouping a-block">
+                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input')}}<h4
+                            class="a-bonus" id="con-bonus"></h4>
+                    </div>
+                    <div class="int grouping a-block">
+                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input')}}<h4
+                            class="a-bonus" id="int-bonus"></h4>
+                    </div>
+                    <div class="wis grouping a-block">
+                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input')}}<h4 class="a-bonus"
+                            id="wis-bonus"></h4>
+                    </div>
+                    <div class="cha grouping a-block">
+                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input')}}<h4 class="a-bonus"
+                            id="cha-bonus"></h4>
+                    </div>
                 </div>
+                <div class="a-up grouping">
+                    <div class="Inspiration">
+                        <h4>proficiency bonus</h4>
+                    </div>
+                    <div class="proficiency">{{form.proficiency_bonus()}}</div>
+                </div>
+                <div class="saves grouping">
+                    <div class="str-save save-div grid">{{form.saving_throws.strength()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.strength.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="dex-save save-div grid">{{form.saving_throws.dexterity()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.dexterity.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="con-save save-div grid">{{form.saving_throws.constitution()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.constitution.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="int-save save-div grid">{{form.saving_throws.intelligence()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.intelligence.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="wis-save save-div grid">{{form.saving_throws.wisdom()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.wisdom.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="cha-save save-div grid"> {{form.saving_throws.charisma()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.charisma.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                </div>
+                <div class="skills grouping">
+                    <div class="acrobatics skill-div grid">{{form.skill_forms.acrobatics()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.acrobatics.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="animal_handling skill-div grid">{{form.skill_forms.animal_handling()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.animal_handling.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="arcana skill-div grid">{{form.skill_forms.arcana()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.arcana.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="athletics skill-div grid">{{form.skill_forms.athletics()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.athletics.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="deception skill-div grid">{{form.skill_forms.deception()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.deception.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="history skill-div grid">{{form.skill_forms.history()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.history.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="insight skill-div grid">{{form.skill_forms.insight()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.insight.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="intimidation skill-div grid">{{form.skill_forms.intimidation()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.intimidation.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="investigation skill-div grid">{{form.skill_forms.investigation()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.investigation.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="medicine skill-div grid">{{form.skill_forms.medicine()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.medicine.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="nature skill-div grid">{{form.skill_forms.nature()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.nature.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="perception skill-div grid">{{form.skill_forms.perception()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.perception.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="performance skill-div grid">{{form.skill_forms.performance()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.performance.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="persuasion skill-div grid">{{form.skill_forms.persuasion()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.persuasion.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="religion skill-div grid">{{form.skill_forms.religion()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.religion.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="sleight_of_hand skill-div grid">{{form.skill_forms.sleight_of_hand()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.sleight_of_hand.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="stealth skill-div grid"> {{form.skill_forms.stealth()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.stealth.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                    <div class="survival skill-div grid">{{form.skill_forms.survival()}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.survival.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mid">
+                <div class="mid-forms">
+                    <div class="ac grouping">{{form.mid_forms.armor_class()}} {{form.mid_forms.armor_class.label}}</div>
+                    <div class="speed grouping">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
+                    <div class="hit_point_maximum grouping">
+                        {{form.mid_forms.hit_point_maximum()}}{{form.mid_forms.hit_point_maximum.label}}</div>
+                    <div class="hit_dice grid"> {{form.mid_forms.hit_dice_count()}}<h4>d</h4>
+                        {{form.mid_forms.hit_dice_type()}}</div>
+                </div>
+                <div class="actions"></div>
+            </div>
+            <div class="right">
+                <div class="dmg">
+                    <div class="dmg_vuln grouping">
+                        {{form.damage_forms.damage_vulnerabilities.label}}{{form.damage_forms.damage_vulnerabilities(size='10')}}
+                    </div>
+                    <div class="dmg_resist grouping">
+                        {{form.damage_forms.damage_resistances.label}}{{form.damage_forms.damage_resistances(size='10')}}
+                    </div>
+                    <div class="dmg_immune grouping">
+                        {{form.damage_forms.damage_immunities.label}}{{form.damage_forms.damage_immunities(size='10')}}
+                    </div>
+                    <div class="condition_immune grouping">
+                        {{form.damage_forms.condition_immunities.label}}{{form.damage_forms.condition_immunities(size='10')}}
+                    </div>
+                </div>
+                <div class="special"><input type=submit value="Add Character To Game"></div>
             </div>
         </div>
-        <div id="body-forms" class="char-sheet grid ">
 
 
-            <div class="char-sheet ability-forms grid container-fluid">
-                <div class="a-left">
-                    <div class="a-block">
-                        <div class="a-score" id="str">
-                            {{form.ability_forms.strength(class_='skill-input')}}</div>
-                        <div id="str-mod" class="a-modifier"></div>
-                    </div>
-                    <div class="a-block">
-                        <div class="a-score" id="dex">
 
-
-                            {{form.ability_forms.dexterity(class_='skill-input')}}</div>
-                        <div id="dex-mod" class="a-modifier"></div>
-                    </div>
-                    <div class="a-block">
-                        <div class="a-score" id="con">
-
-
-                            {{form.ability_forms.constitution(class_='skill-input')}}</div>
-                        <div id="con-mod" class="a-modifier"></div>
-                    </div>
-                    <div class="a-block">
-                        <div class="a-score" id="int">
-                            {{form.ability_forms.intelligence(class_='skill-input')}}</div>
-                        <div id="int-mod" class="a-modifier"></div>
-                    </div>
-                    <div class="a-block">
-                        <div class="a-score" id="wis">
-
-
-                            {{form.ability_forms.wisdom(class_='skill-input')}}</div>
-                        <div id="wis-mod" class="a-modifier"></div>
-                    </div>
-                    <div class="a-block">
-                        <div class="a-score" id="cha">
-
-
-                            {{form.ability_forms.charisma(class_='skill-input')}}</div>
-                        <div id="cha-mod" class="a-modifier"></div>
-                    </div>
-                </div>
-                <div class="a-right">
-                    <div id="saving-throws">
-                        <div class="save-div grid">{{form.saving_throws.strength()}}
-                            {{form.saving_throws.strength.label}}
-                        </div>
-                        <div class="save-div grid">{{form.saving_throws.dexterity()}}
-                            {{form.saving_throws.dexterity.label}}
-                        </div>
-                        <div class="save-div grid">{{form.saving_throws.constitution()}}
-                            {{form.saving_throws.constitution.label}}
-                        </div>
-                        <div class="save-div grid">{{form.saving_throws.intelligence()}}
-                            {{form.saving_throws.intelligence.label}}
-                        </div>
-                        <div class="save-div grid">{{form.saving_throws.wisdom()}}
-                            {{form.saving_throws.wisdom.label}}
-                        </div>
-                        <div class="save-div grid">{{form.saving_throws.charisma()}}
-                            {{form.saving_throws.charisma.label}}
-                        </div>
-                    </div>
-                    <div id="skills">
-
-
-                        <div class="skill-div grid">{{form.skill_forms.acrobatics()}}
-                            {{form.skill_forms.acrobatics.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.animal_handling()}}
-                            {{form.skill_forms.animal_handling.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.arcana()}}
-                            {{form.skill_forms.arcana.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.athletics()}}
-                            {{form.skill_forms.athletics.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.deception()}}
-                            {{form.skill_forms.deception.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.history()}}
-                            {{form.skill_forms.history.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.insight()}}
-                            {{form.skill_forms.insight.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.intimidation()}}
-                            {{form.skill_forms.intimidation.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.investigation()}}
-                            {{form.skill_forms.investigation.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.medicine()}}
-                            {{form.skill_forms.medicine.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.nature()}}
-                            {{form.skill_forms.nature.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.perception()}}
-                            {{form.skill_forms.perception.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.performance()}}
-                            {{form.skill_forms.performance.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.persuasion()}}
-                            {{form.skill_forms.persuasion.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.religion()}}
-                            {{form.skill_forms.religion.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.sleight_of_hand()}}
-                            {{form.skill_forms.sleight_of_hand.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.stealth()}}
-                            {{form.skill_forms.stealth.label}}
-                        </div>
-                        <div class="skill-div grid">{{form.skill_forms.survival()}}
-                            {{form.skill_forms.survival.label}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="char-sheet mid-forms container-fluid">
-                {{form.mid_forms()}}
-            </div>
-            <div class="char-sheet dmg-forms container-fluid">
-                {{form.damage_forms()}}
-            </div>
-        </div>
 
     </form>
 
 
 </section>
-{%endblock%}
+
 
 <script>
+    function update_ability_modifier(e) {
+        let n = Math.floor((e.target.value - 10) / 2);
+        let sign = "";
+        if (n >= 0) {
+            sign = "+";
+        }
+
+        e.target.nextElementSibling.innerText = sign + n;
+        var skill_tag = e.target.getAttribute('data-skill')
+        console.log(`input.${skill_tag}`,)
+        var skills = document.querySelectorAll(`input.${skill_tag}`)
+        console.log(skills)
+        skills.forEach((element) => {
+            if (!element.nextElementSibling.lastElementChild.checked) { element.value = n } else { element.value = n + parseInt(document.querySelector("#proficiency_bonus").value) }
+        })
+
+    }
+
+    function toggleProficiency(e) {
+        if (e.target.checked) {
+            console.log(e.target.parentNode.previousElementSibling.value, document.querySelector('#proficiency_bonus').value)
+            e.target.parentNode.previousElementSibling.value = parseInt(e.target.parentNode.previousElementSibling.value) + parseInt(document.querySelector('#proficiency_bonus').value);
+
+        } else {
+            e.target.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${e.target.parentNode.previousElementSibling.classList[1]}"]`).value - 10) / 2);
+
+        }
+
+    }
+
+    function update_skills(e) {
+        let skills = document.querySelectorAll('input[type=checkbox]')
+        skills.forEach((skill) => {
+            if (skill.checked) {
+                console.log(skill.parentNode.previousElementSibling.value, document.querySelector('#proficiency_bonus').value)
+                skill.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${skill.parentNode.previousElementSibling.classList[1]}"]`).value - 10) / 2) + parseInt(document.querySelector('#proficiency_bonus').value);
+
+            }
+        })
+    }
+
+
+    //From stack exchange: https://stackoverflow.com/questions/8641729/how-to-avoid-the-need-for-ctrl-click-in-a-multi-select-box-using-javascript
+    window.onmousedown = function (e) {
+        var el = e.target;
+        if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+            e.preventDefault();
+
+            // toggle selection
+            if (el.hasAttribute('selected')) el.removeAttribute('selected');
+            else el.setAttribute('selected', '');
+
+            // hack to correct buggy behavior
+            var select = el.parentNode.cloneNode(true);
+            el.parentNode.parentNode.replaceChild(select, el.parentNode);
+
+        }
+    }
 
 </script>
+{%endblock%}

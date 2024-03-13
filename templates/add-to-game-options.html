@@ -2,6 +2,11 @@
 {%block title%}Game Management{%endblock%}
 
 {%block body%}
+{% for msg in get_flashed_messages() %}
+<dialog open onclick="this.close()">
+    {{msg}}
+</dialog>
+{% endfor %}
 <section class="container-fluid">
     <h3 class="grid"> Add entity to game: </h3>
     <div class="container-fluid grid">

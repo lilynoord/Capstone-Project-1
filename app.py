@@ -25,18 +25,8 @@ from models import (
     MonsterSpeed,
     MonsterSkills,
     MonsterSpell,
-    PcAction,
-    PcBonusAction,
-    PcReaction,
-    PcSpecialAbility,
     PcSpeed,
     PcSkills,
-    PcSpells,
-    NpcAction,
-    NpcBonusAction,
-    NpcReaction,
-    NpcLegendaryAction,
-    NpcSpecialAbility,
     NpcSpeed,
     NpcSkills,
     Action,
@@ -46,6 +36,8 @@ from models import (
 )
 from api_handler import *
 from factories.monster_factory import new_monster
+from factories.pc_factory import new_pc
+from factories.npc_factory import new_npc
 from forms import *
 
 app = Flask(__name__)
@@ -306,6 +298,7 @@ size_choices = [
     ("Gargantuan"),
 ]
 dmg_choices = [
+    ("None"),
     ("Acid"),
     ("Bludgeoning"),
     ("Cold"),
@@ -321,6 +314,7 @@ dmg_choices = [
     ("Thunder"),
 ]
 condition_choices = [
+    ("None"),
     ("Blinded"),
     ("Charmed"),
     ("Deafened"),
@@ -339,7 +333,7 @@ condition_choices = [
 ]
 
 
-@app.route("/games/<gameId>/add/pc")
+@app.route("/games/<gameId>/add/pc", methods=["GET", "POST"])
 def add_pc_to_game(gameId):
     form = AddPcForm()
     form.header_forms.character_class.choices = class_choices
@@ -350,15 +344,43 @@ def add_pc_to_game(gameId):
     form.damage_forms.damage_resistances.choices = dmg_choices
     form.damage_forms.damage_immunities.choices = dmg_choices
     form.damage_forms.condition_immunities.choices = condition_choices
-    if form.is_submitted() and form.validate():
-        return redirect("/")
-    return render_template("test.html", form=form)
+
+    if form.is_submitted():
+        obj_list = new_pc(form)
+        for each in obj_list:
+            db.session.add(each)
+        pc = obj_list[0]
+        game_pc = GamePc(game_id=int(gameId), pc_id=pc.id)
+        db.session.add(game_pc)
+        db.session.commit()
+        flash(f"{pc.name} added to {Game.query.where(Game.id == gameId).first().name}")
+        return redirect(f"/games/{gameId}/add")
+    return render_template("add-pc.html", form=form)
 
 
-@app.route("/games/<gameId>/add/npc")
+@app.route("/games/<gameId>/add/npc", methods=["GET", "POST"])
 def add_npc_to_game(gameId):
-    # TODO: Add npc form
-    return render_template("")
+    form = AddPcForm()
+    form.header_forms.character_class.choices = class_choices
+    form.header_forms.alignment.choices = alignment_choices
+    form.header_forms.size.choices = size_choices
+
+    form.damage_forms.damage_vulnerabilities.choices = dmg_choices
+    form.damage_forms.damage_resistances.choices = dmg_choices
+    form.damage_forms.damage_immunities.choices = dmg_choices
+    form.damage_forms.condition_immunities.choices = condition_choices
+
+    if form.is_submitted():
+        obj_list = new_npc(form)
+        for each in obj_list:
+            db.session.add(each)
+        npc = obj_list[0]
+        game_npc = GameNpc(game_id=int(gameId), npc_id=npc.id)
+        db.session.add(game_npc)
+        db.session.commit()
+        flash(f"{npc.name} added to {Game.query.where(Game.id == gameId).first().name}")
+        return redirect(f"/games/{gameId}/add")
+    return render_template("add-npc.html", form=form)
 
 
 @app.route("/games/<gameId>/combat/<combatId>")

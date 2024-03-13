@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{%block title%}Add PC{%endblock%}
+{%block title%}Add NPC{%endblock%}
 
 {%block body%}
 
@@ -332,7 +332,13 @@
 </style>
 <!-- Todo: Work on the styling of this.  -->
 <section class="container">
-    <form>
+    <form id="character-form" method="POST">
+        {% for field in form
+        if field.widget.input_type != 'hidden' %}
+        {{ form.hidden_tag() }}
+        {% for error in field.errors %}
+        {{ error }}
+        {% endfor %} {% endfor %}
         <div class="char-sheet">
             <div class="header-forms grouping">
                 <div class="h-left">{{form.header_forms.character_name()}}</div>
@@ -379,56 +385,103 @@
                 </div>
                 <div class="saves grouping">
                     <div class="str-save save-div grid">{{form.saving_throws.strength()}}
-                        {{form.saving_throws.strength.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.strength.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="dex-save save-div grid">{{form.saving_throws.dexterity()}}
-                        {{form.saving_throws.dexterity.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.dexterity.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="con-save save-div grid">{{form.saving_throws.constitution()}}
-                        {{form.saving_throws.constitution.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.constitution.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="int-save save-div grid">{{form.saving_throws.intelligence()}}
-                        {{form.saving_throws.intelligence.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.intelligence.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="wis-save save-div grid">{{form.saving_throws.wisdom()}}
-                        {{form.saving_throws.wisdom.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.wisdom.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="cha-save save-div grid"> {{form.saving_throws.charisma()}}
-                        {{form.saving_throws.charisma.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.saving_throws.charisma.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                 </div>
                 <div class="skills grouping">
                     <div class="acrobatics skill-div grid">{{form.skill_forms.acrobatics()}}
-                        {{form.skill_forms.acrobatics.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.acrobatics.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="animal_handling skill-div grid">{{form.skill_forms.animal_handling()}}
-                        {{form.skill_forms.animal_handling.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.animal_handling.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="arcana skill-div grid">{{form.skill_forms.arcana()}}
-                        {{form.skill_forms.arcana.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.arcana.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="athletics skill-div grid">{{form.skill_forms.athletics()}}
-                        {{form.skill_forms.athletics.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.athletics.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="deception skill-div grid">{{form.skill_forms.deception()}}
-                        {{form.skill_forms.deception.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.deception.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="history skill-div grid">{{form.skill_forms.history()}}
-                        {{form.skill_forms.history.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.history.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="insight skill-div grid">{{form.skill_forms.insight()}}
-                        {{form.skill_forms.insight.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.insight.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="intimidation skill-div grid">{{form.skill_forms.intimidation()}}
-                        {{form.skill_forms.intimidation.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.intimidation.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="investigation skill-div grid">{{form.skill_forms.investigation()}}
-                        {{form.skill_forms.investigation.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.investigation.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="medicine skill-div grid">{{form.skill_forms.medicine()}}
-                        {{form.skill_forms.medicine.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.medicine.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="nature skill-div grid">{{form.skill_forms.nature()}}
-                        {{form.skill_forms.nature.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.nature.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="perception skill-div grid">{{form.skill_forms.perception()}}
-                        {{form.skill_forms.perception.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.perception.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="performance skill-div grid">{{form.skill_forms.performance()}}
-                        {{form.skill_forms.performance.label}}
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.performance.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
                     </div>
                     <div class="persuasion skill-div grid">{{form.skill_forms.persuasion()}}
-                        {{form.skill_forms.persuasion.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.persuasion.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="religion skill-div grid">{{form.skill_forms.religion()}}
-                        {{form.skill_forms.religion.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.religion.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="sleight_of_hand skill-div grid">{{form.skill_forms.sleight_of_hand()}}
-                        {{form.skill_forms.sleight_of_hand.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.sleight_of_hand.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="stealth skill-div grid"> {{form.skill_forms.stealth()}}
-                        {{form.skill_forms.stealth.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.stealth.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                     <div class="survival skill-div grid">{{form.skill_forms.survival()}}
-                        {{form.skill_forms.survival.label}}</div>
+                        <div class="conainer-fluid" style="padding:0">{{form.skill_forms.survival.label}} <input
+                                onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
+                    </div>
                 </div>
             </div>
             <div class="mid">
@@ -457,7 +510,7 @@
                         {{form.damage_forms.condition_immunities.label}}{{form.damage_forms.condition_immunities(size='10')}}
                     </div>
                 </div>
-                <div class="special"></div>
+                <div class="special"><input type=submit value="Add Character To Game"></div>
             </div>
         </div>
 
@@ -479,12 +532,38 @@
         }
 
         e.target.nextElementSibling.innerText = sign + n;
+        var skill_tag = e.target.getAttribute('data-skill')
+        console.log(`input.${skill_tag}`,)
+        var skills = document.querySelectorAll(`input.${skill_tag}`)
+        console.log(skills)
+        skills.forEach((element) => {
+            if (!element.nextElementSibling.lastElementChild.checked) { element.value = n } else { element.value = n + parseInt(document.querySelector("#proficiency_bonus").value) }
+        })
 
     }
 
+    function toggleProficiency(e) {
+        if (e.target.checked) {
+            console.log(e.target.parentNode.previousElementSibling.value, document.querySelector('#proficiency_bonus').value)
+            e.target.parentNode.previousElementSibling.value = parseInt(e.target.parentNode.previousElementSibling.value) + parseInt(document.querySelector('#proficiency_bonus').value);
 
+        } else {
+            e.target.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${e.target.parentNode.previousElementSibling.classList[1]}"]`).value - 10) / 2);
 
+        }
 
+    }
+
+    function update_skills(e) {
+        let skills = document.querySelectorAll('input[type=checkbox]')
+        skills.forEach((skill) => {
+            if (skill.checked) {
+                console.log(skill.parentNode.previousElementSibling.value, document.querySelector('#proficiency_bonus').value)
+                skill.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${skill.parentNode.previousElementSibling.classList[1]}"]`).value - 10) / 2) + parseInt(document.querySelector('#proficiency_bonus').value);
+
+            }
+        })
+    }
 
 
     //From stack exchange: https://stackoverflow.com/questions/8641729/how-to-avoid-the-need-for-ctrl-click-in-a-multi-select-box-using-javascript
@@ -506,118 +585,3 @@
 
 </script>
 {%endblock%}
-
-
-
-<!-- {{form.header_forms.character_name()}}
-
-
-    {{form.header_forms.character_class()}}
-    {{form.header_forms.level()}}
-    {{form.header_forms.player_name()}}
-
-
-
-    {{form.header_forms.creature_type()}}
-    {{form.header_forms.alignment()}}
-    {{form.header_forms.size()}}
-
-
-    {{form.ability_forms.strength(class_='skill-input')}}
-
-    {{form.ability_forms.dexterity(class_='skill-input')}}
-
-    {{form.ability_forms.constitution(class_='skill-input')}}
-
-    {{form.ability_forms.intelligence(class_='skill-input')}}
-
-    {{form.ability_forms.wisdom(class_='skill-input')}}
-
-
-    {{form.ability_forms.charisma(class_='skill-input')}}
-
-    {{form.saving_throws.strength()}}
-    {{form.saving_throws.strength.label}}
-
-    {{form.saving_throws.dexterity()}}
-    {{form.saving_throws.dexterity.label}}
-
-    {{form.saving_throws.constitution()}}
-    {{form.saving_throws.constitution.label}}
-
-    {{form.saving_throws.intelligence()}}
-    {{form.saving_throws.intelligence.label}}
-
-    {{form.saving_throws.wisdom()}}
-    {{form.saving_throws.wisdom.label}}
-
-    {{form.saving_throws.charisma()}}
-    {{form.saving_throws.charisma.label}}
-
-
-
-
-
-    {{form.skill_forms.acrobatics()}}
-    {{form.skill_forms.acrobatics.label}}
-
-    {{form.skill_forms.animal_handling()}}
-    {{form.skill_forms.animal_handling.label}}
-
-    {{form.skill_forms.arcana()}}
-    {{form.skill_forms.arcana.label}}
-
-    {{form.skill_forms.athletics()}}
-    {{form.skill_forms.athletics.label}}
-
-    {{form.skill_forms.deception()}}
-    {{form.skill_forms.deception.label}}
-
-    {{form.skill_forms.history()}}
-    {{form.skill_forms.history.label}}
-
-    {{form.skill_forms.insight()}}
-    {{form.skill_forms.insight.label}}
-
-    {{form.skill_forms.intimidation()}}
-    {{form.skill_forms.intimidation.label}}
-
-    {{form.skill_forms.investigation()}}
-    {{form.skill_forms.investigation.label}}
-
-    {{form.skill_forms.medicine()}}
-    {{form.skill_forms.medicine.label}}
-
-    {{form.skill_forms.nature()}}
-    {{form.skill_forms.nature.label}}
-
-    {{form.skill_forms.perception()}}
-    {{form.skill_forms.perception.label}}
-
-    {{form.skill_forms.performance()}}
-    {{form.skill_forms.performance.label}}
-
-    {{form.skill_forms.persuasion()}}
-    {{form.skill_forms.persuasion.label}}
-
-    {{form.skill_forms.religion()}}
-    {{form.skill_forms.religion.label}}
-
-    {{form.skill_forms.sleight_of_hand()}}
-    {{form.skill_forms.sleight_of_hand.label}}
-
-    {{form.skill_forms.stealth()}}
-    {{form.skill_forms.stealth.label}}
-
-    {{form.skill_forms.survival()}}
-    {{form.skill_forms.survival.label}}
-
-
-
-
-
-    {{form.mid_forms.armor_class()}}
-    {{form.mid_forms.speed()}}
-    {{form.mid_forms.max_hit_points}}
-
-    {{form.damage_forms()}} -->

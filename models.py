@@ -171,7 +171,6 @@ class PlayerCharacter(db.Model):
     creature_type = db.Column(db.Text, nullable=True)
     alignment = db.Column(db.Text, nullable=True)
     armor_class = db.Column(db.Integer, nullable=False)
-    armor_desc = db.Column(db.Text, nullable=True)
     max_hit_points = db.Column(db.Integer, nullable=False)
     hit_dice = db.Column(db.Text, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
@@ -186,15 +185,10 @@ class PlayerCharacter(db.Model):
     intelligence_save = db.Column(db.Integer, nullable=True)
     wisdom_save = db.Column(db.Integer, nullable=True)
     charisma_save = db.Column(db.Integer, nullable=True)
-    perception = db.Column(db.Integer, nullable=True)
     damage_vulnerabilities = db.Column(db.ARRAY(db.Text), nullable=True)
     damage_resistances = db.Column(db.ARRAY(db.Text), nullable=True)
     damage_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     condition_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
-    languages = db.Column(db.ARRAY(db.Text), nullable=True)
-    environments = db.Column(db.ARRAY(db.Text), nullable=True)
-    img = db.Column(db.Text, nullable=True)
-    senses = db.Column(db.ARRAY(db.Text), nullable=True)
     level = db.Column(db.Integer, nullable=True)
     character_class = db.Column(db.Text, nullable=True)
 
@@ -204,12 +198,12 @@ class NonPlayerCharacter(db.Model):
 
     __tablename__ = "nonplayer_characters"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    player_name = db.Column(db.Text, nullable=False)
     name = db.Column(db.Text, nullable=False)
-    size = db.Column(db.Text, nullable=False)
-    creature_type = db.Column(db.Text, nullable=False)
-    alignment = db.Column(db.Text, nullable=False)
+    size = db.Column(db.Text, nullable=True)
+    creature_type = db.Column(db.Text, nullable=True)
+    alignment = db.Column(db.Text, nullable=True)
     armor_class = db.Column(db.Integer, nullable=False)
-    armor_desc = db.Column(db.Text, nullable=False)
     max_hit_points = db.Column(db.Integer, nullable=False)
     hit_dice = db.Column(db.Text, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
@@ -224,16 +218,12 @@ class NonPlayerCharacter(db.Model):
     intelligence_save = db.Column(db.Integer, nullable=True)
     wisdom_save = db.Column(db.Integer, nullable=True)
     charisma_save = db.Column(db.Integer, nullable=True)
-    perception = db.Column(db.Integer, nullable=True)
     damage_vulnerabilities = db.Column(db.ARRAY(db.Text), nullable=True)
     damage_resistances = db.Column(db.ARRAY(db.Text), nullable=True)
     damage_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
     condition_immunities = db.Column(db.ARRAY(db.Text), nullable=True)
-    languages = db.Column(db.ARRAY(db.Text), nullable=True)
-    challenge_rating = db.Column(db.Float, nullable=False)
-    environments = db.Column(db.ARRAY(db.Text), nullable=True)
-    img = db.Column(db.Text, nullable=True)
-    senses = db.Column(db.ARRAY(db.Text), nullable=False)
+    level = db.Column(db.Integer, nullable=True)
+    character_class = db.Column(db.Text, nullable=True)
 
 
 class MonsterAction(db.Model):
@@ -308,42 +298,6 @@ class MonsterSpell(db.Model):
     spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
 
 
-class PcAction(db.Model):
-    """"""
-
-    __tablename__ = "pcs_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class PcBonusAction(db.Model):
-    """"""
-
-    __tablename__ = "pcs_bonus_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class PcReaction(db.Model):
-    """"""
-
-    __tablename__ = "pcs_reactions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class PcSpecialAbility(db.Model):
-    """"""
-
-    __tablename__ = "pcs_special_abilities"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
 class PcSpeed(db.Model):
     """"""
 
@@ -362,60 +316,6 @@ class PcSkills(db.Model):
     skills_id = db.Column(db.Integer, db.ForeignKey("skills.id"))
 
 
-class PcSpells(db.Model):
-    """"""
-
-    __tablename__ = "pcs_spells"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
-
-
-class NpcAction(db.Model):
-    """"""
-
-    __tablename__ = "npcs_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class NpcBonusAction(db.Model):
-    """"""
-
-    __tablename__ = "npcs_bonus_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class NpcReaction(db.Model):
-    """"""
-
-    __tablename__ = "npcs_reactions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class NpcLegendaryAction(db.Model):
-    """"""
-
-    __tablename__ = "npcs_legendary_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
-class NpcSpecialAbility(db.Model):
-    """"""
-
-    __tablename__ = "npcs_special_abilities"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
-
-
 class NpcSpeed(db.Model):
     """"""
 
@@ -432,15 +332,6 @@ class NpcSkills(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
     skills_id = db.Column(db.Integer, db.ForeignKey("skills.id"))
-
-
-class NpcSpells(db.Model):
-    """"""
-
-    __tablename__ = "npcs_spells"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
 
 
 class Action(db.Model):
@@ -520,3 +411,105 @@ class Spell(db.Model):
 def connect_db(app):
     db.app = app
     db.init_app(app)
+
+
+""" 
+! Currently unused tables that I may or may not implement someday.  
+
+class PcAction(db.Model):
+    """ """
+
+    __tablename__ = "pcs_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class PcBonusAction(db.Model):
+    """ """
+
+    __tablename__ = "pcs_bonus_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class PcReaction(db.Model):
+    """ """
+
+    __tablename__ = "pcs_reactions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class PcSpecialAbility(db.Model):
+    """ """
+
+    __tablename__ = "pcs_special_abilities"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class PcSpells(db.Model):
+    """ """
+
+    __tablename__ = "pcs_spells"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
+
+
+class NpcAction(db.Model):
+    """ """
+
+    __tablename__ = "npcs_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class NpcBonusAction(db.Model):
+    """ """
+
+    __tablename__ = "npcs_bonus_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class NpcReaction(db.Model):
+    """ """
+
+    __tablename__ = "npcs_reactions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class NpcLegendaryAction(db.Model):
+    """ """
+
+    __tablename__ = "npcs_legendary_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class NpcSpecialAbility(db.Model):
+    """ """
+
+    __tablename__ = "npcs_special_abilities"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+class NpcSpells(db.Model):
+    """ """
+
+    __tablename__ = "npcs_spells"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
+"""
