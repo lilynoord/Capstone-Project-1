@@ -2,26 +2,40 @@
 {%block title%}Game Management{%endblock%}
 
 {%block body%}
+<style>
+    div {
+        padding: 5px;
+    }
+</style>
 {% for msg in get_flashed_messages() %}
 <dialog open onclick="this.close()">
     {{msg}}
 </dialog>
 {% endfor %}
 <section class="container-fluid">
-    <h3 class="grid"> Add entity to game: </h3>
+    <h3 class="grid"> {{game.name}}</h3>
     <div class="container-fluid grid">
         <a class="grid" href="/games/{{gameId}}/add/creature">
-            <button> Monster
+            <button> Add Monster
             </button></a>
 
         <a class="grid" href="/games/{{gameId}}/add/pc">
             <button>
-                Player Character</button></a>
+                Add Player Character</button></a>
 
         <a class="grid" href="/games/{{gameId}}/add/npc">
             <button>
-                Nonplayer Character</button></a>
+                Add Nonplayer Character</button></a>
 
     </div>
+    <div class="container-fluid grid">
+        <a role="button" href="/games/{{gameId}}/combat/new">Create New Combat</a>
+
+    </div>
+    <section>
+        <h4>
+            Combats:
+        </h4>
+    </section>
 </section>
 {%endblock%}

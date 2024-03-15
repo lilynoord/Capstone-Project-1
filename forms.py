@@ -92,33 +92,33 @@ class SavingThrows(FlaskForm):
         "Strength",
         validators=[DataRequired()],
         render_kw={
-            "class": "save-form str-skill",
+            "class": "pico-override save-form str-skill",
         },
     )
     dexterity = IntegerField(
         "Dexterity",
         validators=[DataRequired()],
-        render_kw={"class": "save-form dex-skill"},
+        render_kw={"class": "pico-override save-form dex-skill"},
     )
     constitution = IntegerField(
         "Constitution",
         validators=[DataRequired()],
-        render_kw={"class": "save-form con-skill"},
+        render_kw={"class": "pico-override save-form con-skill"},
     )
     intelligence = IntegerField(
         "Intelligence",
         validators=[DataRequired()],
-        render_kw={"class": "save-form int-skill"},
+        render_kw={"class": "pico-override save-form int-skill"},
     )
     wisdom = IntegerField(
         "Wisdom",
         validators=[DataRequired()],
-        render_kw={"class": "save-form wis-skill"},
+        render_kw={"class": "pico-override save-form wis-skill"},
     )
     charisma = IntegerField(
         "Charisma",
         validators=[DataRequired()],
-        render_kw={"class": "save-form cha-skill"},
+        render_kw={"class": "pico-override save-form cha-skill"},
     )
 
 
@@ -126,92 +126,92 @@ class SkillForms(FlaskForm):
     acrobatics = IntegerField(
         "Acrobatics",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form dex-skill"},
+        render_kw={"class": "pico-override skill-form dex-skill"},
     )
     animal_handling = IntegerField(
         "Animal Handling",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form wis-skill"},
+        render_kw={"class": "pico-override skill-form wis-skill"},
     )
     arcana = IntegerField(
         "Arcana",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form int-skill"},
+        render_kw={"class": "pico-override skill-form int-skill"},
     )
     athletics = IntegerField(
         "Athletics",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form str-skill"},
+        render_kw={"class": "pico-override skill-form str-skill"},
     )
     deception = IntegerField(
         "Deception",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form cha-skill"},
+        render_kw={"class": "pico-override skill-form cha-skill"},
     )
     history = IntegerField(
         "History",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form int-skill"},
+        render_kw={"class": "pico-override skill-form int-skill"},
     )
     insight = IntegerField(
         "Insight",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form wis-skill"},
+        render_kw={"class": "pico-override skill-form wis-skill"},
     )
     intimidation = IntegerField(
         "Intimidation",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form cha-skill"},
+        render_kw={"class": "pico-override skill-form cha-skill"},
     )
     investigation = IntegerField(
         "Investigation",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form int-skill"},
+        render_kw={"class": "pico-override skill-form int-skill"},
     )
     medicine = IntegerField(
         "Medicine",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form wis-skill"},
+        render_kw={"class": "pico-override skill-form wis-skill"},
     )
     nature = IntegerField(
         "Nature",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form int-skill"},
+        render_kw={"class": "pico-override skill-form int-skill"},
     )
     perception = IntegerField(
         "Perception",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form wis-skill"},
+        render_kw={"class": "pico-override skill-form wis-skill"},
     )
     performance = IntegerField(
         "Performance",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form cha-skill"},
+        render_kw={"class": "pico-override skill-form cha-skill"},
     )
     persuasion = IntegerField(
         "Persuasion",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form cha-skill"},
+        render_kw={"class": "pico-override skill-form cha-skill"},
     )
     religion = IntegerField(
         "Religion",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form int-skill"},
+        render_kw={"class": "pico-override skill-form int-skill"},
     )
     sleight_of_hand = IntegerField(
         "Sleight of Hand",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form  dex-skill"},
+        render_kw={"class": "pico-override skill-form  dex-skill"},
     )
     stealth = IntegerField(
         "Stealth",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form  dex-skill"},
+        render_kw={"class": "pico-override skill-form  dex-skill"},
     )
     survival = IntegerField(
         "Survival",
         validators=[DataRequired()],
-        render_kw={"class": "skill-form wis-skill"},
+        render_kw={"class": "pico-override skill-form wis-skill"},
     )
 
 

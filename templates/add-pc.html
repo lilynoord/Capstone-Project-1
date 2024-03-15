@@ -4,6 +4,17 @@
 {%block body%}
 
 <style>
+    input.pico-override,
+    select.pico-override {
+        margin-bottom: 0;
+        height: auto;
+
+    }
+
+    label {
+        margin: 0;
+    }
+
     .char-sheet {
         display: grid;
         grid-template-columns: 1.3fr 0.7fr 0.7fr;
@@ -24,7 +35,6 @@
     }
 
     .header-forms {
-        display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
         gap: 0px 0px;
@@ -46,14 +56,14 @@
     .ability-forms {
         display: grid;
         grid-template-columns: 0.8fr 1.3fr;
-        grid-template-rows: 0.5fr 0.6fr 1.9fr;
+        grid-template-rows: 0.1fr 0.1fr .1fr;
         gap: 0px 0px;
         grid-area: 2 / 1 / 3 / 2;
         word-wrap: break-word;
     }
 
     .a-left {
-        display: grid;
+
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
         gap: 0px 0px;
@@ -107,24 +117,21 @@
     }
 
     .a-up {
-        display: grid;
+
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: .1fr 1.9fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-area: 1 / 2 / 2 / 3;
     }
 
-    .Inspiration {
-        grid-area: 1 / 1 / 2 / 2;
-    }
 
     .proficiency {
         grid-area: 2 / 1 / 3 / 2;
     }
 
     .saves {
-        display: grid;
+
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
         gap: 0px 0px;
@@ -157,7 +164,7 @@
     }
 
     .skills {
-        display: grid;
+
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
         gap: 0px 0px;
@@ -317,12 +324,12 @@
     }
 
     .save-div {
-        max-height: 8em;
+        max-height: 5em;
         word-wrap: normal;
     }
 
     .skill-div {
-        max-height: 8em;
+        max-height: 5em;
         word-wrap: normal;
     }
 
@@ -341,47 +348,47 @@
         {% endfor %} {% endfor %}
         <div class="char-sheet">
             <div class="header-forms grouping">
-                <div class="h-left">{{form.header_forms.character_name()}}</div>
+                <div class="h-left">{{form.header_forms.character_name(class_="pico-override")}}</div>
                 <div class="h-up grid">
-                    {{form.header_forms.character_class(placeholder="class")}}
-                    {{form.header_forms.level()}}
-                    {{form.header_forms.player_name()}}</div>
-                <div class="h-right grid">{{form.header_forms.creature_type()}}
-                    {{form.header_forms.alignment()}}
-                    {{form.header_forms.size()}}</div>
+                    {{form.header_forms.character_class(placeholder="class",class_="pico-override")}}
+                    {{form.header_forms.level(class_="pico-override")}}
+                    {{form.header_forms.player_name(class_="pico-override")}}</div>
+                <div class="h-right grid">{{form.header_forms.creature_type(class_="pico-override")}}
+                    {{form.header_forms.alignment(class_="pico-override")}}
+                    {{form.header_forms.size(class_="pico-override")}}</div>
             </div>
             <div class="ability-forms">
                 <div class="a-left ">
                     <div class="str grouping a-block">
-                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input')}}<h4 class="a-bonus"
-                            id="str-bonus"></h4>
+                        <h3>Strength</h3>{{form.ability_forms.strength(class_='skill-input pico-override')}}<h4
+                            class="a-bonus" id="str-bonus"></h4>
                     </div>
                     <div class="dex grouping a-block">
-                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input')}}<h4 class="a-bonus"
-                            id="dex-bonus"></h4>
+                        <h3>Dexterity</h3>{{form.ability_forms.dexterity(class_='skill-input pico-override')}}<h4
+                            class="a-bonus" id="dex-bonus"></h4>
                     </div>
                     <div class="con grouping a-block">
-                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input')}}<h4
+                        <h3>Constitution</h3>{{form.ability_forms.constitution(class_='skill-input pico-override')}}<h4
                             class="a-bonus" id="con-bonus"></h4>
                     </div>
                     <div class="int grouping a-block">
-                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input')}}<h4
+                        <h3>Intelligence</h3>{{form.ability_forms.intelligence(class_='skill-input pico-override')}}<h4
                             class="a-bonus" id="int-bonus"></h4>
                     </div>
                     <div class="wis grouping a-block">
-                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input')}}<h4 class="a-bonus"
-                            id="wis-bonus"></h4>
+                        <h3>Wisdom</h3>{{form.ability_forms.wisdom(class_='skill-input pico-override')}}<h4
+                            class="a-bonus" id="wis-bonus"></h4>
                     </div>
                     <div class="cha grouping a-block">
-                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input')}}<h4 class="a-bonus"
-                            id="cha-bonus"></h4>
+                        <h3>Charisma</h3> {{form.ability_forms.charisma(class_='skill-input pico-override')}}<h4
+                            class="a-bonus" id="cha-bonus"></h4>
                     </div>
                 </div>
                 <div class="a-up grouping">
-                    <div class="Inspiration">
-                        <h4>proficiency bonus</h4>
+
+                    <div class="proficiency">
+                        <h4>Proficiency Bonus</h4>{{form.proficiency_bonus(class_="pico-override")}}
                     </div>
-                    <div class="proficiency">{{form.proficiency_bonus()}}</div>
                 </div>
                 <div class="saves grouping">
                     <div class="str-save save-div grid">{{form.saving_throws.strength()}}
@@ -414,7 +421,8 @@
                         <div class="conainer-fluid" style="padding:0">{{form.skill_forms.acrobatics.label}} <input
                                 onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
                     </div>
-                    <div class="animal_handling skill-div grid">{{form.skill_forms.animal_handling()}}
+                    <div class="animal_handling skill-div grid">
+                        {{form.skill_forms.animal_handling()}}
                         <div class="conainer-fluid" style="padding:0">{{form.skill_forms.animal_handling.label}} <input
                                 onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
                     </div>
@@ -470,7 +478,8 @@
                         <div class="conainer-fluid" style="padding:0">{{form.skill_forms.religion.label}} <input
                                 onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
                     </div>
-                    <div class="sleight_of_hand skill-div grid">{{form.skill_forms.sleight_of_hand()}}
+                    <div class="sleight_of_hand skill-div grid">
+                        {{form.skill_forms.sleight_of_hand()}}
                         <div class="conainer-fluid" style="padding:0">{{form.skill_forms.sleight_of_hand.label}} <input
                                 onclick="toggleProficiency(event)" style="margin:auto" type="checkbox"></div>
                     </div>
@@ -486,28 +495,36 @@
             </div>
             <div class="mid">
                 <div class="mid-forms">
-                    <div class="ac grouping">{{form.mid_forms.armor_class()}} {{form.mid_forms.armor_class.label}}</div>
-                    <div class="speed grouping">{{form.mid_forms.speed()}}{{form.mid_forms.speed.label}}</div>
+                    <div class="ac grouping">{{form.mid_forms.armor_class(class_="pico-override")}}
+                        {{form.mid_forms.armor_class.label}}</div>
+                    <div class="speed grouping">
+                        {{form.mid_forms.speed(class_="pico-override")}}{{form.mid_forms.speed.label}}</div>
                     <div class="hit_point_maximum grouping">
-                        {{form.mid_forms.hit_point_maximum()}}{{form.mid_forms.hit_point_maximum.label}}</div>
-                    <div class="hit_dice grid"> {{form.mid_forms.hit_dice_count()}}<h4>d</h4>
-                        {{form.mid_forms.hit_dice_type()}}</div>
+                        {{form.mid_forms.hit_point_maximum(class_="pico-override")}}{{form.mid_forms.hit_point_maximum.label}}
+                    </div>
+                    <div class="hit_dice">
+                        <h5>Hit Dice</h5>
+                        <div class="grid">
+                            {{form.mid_forms.hit_dice_count(class_="pico-override")}}<h4>d</h4>
+                            {{form.mid_forms.hit_dice_type(class_="pico-override")}}
+                        </div>
+                    </div>
                 </div>
                 <div class="actions"></div>
             </div>
             <div class="right">
                 <div class="dmg">
                     <div class="dmg_vuln grouping">
-                        {{form.damage_forms.damage_vulnerabilities.label}}{{form.damage_forms.damage_vulnerabilities(size='10')}}
+                        {{form.damage_forms.damage_vulnerabilities.label}}{{form.damage_forms.damage_vulnerabilities(class_="pico-override",size='10')}}
                     </div>
                     <div class="dmg_resist grouping">
-                        {{form.damage_forms.damage_resistances.label}}{{form.damage_forms.damage_resistances(size='10')}}
+                        {{form.damage_forms.damage_resistances.label}}{{form.damage_forms.damage_resistances(class_="pico-override",size='10')}}
                     </div>
                     <div class="dmg_immune grouping">
-                        {{form.damage_forms.damage_immunities.label}}{{form.damage_forms.damage_immunities(size='10')}}
+                        {{form.damage_forms.damage_immunities.label}}{{form.damage_forms.damage_immunities(class_="pico-override",size='10')}}
                     </div>
                     <div class="condition_immune grouping">
-                        {{form.damage_forms.condition_immunities.label}}{{form.damage_forms.condition_immunities(size='10')}}
+                        {{form.damage_forms.condition_immunities.label}}{{form.damage_forms.condition_immunities(class_="pico-override",size='10')}}
                     </div>
                 </div>
                 <div class="special"><input type=submit value="Add Character To Game"></div>
@@ -537,6 +554,7 @@
         var skills = document.querySelectorAll(`input.${skill_tag}`)
         console.log(skills)
         skills.forEach((element) => {
+            console.log(element)
             if (!element.nextElementSibling.lastElementChild.checked) { element.value = n } else { element.value = n + parseInt(document.querySelector("#proficiency_bonus").value) }
         })
 

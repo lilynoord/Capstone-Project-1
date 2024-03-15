@@ -151,12 +151,13 @@ def delete_game(gameId):
     return redirect("/games")
 
 
-@app.route("/games/<gameId>/add")
+@app.route("/games/<int:gameId>/add")
 def add_entity_to_game(gameId):
     # TODO: list of options for adding things to the game
     if check_user(request):
         return redirect("/")
-    html = render_template("add-to-game-options.html", gameId=gameId)
+    game = Game.query.filter(Game.id == gameId).first_or_404()
+    html = render_template("add-to-game-options.html", gameId=gameId, game=game)
     response = make_response(html)
     response.set_cookie("existing_slug", "False")
     response.set_cookie("existing_search", "False")
@@ -389,7 +390,7 @@ def combat_master(gameId, combatId):
     return render_template("")
 
 
-@app.route("/games/<gameId>/combat/<combatId>/setup/new")
+@app.route("/games/<gameId>/combat/new")
 def combat_setup_new(gameId, combatId):
     return render_template("")
 
