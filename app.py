@@ -424,29 +424,25 @@ def add_npc_to_game(gameId):
     return render_template("add-npc.html", form=form)
 
 
-@app.route("/games/<int:gameId>/combat/<combatId>")
+@app.route("/games/<int:gameId>/combat/<int:combatId>")
 def combat_master(gameId, combatId):
     # TODO: option to either setup combat or start combat
-    return render_template("")
+    return render_template("base.html")
 
 
-@app.route("/games/<int:gameId>/combat/new")
-def combat_setup_new(gameId, combatId):
-    return render_template("")
+@app.route("/games/<int:gameId>/combat/new", methods=["GET", "POST"])
+def combat_setup_new(gameId):
+    form = NewCombatForm()
+    if form.is_submitted() and form.validate():
+        newCombat = Combat(name=form.name.data, game_id=gameId)
+        db.session.add(newCombat)
+        db.session.commit()
+        return redirect(f"/games/{gameId}/combat/{newCombat.id}/setup")
+    return render_template("new-combat.html", form=form)
 
 
-@app.route("/games/<int:gameId>/combat/<combatId>/setup/add-pcs")
-def combat_setup_pcs(gameId, combatId):
-    return render_template("")
-
-
-@app.route("/games/<int:gameId>/combat/<combatId>/setup/add-npcs")
-def combat_setup_npcs(gameId, combatId):
-    return render_template("")
-
-
-@app.route("/games/<int:gameId>/combat/<combatId>/setup/add-creatures")
-def combat_setup_creatures(gameId, combatId):
+@app.route("/games/<int:gameId>/combat/<int:combatId>/setup")
+def combat_setup(gameId, combatId):
     return render_template("")
 
 

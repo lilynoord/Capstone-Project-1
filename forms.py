@@ -272,7 +272,8 @@ class AddPcForm(FlaskForm):
     damage_forms = FormField(DamageForms)
 
 
-# addnpcform
+class NewCombatForm(FlaskForm):
+    name = StringField("Combat Name", validators=[DataRequired()])
 
 
 # ccounts+nameform
