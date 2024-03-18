@@ -71,7 +71,6 @@ def skills_factory(skill):
 def new_npc(form):
     npc = npc_factory(form)
     skills = skills_factory(form.skill_forms)
-    npc_skills = NpcSkills(npc_id=npc.id, skills_id=skills.id)
     speed = Speed(speed_type="default speed", distance=form.mid_forms.speed.data)
-    npc_speed = NpcSpeed(npc_id=npc.id, speed_id=speed.id)
-    return [npc, skills, npc_skills, speed, npc_speed]
+
+    return [npc, skills, speed]

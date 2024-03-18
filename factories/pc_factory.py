@@ -42,6 +42,7 @@ def pc_factory(form):
         level=head.level.data,
         character_class=head.character_class.data,
     )
+    print("NEW PC", pc.name, pc.id)
     return pc
 
 
@@ -72,7 +73,8 @@ def skills_factory(skill):
 def new_pc(form):
     pc = pc_factory(form)
     skills = skills_factory(form.skill_forms)
-    pc_skills = PcSkills(pc_id=pc.id, skills_id=skills.id)
+
     speed = Speed(speed_type="default speed", distance=form.mid_forms.speed.data)
-    pc_speed = PcSpeed(pc_id=pc.id, speed_id=speed.id)
-    return [pc, skills, pc_skills, speed, pc_speed]
+
+    print(pc.id)
+    return [pc, skills, speed]

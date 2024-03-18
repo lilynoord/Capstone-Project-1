@@ -6,6 +6,11 @@
     div {
         padding: 5px;
     }
+
+    .combats-article {
+        overflow: auto;
+        max-height: 3em;
+    }
 </style>
 {% for msg in get_flashed_messages() %}
 <dialog open onclick="this.close()">
@@ -36,6 +41,72 @@
         <h4>
             Combats:
         </h4>
+        <article class="combats-article">
+            <table>
+                {%for combat in combats %}
+                <tr>
+                    <td>
+                        <p><b>{{combat.name}}</b></p>
+                    </td>
+                    <td><a href="games/{{gameId}}/combat/{{combat.id}}" role="button" class="contrast">Open</a></td>
+                    <td><a href="games/{{gameId}}/combat/{{combat.id}}/delete" role="button" class="outline">Delete</a>
+                    </td>
+                </tr>
+
+                {%endfor%}
+            </table>
+
+        </article>
+    </section>
+    <section class="grid">
+        <div>
+            <h4>
+                Monsters:
+            </h4>
+            <article>
+                <table>
+                    {%for monster in monsters %}
+                    <tr>
+                        <td>{{monster.name}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+
+
+        </div>
+        <div>
+            <h4>
+                Player Characters:
+            </h4>
+            <article>
+                <table>
+                    {%for pc in pcs %}
+                    <tr>
+                        <td>{{pc.name}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+
+
+        </div>
+        <div>
+            <h4>
+                NPCs:
+            </h4>
+            <article>
+                <table>
+                    {%for npc in npcs %}
+                    <tr>
+                        <td>{{npc.name}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+
+
+        </div>
     </section>
 </section>
 {%endblock%}

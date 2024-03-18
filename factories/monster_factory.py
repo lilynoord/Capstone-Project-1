@@ -242,7 +242,9 @@ def parse_skills(m):
     return skills
 
 
-def new_monster(slug="", custom_monster=False, custom_monster_data=dict[str, str]):
+def new_monster(
+    session, slug="", custom_monster=False, custom_monster_data=dict[str, str]
+):
     """
     Handles everything involved with adding a new monster to a game, except for adding it to the database. Returns a dictionary of lists of objects, all of which should be added to the database in app.py
 
@@ -270,45 +272,49 @@ def new_monster(slug="", custom_monster=False, custom_monster_data=dict[str, str
             return "error: monster slug is not valid"
 
         new_monster = monster_factory(monster_json)
-        db_entries["creature"] = [new_monster]
+        session.add(new_monster)
         spells = parse_spells(monster_json)
         actions = parse_actions(monster_json)
         speeds = parse_speeds(monster_json)
         skills = parse_skills(monster_json)
 
-        # Add each object to db_entries, as well as a new relational object for each.
         for each in spells:
-            db_entries["spells"].append(each)
+            session.add(each)
+        for each in speeds:
+            session.add(each)
+        for each in actions:
+            for e in actions[each]:
+                session.add(e)
+        session.add(skills)
+
+        session.commit()
+        # Add a new relational object to db_entries for each object.
+        for each in spells:
+
             mtm = MonsterSpell(monster_id=new_monster.id, spell_id=each.id)
             db_entries["spells"].append(mtm)
 
         for each in speeds:
-            db_entries["speeds"].append(each)
             mtm = MonsterSpeed(monster_id=new_monster.id, speed_id=each.id)
             db_entries["speeds"].append(mtm)
-        db_entries["skills"].append(skills)
+
         db_entries["skills"].append(
-            MonsterSkills(monster_id=new_monster.id, skills_id=each.id)
+            MonsterSkills(monster_id=new_monster.id, skills_id=skills.id)
         )
 
         for each in actions["actions"]:
-            db_entries["actions"].append(each)
             mtm = MonsterAction(monster_id=new_monster.id, action_id=each.id)
             db_entries["actions"].append(mtm)
         for each in actions["bonus_actions"]:
-            db_entries["actions"].append(each)
             mtm = MonsterBonusAction(monster_id=new_monster.id, action_id=each.id)
             db_entries["actions"].append(mtm)
         for each in actions["reactions"]:
-            db_entries["actions"].append(each)
             mtm = MonsterReaction(monster_id=new_monster.id, action_id=each.id)
             db_entries["actions"].append(mtm)
         for each in actions["legendary_actions"]:
-            db_entries["actions"].append(each)
             mtm = MonsterLegendaryAction(monster_id=new_monster.id, action_id=each.id)
             db_entries["actions"].append(mtm)
         for each in actions["special_abilities"]:
-            db_entries["actions"].append(each)
             mtm = MonsterSpecialAbility(monster_id=new_monster.id, action_id=each.id)
             db_entries["actions"].append(mtm)
-        return db_entries
+        return new_monster, db_entries
