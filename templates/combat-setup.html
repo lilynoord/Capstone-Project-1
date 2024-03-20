@@ -1,0 +1,76 @@
+{%extends 'base.html' %}
+
+{%block title%}Setup Combat{%endblock%}
+
+
+
+{%block body%}
+<section>
+    <h2>: Setup</h2>
+    <div class="grid">
+        <div class="container-fluid">
+            <article>
+                <h3>Add Monsters</h3>
+                <table>
+                    <thead>
+
+                        <tr>
+                            <td>Name</td>
+                            <td>CR</td>
+                        </tr>
+                    </thead>
+                    {%for each in monsters%}
+                    <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="monster_click(event)">
+                        <td>{{each.name}}</td>
+                        <td>{{each.challenge_rating}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+            <article>
+                <h3>Add Player Characters</h3>
+                <table>
+                    {%for each in pcs%}
+                    <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="pc_click(event)">
+                        <td>{{each.name}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+            <article>
+                <h3>Add Nonplayer Characters</h3>
+                <table>
+                    {%for each in pcs%}
+                    <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="npc_click(event)">
+                        <td>{{each.name}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </article>
+        </div>
+        <div class="container-fluid">
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+    function monster_click(e) {
+        let name = e.target.parentElement.getAttribute("data-name");
+        let id = e.target.parentElement.getAttribute("data-id")
+    }
+    function pc_click(e) {
+        let name = e.target.parentElement.getAttribute("data-name");
+        let id = e.target.parentElement.getAttribute("data-id")
+    }
+    function npc_click(e) {
+        let name = e.target.parentElement.getAttribute("data-name");
+        let id = e.target.parentElement.getAttribute("data-id")
+    }
+    //When a creature is clicked, add an entry to the active box (Initiative - Name)
+    //When creature in active box is clicked, remove from active box
+    //keep a record of everything in the active box: Creature ID plus initiative
+    // When submit is clicked, send data from active box to server as json. 
+</script>
+{%endblock%}

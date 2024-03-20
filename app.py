@@ -443,7 +443,35 @@ def combat_setup_new(gameId):
 
 @app.route("/games/<int:gameId>/combat/<int:combatId>/setup")
 def combat_setup(gameId, combatId):
-    return render_template("")
+    game = Game.query.filter(Game.id == gameId).first_or_404()
+    combat = Combat.query.filter(Combat.id == combatId).first_or_404()
+    pcs_ids = GamePc.query.filter(GamePc.game_id == gameId).all()
+    npcs_ids = GameNpc.query.filter(GameNpc.game_id == gameId).all()
+    monsters_ids = GameMonster.query.filter(GameMonster.game_id == gameId).all()
+    pcs = []
+    npcs = []
+    monsters = []
+
+    for each in pcs_ids:
+        pcs.append(
+            PlayerCharacter.query.filter(PlayerCharacter.id == each.pc_id).first()
+        )
+    for each in npcs_ids:
+        npcs.append(
+            NonPlayerCharacter.query.filter(
+                NonPlayerCharacter.id == each.npc_id
+            ).first()
+        )
+    for each in monsters_ids:
+        monsters.append(Monster.query.filter(Monster.id == each.monster_id).first())
+    return render_template(
+        "combat-setup.html",
+        game=game,
+        combat=combat,
+        pcs=pcs,
+        monsters=monsters,
+        npcs=npcs,
+    )
 
 
 @app.route("/games/<int:gameId>/combat/<combatId>/setup/confirm")
