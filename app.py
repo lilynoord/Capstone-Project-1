@@ -474,19 +474,16 @@ def combat_setup(gameId, combatId):
     )
 
 
-@app.route("/games/<int:gameId>/combat/<combatId>/setup/confirm")
-def combat_setup_confirm(gameId, combatId):
-    return render_template("")
-
-
-@app.route("/games/<int:gameId>/combat/<combatId>/play/set-initiative")
-def combat_set_initiative(gameId, combatId):
-    return render_template("")
-
-
-@app.route("/games/<int:gameId>/combat/<combatId>/play/<turn>")
+@app.route(
+    "/games/<int:gameId>/combat/<combatId>/play/<int:turn>", methods=["GET", "POST"]
+)
 def combat_play(gameId, combatId, turn):
     return render_template("")
+
+
+@app.route("/games/combat/submit-combat/<int:combatId>", methods=["POST"])
+def submit_combat(combatId):
+    return True
 
 
 @app.route("/games/<int:gameId>/<pcId>")

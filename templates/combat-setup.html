@@ -5,31 +5,56 @@
 
 
 {%block body%}
+
+<style>
+    .setup-article {
+        max-height: 30em;
+        overflow: auto;
+    }
+
+    .initiative {
+        max-height: 60em;
+        overflow: auto;
+    }
+</style>
 <section>
     <h2>{{combat.name}}: Setup</h2>
     <div class="grid">
         <div class="container-fluid">
-            <article>
-                <h3>Add Monsters</h3>
+            <article class="setup-article">
+
                 <table>
                     <thead>
 
                         <tr>
-                            <td>Name</td>
+                            <td>
+                                <h3>Monsters</h3>
+                            </td>
                             <td>CR</td>
                         </tr>
                     </thead>
-                    {%for each in monsters%}
-                    <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="monster_click(event)">
-                        <td>{{each.name}}</td>
-                        <td>{{each.challenge_rating}}</td>
-                    </tr>
-                    {%endfor%}
+                    <tbody class="setup-table">
+
+                        {%for each in monsters%}
+                        <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="monster_click(event)">
+                            <td>{{each.name}}</td>
+                            <td>{{each.challenge_rating}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
                 </table>
             </article>
-            <article>
-                <h3>Add Player Characters</h3>
+            <article class="setup-article">
+
                 <table>
+                    <thead>
+
+                        <tr>
+                            <td>
+                                <h3>Player Characters</h3>
+                            </td>
+                        </tr>
+                    </thead>
                     {%for each in pcs%}
                     <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="pc_click(event)">
                         <td>{{each.name}}</td>
@@ -37,9 +62,17 @@
                     {%endfor%}
                 </table>
             </article>
-            <article>
-                <h3>Add Nonplayer Characters</h3>
+            <article class="setup-article">
+
                 <table>
+                    <thead>
+
+                        <tr>
+                            <td>
+                                <h3>Nonplayer Characters</h3>
+                            </td>
+                        </tr>
+                    </thead>
                     {%for each in pcs%}
                     <tr data-name="{{each.name}}" data-id="{{each.id}}" onclick="npc_click(event)">
                         <td>{{each.name}}</td>
@@ -49,28 +82,81 @@
             </article>
         </div>
         <div class="container-fluid">
+            <article class="initiative">
+                <table id="initiative-table">
+                    <thead>
+                        <tr>
+                            <td>Initiative</td>
+                            <td>Creature</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody id="init-body"></tbody>
+                </table>
+            </article>
+            <div>
+                <form class='container-fluid' action="/games/{{game.id}}/combat/{{combat.id}}/play/0"><input
+                        type="submit" onClick="submit_setup(event)">Complete Setup</button></form>
 
+            </div>
         </div>
     </div>
 </section>
 
 
 <script>
+    let entity_list = [];
+    let entity_count = 0;
     function monster_click(e) {
         let name = e.target.parentElement.getAttribute("data-name");
-        let id = e.target.parentElement.getAttribute("data-id")
+        let id = e.target.parentElement.getAttribute("data-id");
+        add_to_initiative(name, id, "monster");
     }
     function pc_click(e) {
         let name = e.target.parentElement.getAttribute("data-name");
-        let id = e.target.parentElement.getAttribute("data-id")
+        let id = e.target.parentElement.getAttribute("data-id");
+        add_to_initiative(name, id, "pc");
     }
     function npc_click(e) {
         let name = e.target.parentElement.getAttribute("data-name");
-        let id = e.target.parentElement.getAttribute("data-id")
+        let id = e.target.parentElement.getAttribute("data-id");
+        add_to_initiative(name, id, "npc");
+    }
+
+    function add_to_initiative(name, id, kind) {
+        initiative = document.querySelector("#init-body");
+        console.log(name);
+        newRow = initiative.insertRow();
+        newCell1 = newRow.insertCell();
+        newCell2 = newRow.insertCell();
+        newCell3 = newRow.insertCell();
+        newCell2.innerHTML = name;
+        newCell1.innerHTML = `<input id='${entity_count}' type='number' class='init-input' oninput='update_initiative(event)' value=10>`;
+        newCell3.innerHTML = `<button id='${entity_count}' class='contrast outline init-del' onclick='remove_from_initiative(event)'>x</button>`;
+        entity_list.push({ 'name': name, 'id': id, 'kind': kind, 'initiative': 10 });
+        entity_count += 1;
+        console.log(entity_list);
+
+    }
+
+    function remove_from_initiative(e) {
+        e.target.parentElement.parentElement.parentElement.deleteRow(e.target.parentElement.parentElement.rowIndex - 1);
+        entity_list[e.target.id] = "REMOVED";
+
+
+
+    }
+
+    function update_initiative(e) {
+        entity_list[e.target.id]['initiative'] = parseInt(e.target.value)
     }
     //When a creature is clicked, add an entry to the active box (Initiative - Name)
     //When creature in active box is clicked, remove from active box
     //keep a record of everything in the active box: Creature ID plus initiative
     // When submit is clicked, send data from active box to server as json. 
+
+    function submit_setup(e) {
+
+    }
 </script>
 {%endblock%}
