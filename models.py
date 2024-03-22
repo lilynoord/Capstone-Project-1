@@ -57,33 +57,6 @@ class Combat(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey("games.id"))
 
 
-class CombatMonster(db.Model):
-    """"""
-
-    __tablename__ = "combats_monsters"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    combat_id = db.Column(db.Integer, db.ForeignKey("combats.id"))
-    monster_id = db.Column(db.Integer, db.ForeignKey("monsters.id"))
-
-
-class CombatPc(db.Model):
-    """"""
-
-    __tablename__ = "combats_pcs"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    combat_id = db.Column(db.Integer, db.ForeignKey("combats.id"))
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-
-
-class CombatNpc(db.Model):
-    """"""
-
-    __tablename__ = "combats_npcs"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    combat_id = db.Column(db.Integer, db.ForeignKey("combats.id"))
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-
-
 class TempMonster(db.Model):
     """Temporary monster stats"""
 
@@ -95,6 +68,7 @@ class TempMonster(db.Model):
     current_hit_points = db.Column(db.Integer, nullable=False)
     concentration = db.Column(db.BOOLEAN, nullable=False)
     status_effects = db.Column(db.ARRAY(db.Text), nullable=False)
+    initiative = db.Column(db.Integer, nullable=False)
 
 
 class TempPc(db.Model):
@@ -106,6 +80,7 @@ class TempPc(db.Model):
     current_hit_points = db.Column(db.Integer, nullable=False)
     concentration = db.Column(db.BOOLEAN, nullable=False)
     status_effects = db.Column(db.ARRAY(db.Text), nullable=False)
+    initiative = db.Column(db.Integer, nullable=False)
 
 
 class TempNpc(db.Model):
@@ -117,6 +92,7 @@ class TempNpc(db.Model):
     current_hit_points = db.Column(db.Integer, nullable=False)
     concentration = db.Column(db.BOOLEAN, nullable=False)
     status_effects = db.Column(db.ARRAY(db.Text), nullable=False)
+    initiative = db.Column(db.Integer, nullable=False)
 
 
 class Monster(db.Model):

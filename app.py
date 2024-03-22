@@ -11,9 +11,6 @@ from models import (
     GamePc,
     GameNpc,
     Combat,
-    CombatMonster,
-    CombatPc,
-    CombatNpc,
     Monster,
     PlayerCharacter,
     NonPlayerCharacter,
@@ -33,6 +30,9 @@ from models import (
     Speed,
     Skills,
     Spell,
+    TempMonster,
+    TempNpc,
+    TempPc,
 )
 from api_handler import *
 from factories.monster_factory import new_monster
@@ -478,12 +478,57 @@ def combat_setup(gameId, combatId):
     "/games/<int:gameId>/combat/<combatId>/play/<int:turn>", methods=["GET", "POST"]
 )
 def combat_play(gameId, combatId, turn):
-    return render_template("")
+    return render_template("base.html")
 
 
 @app.route("/games/combat/submit-combat/<int:combatId>", methods=["POST"])
 def submit_combat(combatId):
-    return True
+    entity_list = request.json["entity_list"]
+    combat = Combat.query.filter(Combat.id == combatId).first_or_404()
+    for each in entity_list:
+        if each["kind"] == "monster":
+            entity = Monster.query.filter(Monster.id == int(each["id"])).first_or_404()
+            temp_entity = TempMonster(
+                combat_id=combatId,
+                monster_id=entity.id,
+                max_hit_points=entity.max_hit_points,
+                current_hit_points=entity.max_hit_points,
+                concentration=False,
+                status_effects=[],
+                initiative=each["initiative"],
+            )
+            db.session.add(temp_entity)
+        elif each["kind"] == "pc":
+            entity = PlayerCharacter.query.filter(
+                PlayerCharacter.id == int(each["id"])
+            ).first_or_404()
+            temp_entity = TempPc(
+                combat_id=combatId,
+                pc_id=entity.id,
+                max_hit_points=entity.max_hit_points,
+                current_hit_points=entity.max_hit_points,
+                concentration=False,
+                status_effects=[],
+                initiative=each["initiative"],
+            )
+            db.session.add(temp_entity)
+        elif each["kind"] == "npc":
+            entity = NonPlayerCharacter.query.filter(
+                NonPlayerCharacter.id == int(each["id"])
+            ).first_or_404()
+            temp_entity = TempNpc(
+                combat_id=combatId,
+                npc_id=entity.id,
+                max_hit_points=entity.max_hit_points,
+                current_hit_points=entity.max_hit_points,
+                concentration=False,
+                status_effects=[],
+                initiative=each["initiative"],
+            )
+            db.session.add(temp_entity)
+    db.session.commit()
+    print(entity_list)
+    return request
 
 
 @app.route("/games/<int:gameId>/<pcId>")
