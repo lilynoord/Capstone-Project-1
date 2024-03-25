@@ -474,61 +474,103 @@ def combat_setup(gameId, combatId):
     )
 
 
+def sortInitiative(val):
+    return val.initiative
+
+
 @app.route(
-    "/games/<int:gameId>/combat/<combatId>/play/<int:turn>", methods=["GET", "POST"]
+    "/games/<int:gameId>/combat/<int:combatId>/play/<int:turn>", methods=["GET", "POST"]
 )
 def combat_play(gameId, combatId, turn):
-    return render_template("base.html")
+    combat = Combat.query.filter(Combat.id == combatId).first_or_404()
+    game = Game.query.filter(Game.id == gameId).first_or_404()
+    entity_list = []
+    for each in TempMonster.query.filter(TempMonster.combat_id == combatId):
+        entity_list.append(each)
+    for each in TempPc.query.filter(TempPc.combat_id == combatId):
+        entity_list.append(each)
+    for each in TempNpc.query.filter(TempNpc.combat_id == combatId):
+        entity_list.append(each)
+    print("ENTITIES", entity_list)
+    entity_list.sort(key=sortInitiative)
+    entity_list_verbose = []
+    for each in entity_list:
+        if type(each) == TempMonster:
+            a = Monster.query.filter(Monster.id == each.monster_id).first_or_404()
+        elif type(each) == TempPc:
+            a = PlayerCharacter.query.filter(
+                PlayerCharacter.id == each.pc_id
+            ).first_or_404()
+        elif type(each) == TempNpc:
+            a = NonPlayerCharacter.query.filter(
+                NonPlayerCharacter.id == each.npc_id
+            ).first_or_404()
+        entity_list_verbose.append(a)
+    print("ENTITIES", entity_list)
+    return render_template(
+        "combat.html",
+        game=game,
+        combat=combat,
+        entity_list=entity_list,
+        entity_list_verbose=entity_list_verbose,
+    )
 
 
 @app.route("/games/combat/submit-combat/<int:combatId>", methods=["POST"])
 def submit_combat(combatId):
-    entity_list = request.json["entity_list"]
+    print("REQUEST:", request.json)
+    entity_list = request.json[
+        "entity_list"
+    ]  #! TODO: No request? Clearly the js here doesn't work.
+    print("ENTITY_LIST", entity_list)
     combat = Combat.query.filter(Combat.id == combatId).first_or_404()
     for each in entity_list:
-        if each["kind"] == "monster":
-            entity = Monster.query.filter(Monster.id == int(each["id"])).first_or_404()
-            temp_entity = TempMonster(
-                combat_id=combatId,
-                monster_id=entity.id,
-                max_hit_points=entity.max_hit_points,
-                current_hit_points=entity.max_hit_points,
-                concentration=False,
-                status_effects=[],
-                initiative=each["initiative"],
-            )
-            db.session.add(temp_entity)
-        elif each["kind"] == "pc":
-            entity = PlayerCharacter.query.filter(
-                PlayerCharacter.id == int(each["id"])
-            ).first_or_404()
-            temp_entity = TempPc(
-                combat_id=combatId,
-                pc_id=entity.id,
-                max_hit_points=entity.max_hit_points,
-                current_hit_points=entity.max_hit_points,
-                concentration=False,
-                status_effects=[],
-                initiative=each["initiative"],
-            )
-            db.session.add(temp_entity)
-        elif each["kind"] == "npc":
-            entity = NonPlayerCharacter.query.filter(
-                NonPlayerCharacter.id == int(each["id"])
-            ).first_or_404()
-            temp_entity = TempNpc(
-                combat_id=combatId,
-                npc_id=entity.id,
-                max_hit_points=entity.max_hit_points,
-                current_hit_points=entity.max_hit_points,
-                concentration=False,
-                status_effects=[],
-                initiative=each["initiative"],
-            )
-            db.session.add(temp_entity)
+        if each != "REMOVED":
+            if each["kind"] == "monster":
+                entity = Monster.query.filter(
+                    Monster.id == int(each["id"])
+                ).first_or_404()
+                temp_entity = TempMonster(
+                    combat_id=combatId,
+                    monster_id=entity.id,
+                    max_hit_points=entity.max_hit_points,
+                    current_hit_points=entity.max_hit_points,
+                    concentration=False,
+                    status_effects=[],
+                    initiative=each["initiative"],
+                )
+                db.session.add(temp_entity)
+            elif each["kind"] == "pc":
+                entity = PlayerCharacter.query.filter(
+                    PlayerCharacter.id == int(each["id"])
+                ).first_or_404()
+                temp_entity = TempPc(
+                    combat_id=combatId,
+                    pc_id=entity.id,
+                    max_hit_points=entity.max_hit_points,
+                    current_hit_points=entity.max_hit_points,
+                    concentration=False,
+                    status_effects=[],
+                    initiative=each["initiative"],
+                )
+                db.session.add(temp_entity)
+            elif each["kind"] == "npc":
+                entity = NonPlayerCharacter.query.filter(
+                    NonPlayerCharacter.id == int(each["id"])
+                ).first_or_404()
+                temp_entity = TempNpc(
+                    combat_id=combatId,
+                    npc_id=entity.id,
+                    max_hit_points=entity.max_hit_points,
+                    current_hit_points=entity.max_hit_points,
+                    concentration=False,
+                    status_effects=[],
+                    initiative=each["initiative"],
+                )
+                db.session.add(temp_entity)
     db.session.commit()
     print(entity_list)
-    return request
+    return "True"
 
 
 @app.route("/games/<int:gameId>/<pcId>")

@@ -87,7 +87,7 @@ class TempNpc(db.Model):
     __tablename__ = "temp_npcs"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     combat_id = db.Column(db.Integer, db.ForeignKey("combats.id"))
-    pc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
     max_hit_points = db.Column(db.Integer, nullable=False)
     current_hit_points = db.Column(db.Integer, nullable=False)
     concentration = db.Column(db.BOOLEAN, nullable=False)

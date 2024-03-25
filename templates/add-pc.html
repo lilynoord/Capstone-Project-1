@@ -566,7 +566,7 @@
             e.target.parentNode.previousElementSibling.value = parseInt(e.target.parentNode.previousElementSibling.value) + parseInt(document.querySelector('#proficiency_bonus').value);
 
         } else {
-            e.target.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${e.target.parentNode.previousElementSibling.classList[1]}"]`).value - 10) / 2);
+            e.target.parentNode.previousElementSibling.value = Math.floor((document.querySelector(`input[data-skill="${e.target.parentNode.previousElementSibling.classList[2]}"]`).value - 10) / 2);
 
         }
 

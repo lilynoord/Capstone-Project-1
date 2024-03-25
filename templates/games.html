@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {%block title%}My Games{%endblock%}
+
+{%block body%}
 <style>
     button {
         padding: 1px
     }
 </style>
-{%block body%}
 <section class="container-fluid">
     {%for game in games%}
     <div class="grid" style="padding:5px">

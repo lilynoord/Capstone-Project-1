@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{%block title%}{{combat.name}}{%endblock%}
+
+{%block body%}
+
+
+<table>
+
+    {%for i in range(0,entity_list|length) %}
+    <tr>
+
+        <td>{{entity_list_verbose[i].name}}</td>
+        <td>{{entity_list[i].current_hit_points}}</td>
+    </tr>
+    {%endfor%}
+</table>
+
+
+
+
+{%endblock%}
