@@ -4,19 +4,141 @@
 
 {%block body%}
 
+<style>
+    details summary {
+        font-size: 20px;
+        list-style-type: disclosure-closed;
+        cursor: pointer;
+        margin-bottom: -10px;
+        transition: margin 1.5s ease-out;
+    }
 
+    details[open] summary {
+        list-style-type: disclosure-open;
+        margin-bottom: 10px;
+    }
+</style>
 <table>
 
-    {%for i in range(0,entity_list|length) %}
+    {%for i in range(0,entity_count) %}
     <tr>
+        <td>
+            <div class="container-fluid">
+                <h3>{{entities[i]['verbose'].name}}</h3>
+                {% if entities[i]['actions'] != []%}
+                <details>
+                    <summary>
+                        Actions
+                    </summary>
+                    <hr>
+                    <div class="grid">
+                        {%for each in entities[i]['actions']%}
+                        <button onClick="show_action(event)">{{each.name}}</button>
+                        <dialog onClick="this.close()">
+                            <article>
+                                <header>
+                                    <h3>{{each.name}}</h3>
+                                </header>
+                                {{each.desc}}
+                            </article>
+                        </dialog>
+                        {%endfor%}
+                    </div>
 
-        <td>{{entity_list_verbose[i].name}}</td>
-        <td>{{entity_list[i].current_hit_points}}</td>
+                </details>
+                {%endif%}
+
+
+                {% if entities[i]['bonusActions'] != []%}
+                <details>
+                    <summary>
+                        Bonus Actions
+                    </summary>
+                    <hr>
+                    <div class="grid">
+                        {%for each in entities[i]['bonusActions']%}
+                        <button onClick="show_action(event)">{{each.name}}</button>
+                        <dialog onClick="this.close()">
+                            <article>
+                                <header>
+                                    <h3>{{each.name}}</h3>
+                                </header>
+                                {{each.desc}}
+                            </article>
+                        </dialog>
+                        {%endfor%}
+                    </div>
+            </div>
+            </details>
+            {%endif%}
+
+            {% if entities[i]['legendaryActions'] != []%}
+            <details>
+                <summary>
+                    Legendary Actions
+                </summary>
+                <hr>
+                <div class="grid">
+                    {%for each in entities[i]['legendaryActions']%}
+                    <button onClick="show_action(event)">{{each.name}}</button>
+                    <dialog onClick="this.close()">
+                        <article>
+                            <header>
+                                <h3>{{each.name}}</h3>
+                            </header>
+                            {{each.desc}}
+                        </article>
+                    </dialog>
+                    {%endfor%}
+                </div>
+                </div>
+            </details>
+            {%endif%}
+            {% if entities[i]['spells'] != []%}
+            <details>
+                <summary>
+                    Spells
+                </summary>
+                <hr>
+                <div style="display:block">
+                    {%for each in entities[i]['spells']%}
+                    <button class="spell-button" onClick="show_action(event)">{{each.name}}</button>
+                    <dialog onClick="this.close()">
+                        <article>
+                            <header>
+                                <h3>{{each.name}}</h3>
+                                <hr style="margin:10px">
+                                <div class="grid">
+                                    <h6>Level: {{each.level}}</h6>
+                                    <h6>Casting Time: {{each.casting_time}}</h6>
+                                    <h6>Duration: {{each.duration}}</h6>
+                                </div>
+                                <div class="grid">
+                                    <h6>Concentration: {{each.requires_concentration}}</h6>
+                                    <h6>Range: {{each.range}}</h6>
+                                    <h6>Spell School: {{each.school}}</h6>
+                                </div>
+
+                            </header>
+                            {{each.desc}}
+                        </article>
+                    </dialog>
+                    {%endfor%}
+                </div>
+                </div>
+            </details>
+            {%endif%}
+            </div>
+        </td>
+
     </tr>
     {%endfor%}
 </table>
 
 
 
+<script src="/static/combat.js">
 
+
+</script>
 {%endblock%}

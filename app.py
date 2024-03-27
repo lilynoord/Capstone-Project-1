@@ -478,13 +478,16 @@ def sortInitiative(val):
     return val.initiative
 
 
-@app.route(
-    "/games/<int:gameId>/combat/<int:combatId>/play/<int:turn>", methods=["GET", "POST"]
-)
-def combat_play(gameId, combatId, turn):
+@app.route("/games/<int:gameId>/combat/<int:combatId>/play", methods=["GET", "POST"])
+def combat_play(
+    gameId,
+    combatId,
+):
     combat = Combat.query.filter(Combat.id == combatId).first_or_404()
     game = Game.query.filter(Game.id == gameId).first_or_404()
     entity_list = []
+
+    # Get all the entities in the combat and put them in an unordered list
     for each in TempMonster.query.filter(TempMonster.combat_id == combatId):
         entity_list.append(each)
     for each in TempPc.query.filter(TempPc.combat_id == combatId):
@@ -492,38 +495,159 @@ def combat_play(gameId, combatId, turn):
     for each in TempNpc.query.filter(TempNpc.combat_id == combatId):
         entity_list.append(each)
     print("ENTITIES", entity_list)
-    entity_list.sort(key=sortInitiative)
-    entity_list_verbose = []
+
+    # sort the entities by their initiative
+    entity_list.sort(key=sortInitiative, reverse=True)
+    entity_dict = {}
+
+    # In the sorted order, give each entity its own unique initiative 'id'
+    initiative_counter = 0
+    for each in entity_list:
+        each.initiative = initiative_counter
+        initiative_counter += 1
+
     for each in entity_list:
         if type(each) == TempMonster:
-            a = Monster.query.filter(Monster.id == each.monster_id).first_or_404()
+            a = generate_monster_dict(each)
         elif type(each) == TempPc:
-            a = PlayerCharacter.query.filter(
-                PlayerCharacter.id == each.pc_id
-            ).first_or_404()
+            a = {
+                "temp": each,
+                "verbose": PlayerCharacter.query.filter(
+                    PlayerCharacter.id == each.pc_id
+                ).first_or_404(),
+                "actions": [],
+                "bonusActions": [],
+                "reactions": [],
+                "legendaryActions": [],
+                "specials": [],
+                "speeds": [],
+                "spells": [],
+                "skills": [],
+            }
         elif type(each) == TempNpc:
-            a = NonPlayerCharacter.query.filter(
-                NonPlayerCharacter.id == each.npc_id
-            ).first_or_404()
-        entity_list_verbose.append(a)
+            a = {
+                "temp": each,
+                "verbose": NonPlayerCharacter.query.filter(
+                    NonPlayerCharacter.id == each.npc_id
+                ).first_or_404(),
+                "actions": [],
+                "bonusActions": [],
+                "reactions": [],
+                "legendaryActions": [],
+                "specials": [],
+                "speeds": [],
+                "spells": [],
+                "skills": [],
+            }
+        entity_dict[each.initiative] = a
+
     print("ENTITIES", entity_list)
     return render_template(
         "combat.html",
         game=game,
         combat=combat,
-        entity_list=entity_list,
-        entity_list_verbose=entity_list_verbose,
+        entities=entity_dict,
+        entity_count=initiative_counter,
     )
+
+
+def generate_monster_dict(entity):
+    verbose = Monster.query.filter(Monster.id == entity.monster_id).first_or_404()
+    entityActions = MonsterAction.query.filter(
+        MonsterAction.monster_id == verbose.id
+    ).all()
+    entityBonusActions = MonsterBonusAction.query.filter(
+        MonsterBonusAction.monster_id == verbose.id
+    ).all()
+    entityReactions = MonsterReaction.query.filter(
+        MonsterReaction.monster_id == verbose.id
+    ).all()
+    entityLegendary = MonsterLegendaryAction.query.filter(
+        MonsterLegendaryAction.monster_id == verbose.id
+    ).all()
+
+    entitySpecials = MonsterSpecialAbility.query.filter(
+        MonsterSpecialAbility.monster_id == verbose.id
+    ).all()
+    entitySpeeds = MonsterSpeed.query.filter(
+        MonsterSpeed.monster_id == verbose.id
+    ).all()
+    entitySkills = MonsterSkills.query.filter(
+        MonsterSkills.monster_id == verbose.id
+    ).all()
+    entitySpells = MonsterSpell.query.filter(
+        MonsterSpell.monster_id == verbose.id
+    ).all()
+
+    actions = []
+    bonusActions = []
+    reactions = []
+    legendaryActions = []
+    specials = []
+    speeds = []
+    skills = []
+    spells = []
+
+    for each in entityActions:
+        actions.append(Action.query.filter(Action.id == each.action_id).first())
+    for each in entityBonusActions:
+        bonusActions.append(Action.query.filter(Action.id == each.action_id).first())
+    for each in entityReactions:
+        reactions.append(Action.query.filter(Action.id == each.action_id).first())
+    for each in entityLegendary:
+        legendaryActions.append(
+            Action.query.filter(Action.id == each.action_id).first()
+        )
+    for each in entitySpecials:
+        specials.append(Action.query.filter(Action.id == each.action_id).first())
+
+    for each in entitySpeeds:
+        speeds.append(Speed.query.filter(Speed.id == each.speed_id).first())
+    for each in entitySkills:
+        skills.append(Skills.query.filter(Skills.id == each.skills_id).first())
+    for each in entitySpells:
+        spells.append(Spell.query.filter(Spell.id == each.spell_id).first())
+    return {
+        "temp": entity,
+        "verbose": verbose,
+        "actions": actions,
+        "bonusActions": bonusActions,
+        "reactions": reactions,
+        "legendaryActions": legendaryActions,
+        "specials": specials,
+        "speeds": speeds,
+        "spells": spells,
+        "skills": skills,
+    }
+
+
+""" Entity Dict Format:
+    entity_dict = {
+        initiative: {
+            'temp': TempMonster | TempPc | TempNpc,
+            'verbose': Monster | PlayerCharacter | NonPlayerCharacter,
+            'actions': [Action],
+            'bonusActions': [Action],
+            'reactions': [Action],
+            'legendaryActions': [Action],
+            'specials':[Action],
+            'speeds':[Speed],
+            'spells': [Spells],
+            'skills': [Skills]
+        }
+    }
+    
+    
+    """
 
 
 @app.route("/games/combat/submit-combat/<int:combatId>", methods=["POST"])
 def submit_combat(combatId):
     print("REQUEST:", request.json)
-    entity_list = request.json[
-        "entity_list"
-    ]  #! TODO: No request? Clearly the js here doesn't work.
+    entity_list = request.json["entity_list"]
     print("ENTITY_LIST", entity_list)
     combat = Combat.query.filter(Combat.id == combatId).first_or_404()
+    initiative_counter = 0
     for each in entity_list:
         if each != "REMOVED":
             if each["kind"] == "monster":
