@@ -33,6 +33,8 @@ from models import (
     TempMonster,
     TempNpc,
     TempPc,
+    PcAction,
+    NpcAction,
 )
 from api_handler import *
 from factories.monster_factory import new_monster
@@ -95,10 +97,16 @@ def login():
                 flash("User not found", "error")
                 redirect("/login")
         else:
-            newUser = User(name=form.name.data, password=form.password.data)
-            db.session.add(newUser)
-            db.session.commit()
-            current_user_key = User.query.where(User.name == form.name.data).first().id
+            if not User.query.filter(User.name == form.name.data).first():
+                newUser = User(name=form.name.data, password=form.password.data)
+                db.session.add(newUser)
+                db.session.commit()
+                current_user_key = (
+                    User.query.where(User.name == form.name.data).first().id
+                )
+            else:
+                flash("Username already exists", "error")
+                redirect("/login")
         html = redirect("/games")
         response = make_response(html)
         response.set_cookie("user_id", str(current_user_key))
@@ -280,12 +288,6 @@ def commit_creature_to_game(gameId):
     return response
 
 
-@app.route("/games/<int:gameId>/add/creature/custom")
-def add_custom_creature_to_game(gameId):
-    # TODO: Add creature form
-    return render_template("")
-
-
 class_choices = [
     ("Barbarian", "Barbarian"),
     ("Bard", "Bard"),
@@ -375,7 +377,10 @@ def add_pc_to_game(gameId):
         skills = obj_list[1]
         speed = obj_list[2]
 
-        for each in obj_list:
+        db.session.add(speed)
+        db.session.add(skills)
+        db.session.add(pc)
+        for each in obj_list[3]:
             db.session.add(each)
         db.session.commit()
 
@@ -385,6 +390,10 @@ def add_pc_to_game(gameId):
         db.session.add(pc_speed)
         game_pc = GamePc(game_id=int(gameId), pc_id=pc.id)
         db.session.add(game_pc)
+
+        for each in obj_list[3]:
+            pcAction = PcAction(pc_id=pc.id, action_id=each.id)
+            db.session.add(pcAction)
         db.session.commit()
 
         flash(f"{pc.name} added to {Game.query.where(Game.id == gameId).first().name}")
@@ -409,7 +418,10 @@ def add_npc_to_game(gameId):
         npc = obj_list[0]
         skills = obj_list[1]
         speed = obj_list[2]
-        for each in obj_list:
+        db.session.add(speed)
+        db.session.add(skills)
+        db.session.add(npc)
+        for each in obj_list[3]:
             db.session.add(each)
         db.session.commit()
         npc_skills = NpcSkills(npc_id=npc.id, skills_id=skills.id)
@@ -418,16 +430,13 @@ def add_npc_to_game(gameId):
         db.session.add(npc_speed)
         game_npc = GameNpc(game_id=int(gameId), npc_id=npc.id)
         db.session.add(game_npc)
+        for each in obj_list[3]:
+            npcAction = NpcAction(npc_id=npc.id, action_id=each.id)
+            db.session.add(npcAction)
         db.session.commit()
         flash(f"{npc.name} added to {Game.query.where(Game.id == gameId).first().name}")
         return redirect(f"/games/{gameId}/add")
     return render_template("add-npc.html", form=form)
-
-
-@app.route("/games/<int:gameId>/combat/<int:combatId>")
-def combat_master(gameId, combatId):
-    # TODO: option to either setup combat or start combat
-    return render_template("base.html")
 
 
 @app.route("/games/<int:gameId>/combat/new", methods=["GET", "POST"])
@@ -474,11 +483,29 @@ def combat_setup(gameId, combatId):
     )
 
 
+@app.route("/update-health", methods=["POST"])
+def update_health():
+
+    eType = request.json["eType"]
+    print(eType)
+    eId = int(request.json["eid"])
+    if eType == "TempMonster":
+        entity = TempMonster.query.filter(TempMonster.id == eId).first_or_404()
+    elif eType == "TempPc":
+        entity = TempPc.query.filter(TempPc.id == eId).first_or_404()
+    elif eType == "TempNpc":
+        entity = TempNpc.query.filter(TempNpc.id == eId).first_or_404()
+    print(entity)
+    entity.current_hit_points += request.json["value"]
+    db.session.commit()
+    return str(entity.current_hit_points)
+
+
 def sortInitiative(val):
     return val.initiative
 
 
-@app.route("/games/<int:gameId>/combat/<int:combatId>/play", methods=["GET", "POST"])
+@app.route("/games/<int:gameId>/combat/<int:combatId>/play", methods=["GET"])
 def combat_play(
     gameId,
     combatId,
@@ -510,12 +537,15 @@ def combat_play(
         if type(each) == TempMonster:
             a = generate_monster_dict(each)
         elif type(each) == TempPc:
+            actions = []
+            for i in PcAction.query.filter(PcAction.pc_id == each.pc_id).all():
+                actions.append(Action.query.filter(Action.id == i.action_id).first())
             a = {
                 "temp": each,
                 "verbose": PlayerCharacter.query.filter(
                     PlayerCharacter.id == each.pc_id
                 ).first_or_404(),
-                "actions": [],
+                "actions": actions,
                 "bonusActions": [],
                 "reactions": [],
                 "legendaryActions": [],
@@ -525,12 +555,15 @@ def combat_play(
                 "skills": [],
             }
         elif type(each) == TempNpc:
+            actions = []
+            for i in NpcAction.query.filter(NpcAction.npc_id == each.npc_id).all():
+                actions.append(Action.query.filter(Action.id == i.action_id).first())
             a = {
                 "temp": each,
                 "verbose": NonPlayerCharacter.query.filter(
                     NonPlayerCharacter.id == each.npc_id
                 ).first_or_404(),
-                "actions": [],
+                "actions": actions,
                 "bonusActions": [],
                 "reactions": [],
                 "legendaryActions": [],
@@ -695,26 +728,6 @@ def submit_combat(combatId):
     db.session.commit()
     print(entity_list)
     return "True"
-
-
-@app.route("/games/<int:gameId>/<pcId>")
-def view_pc(pcId):
-    return render_template("")
-
-
-@app.route("/games/<int:gameId>/list_monsters")
-def list_monsters(gameId):
-    return render_template("gameMonsters")
-
-
-@app.route("/games/<int:gameId>/list_monsters/<monsterId>")
-def view_monster(monsterId):
-    return render_template("viewMonster.html")
-
-
-@app.route("/games/<int:gameId>/<npcId>")
-def view_npc(npcId):
-    return render_template("")
 
 
 def create_new_monster(slug):

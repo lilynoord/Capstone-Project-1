@@ -336,6 +336,28 @@
     select[multiple] option:checked {
         background-color: rgb(184, 184, 184);
     }
+
+    li.action-li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul {
+        padding: 0;
+    }
+
+    .hit_dice_grid {
+        padding: 0;
+    }
+
+    #mid_forms-hit_dice_type {
+        margin: 0;
+    }
+
+    h4 {
+        padding: 0
+    }
 </style>
 <!-- Todo: Work on the styling of this.  -->
 <section class="container">
@@ -504,13 +526,21 @@
                     </div>
                     <div class="hit_dice">
                         <h5>Hit Dice</h5>
-                        <div class="grid">
+                        <div class="hit_dice_grid grid">
                             {{form.mid_forms.hit_dice_count(class_="pico-override")}}<h4>d</h4>
                             {{form.mid_forms.hit_dice_type(class_="pico-override")}}
                         </div>
                     </div>
                 </div>
-                <div class="actions"></div>
+                <div class="actions">
+                    <h5>Actions</h5>
+
+                    {{form.actions}}
+                    <div class='grid'><button class="outline contrast" onClick="add_action(event)">Add Action</button>
+                        <button class="contrast" onClick="remove_action(event)">Remove Action</button>
+                    </div>
+
+                </div>
             </div>
             <div class="right">
                 <div class="dmg">

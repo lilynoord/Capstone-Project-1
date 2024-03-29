@@ -79,3 +79,21 @@ window.onmousedown = function (e) {
 		el.parentNode.parentNode.replaceChild(select, el.parentNode);
 	}
 };
+function add_action(e) {
+	e.preventDefault();
+	let actions = document.querySelectorAll("li.action-li");
+	let actionCount = actions.length;
+	e.target.parentElement.previousElementSibling.insertAdjacentHTML(
+		"beforeend",
+		`<li name='action-${actionCount}' class='action-li'><div class='container-fluid'><input id="actions ${actionCount}-name" name="actions ${actionCount}-name" required="" type="text" value="" placeholder='Action Name'><textarea id="actions ${actionCount}-desc" name="actions ${actionCount}-desc" required="" placeholder='Action Description'></textarea></div></li>`
+	);
+}
+
+function remove_action(e) {
+	e.preventDefault();
+	let actions = document.querySelectorAll("li.action-li");
+	let actionCount = actions.length - 1;
+
+	let toDelete = document.querySelector(`li[name=action-${actionCount}]`);
+	toDelete.remove();
+}

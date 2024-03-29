@@ -8,7 +8,7 @@ from wtforms import (
     FormField,
     TextAreaField,
     SelectMultipleField,
-    RadioField,
+    FieldList,
 )
 from wtforms.validators import DataRequired, optional
 from wtforms.csrf.core import CSRFTokenField
@@ -260,6 +260,11 @@ class DamageForms(FlaskForm):
     )
 
 
+class ActionForm(FlaskForm):
+    name = StringField("Action Name", validators=[DataRequired()])
+    desc = TextAreaField("Action Description", validators=[DataRequired()])
+
+
 class AddPcForm(FlaskForm):
     header_forms = FormField(HeaderForms)
     ability_forms = FormField(AbilityForms)
@@ -270,6 +275,9 @@ class AddPcForm(FlaskForm):
     saving_throws = FormField(SavingThrows)
     skill_forms = FormField(SkillForms)
     damage_forms = FormField(DamageForms)
+    actions = FieldList(
+        FormField(ActionForm), min_entries=0, max_entries=15, separator=" "
+    )
 
 
 class NewCombatForm(FlaskForm):

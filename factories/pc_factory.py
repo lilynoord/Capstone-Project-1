@@ -1,10 +1,4 @@
-from models import (
-    PlayerCharacter,
-    PcSpeed,
-    PcSkills,
-    Speed,
-    Skills,
-)
+from models import PlayerCharacter, PcSpeed, PcSkills, Speed, Skills, Action
 
 
 def pc_factory(form):
@@ -70,11 +64,17 @@ def skills_factory(skill):
     )
 
 
+def action_factory(action):
+    return Action(name=action["name"], desc=action["desc"], action_type="Action")
+
+
 def new_pc(form):
     pc = pc_factory(form)
     skills = skills_factory(form.skill_forms)
-
+    actions = []
+    for each in form.actions.entries:
+        actions.append(action_factory(each.data))
     speed = Speed(speed_type="default speed", distance=form.mid_forms.speed.data)
 
     print(pc.id)
-    return [pc, skills, speed]
+    return [pc, skills, speed, actions]

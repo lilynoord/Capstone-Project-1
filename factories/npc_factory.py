@@ -1,10 +1,4 @@
-from models import (
-    NonPlayerCharacter,
-    NpcSpeed,
-    NpcSkills,
-    Speed,
-    Skills,
-)
+from models import NonPlayerCharacter, NpcSpeed, NpcSkills, Speed, Skills, Action
 
 
 def npc_factory(form):
@@ -68,9 +62,16 @@ def skills_factory(skill):
     )
 
 
+def action_factory(action):
+    return Action(name=action["name"], desc=action["desc"], action_type="Action")
+
+
 def new_npc(form):
     npc = npc_factory(form)
     skills = skills_factory(form.skill_forms)
+    actions = []
+    for each in form.actions.entries:
+        actions.append(action_factory(each.data))
     speed = Speed(speed_type="default speed", distance=form.mid_forms.speed.data)
 
-    return [npc, skills, speed]
+    return [npc, skills, speed, actions]

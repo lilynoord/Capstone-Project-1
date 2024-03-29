@@ -384,6 +384,24 @@ class Spell(db.Model):
     school = db.Column(db.Text, nullable=False)
 
 
+class PcAction(db.Model):
+    """ """
+
+    __tablename__ = "pcs_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
+class NpcAction(db.Model):
+    """ """
+
+    __tablename__ = "npcs_actions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
+    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
+
+
 def connect_db(app):
     db.app = app
     db.init_app(app)
@@ -392,13 +410,6 @@ def connect_db(app):
 """ 
 ! Currently unused tables that I may or may not implement someday.  
 
-class PcAction(db.Model):
-    """ """
-
-    __tablename__ = "pcs_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pc_id = db.Column(db.Integer, db.ForeignKey("player_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
 
 
 class PcBonusAction(db.Model):
@@ -437,13 +448,6 @@ class PcSpells(db.Model):
     spell_id = db.Column(db.Integer, db.ForeignKey("spells.id"))
 
 
-class NpcAction(db.Model):
-    """ """
-
-    __tablename__ = "npcs_actions"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    npc_id = db.Column(db.Integer, db.ForeignKey("nonplayer_characters.id"))
-    action_id = db.Column(db.Integer, db.ForeignKey("actions.id"))
 
 
 class NpcBonusAction(db.Model):

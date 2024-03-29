@@ -24,7 +24,17 @@
     <tr>
         <td>
             <div class="container-fluid">
-                <h3>{{entities[i]['verbose'].name}}</h3>
+                <div class="grid">
+                    <h3>{{entities[i]['verbose'].name}}</h3>
+                    <h5>Health: <span id="hp-{{i}}">
+                            {{entities[i]['temp'].current_hit_points}} </span>/{{entities[i]['temp'].max_hit_points}}
+                    </h5>
+                    <form class="grid"><input data-temp="{{entities[i]['temp'].id}}" data-combat="{{combat.id}}"
+                            data-etype="{{entities[i]['temp'].__class__.__name__}}" data-initiative="{{i}}"
+                            onClick='update_health(event)' type="submit" value="subtract health"
+                            class="outline contrast hp-submit"><input type="number"></form>
+                </div>
+
                 {% if entities[i]['actions'] != []%}
                 <details>
                     <summary>
@@ -68,66 +78,66 @@
                         </dialog>
                         {%endfor%}
                     </div>
-            </div>
-            </details>
-            {%endif%}
 
-            {% if entities[i]['legendaryActions'] != []%}
-            <details>
-                <summary>
-                    Legendary Actions
-                </summary>
-                <hr>
-                <div class="grid">
-                    {%for each in entities[i]['legendaryActions']%}
-                    <button onClick="show_action(event)">{{each.name}}</button>
-                    <dialog onClick="this.close()">
-                        <article>
-                            <header>
-                                <h3>{{each.name}}</h3>
-                            </header>
-                            {{each.desc}}
-                        </article>
-                    </dialog>
-                    {%endfor%}
-                </div>
-                </div>
-            </details>
-            {%endif%}
-            {% if entities[i]['spells'] != []%}
-            <details>
-                <summary>
-                    Spells
-                </summary>
-                <hr>
-                <div style="display:block">
-                    {%for each in entities[i]['spells']%}
-                    <button class="spell-button" onClick="show_action(event)">{{each.name}}</button>
-                    <dialog onClick="this.close()">
-                        <article>
-                            <header>
-                                <h3>{{each.name}}</h3>
-                                <hr style="margin:10px">
-                                <div class="grid">
-                                    <h6>Level: {{each.level}}</h6>
-                                    <h6>Casting Time: {{each.casting_time}}</h6>
-                                    <h6>Duration: {{each.duration}}</h6>
-                                </div>
-                                <div class="grid">
-                                    <h6>Concentration: {{each.requires_concentration}}</h6>
-                                    <h6>Range: {{each.range}}</h6>
-                                    <h6>Spell School: {{each.school}}</h6>
-                                </div>
+                </details>
+                {%endif%}
 
-                            </header>
-                            {{each.desc}}
-                        </article>
-                    </dialog>
-                    {%endfor%}
-                </div>
-                </div>
-            </details>
-            {%endif%}
+                {% if entities[i]['legendaryActions'] != []%}
+                <details>
+                    <summary>
+                        Legendary Actions
+                    </summary>
+                    <hr>
+                    <div class="grid">
+                        {%for each in entities[i]['legendaryActions']%}
+                        <button onClick="show_action(event)">{{each.name}}</button>
+                        <dialog onClick="this.close()">
+                            <article>
+                                <header>
+                                    <h3>{{each.name}}</h3>
+                                </header>
+                                {{each.desc}}
+                            </article>
+                        </dialog>
+                        {%endfor%}
+                    </div>
+
+                </details>
+                {%endif%}
+                {% if entities[i]['spells'] != []%}
+                <details>
+                    <summary>
+                        Spells
+                    </summary>
+                    <hr>
+                    <div style="display:block">
+                        {%for each in entities[i]['spells']%}
+                        <button class="spell-button" onClick="show_action(event)">{{each.name}}</button>
+                        <dialog onClick="this.close()">
+                            <article>
+                                <header>
+                                    <h3>{{each.name}}</h3>
+                                    <hr style="margin:10px">
+                                    <div class="grid">
+                                        <h6>Level: {{each.level}}</h6>
+                                        <h6>Casting Time: {{each.casting_time}}</h6>
+                                        <h6>Duration: {{each.duration}}</h6>
+                                    </div>
+                                    <div class="grid">
+                                        <h6>Concentration: {{each.requires_concentration}}</h6>
+                                        <h6>Range: {{each.range}}</h6>
+                                        <h6>Spell School: {{each.school}}</h6>
+                                    </div>
+
+                                </header>
+                                {{each.desc}}
+                            </article>
+                        </dialog>
+                        {%endfor%}
+                    </div>
+
+                </details>
+                {%endif%}
             </div>
         </td>
 
