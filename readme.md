@@ -16,6 +16,7 @@ The player character creation screen is modeled after 5e character sheets. You c
 <img src='gifs/Add Pc Gif 3_00000000.gif' width='500'>
 
 Once you've added the monsters and characters you want, you can now create a new combat. Click on 'Create New Combat', give it a name, and add the creatures you want to the initiative order. You can then adjust their individual initiatives or remove them from the order entirely. Submitting the combat will bring you to the combat screen.
+
 <img src='gifs/combat 1_00000165.gif' width='500'>
 
 The combat screen displays each creature in order of its initiative. Here you can see each creature's available actions as well as easily adjust its health without needing to do any math.
