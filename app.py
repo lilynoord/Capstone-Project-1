@@ -1,3 +1,5 @@
+import os
+
 from __future__ import print_function
 from tools import *
 from flask import Flask, redirect, render_template, flash, request, make_response
@@ -45,17 +47,21 @@ from forms import *
 app = Flask(__name__)
 
 app.app_context().push()
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///dnd-utils"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL", "postgresql:///dnd-utils"
+)
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# app.config["SQLALCHEMY_ECHO"] = True
+app.config["SQLALCHEMY_ECHO"] = False
+app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = True
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "it's a secret")
+toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
 current_user_key = ""
 with app.app_context():
     db.create_all()
-
-app.config["SECRET_KEY"] = "I Have A Secret!"
 
 
 def check_user(request):
