@@ -17,7 +17,7 @@ from models import (
 )
 
 
-def monster_factory(m):
+def monster_factory(m, customName=None):
     """
     Returns a new `Monster` object
 
@@ -27,9 +27,13 @@ def monster_factory(m):
     Returns:
         `Monster`: new `Monster` object generated using the api json.
     """
+    if customName:
+        name = customName + f" ({m['name']})"
+    else:
+        name = m["name"]
     return Monster(
         slug=m["slug"],
-        name=m["name"],
+        name=name,
         size=m["size"],
         creature_type=m["type"],
         alignment=m["alignment"],
@@ -243,7 +247,11 @@ def parse_skills(m):
 
 
 def new_monster(
-    session, slug="", custom_monster=False, custom_monster_data=dict[str, str]
+    session,
+    slug="",
+    custom_monster=False,
+    customName=None,
+    custom_monster_data=dict[str, str],
 ):
     """
     Handles everything involved with adding a new monster to a game, except for adding it to the database. Returns a dictionary of lists of objects, all of which should be added to the database in app.py
@@ -271,7 +279,7 @@ def new_monster(
         if slug != monster_json["slug"]:  # Check to make sure api call was successful
             return "error: monster slug is not valid"
 
-        new_monster = monster_factory(monster_json)
+        new_monster = monster_factory(monster_json, customName)
         session.add(new_monster)
         spells = parse_spells(monster_json)
         actions = parse_actions(monster_json)

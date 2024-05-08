@@ -62,10 +62,11 @@
 
 
 
-        <div class="grid">
+        <div>
             <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
-            <form method="post" action="/games/{{game.id}}/add/creature?slug={{m['slug']}}" id='slug'>
-
+            <form class="grid" method="post" action="/games/{{game.id}}/add/creature" id='submit-monster'>
+                <input type="hidden" name="slug" id="slug-hidden" value="{{m['slug']}}">
+                <input type="text" name="custom-name" id="custom-name" placeholder="Set Custom Name">
                 <input type="submit" value="Add to game!">
             </form>
         </div>

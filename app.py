@@ -274,11 +274,13 @@ def add_creature_to_game(gameId):
 def commit_creature_to_game(gameId):
 
     game = Game.query.filter(Game.id == gameId).first()
-    slug = request.args.get("slug")
+    slug = request.form["slug"]
+
+    customName = request.form["custom-name"]
     if not slug:
         flash(f"Error adding monster slug: {slug}", "error")
     else:
-        new_monster = create_new_monster(slug)
+        new_monster = create_new_monster(slug, customName)
         new_game_monster = GameMonster(game_id=gameId, monster_id=new_monster.id)
         db.session.add(new_game_monster)
         db.session.commit()
@@ -736,7 +738,7 @@ def submit_combat(combatId):
     return "True"
 
 
-def create_new_monster(slug):
+def create_new_monster(slug, customName=None):
     """
     Adds a new monster to the database. Don't forget to add a new games_monsters entry as well.
 
@@ -744,7 +746,9 @@ def create_new_monster(slug):
         slug (str): the unique name to pass to the api to get this monster
     """
 
-    new_mon, db_entries = new_monster(session=db.session, slug=slug)
+    new_mon, db_entries = new_monster(
+        session=db.session, slug=slug, customName=customName
+    )
     print("Create_New_Monster: ", db_entries)
 
     # Go through the list of new db entries and add them to the session.
