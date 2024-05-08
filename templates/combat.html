@@ -25,7 +25,8 @@
         <td>
             <div class="container-fluid">
                 <div class="grid">
-                    <h3>{{entities[i]['verbose'].name}}</h3>
+                    <h3><a href="/monster-details/{{entities[i]['verbose'].slug}}"
+                            target="_blank">{{entities[i]['verbose'].name}}</a></h3>
                     <h5>Health: <span id="hp-{{i}}">
                             {{entities[i]['temp'].current_hit_points}} </span>/{{entities[i]['temp'].max_hit_points}}
                     </h5>
@@ -35,6 +36,14 @@
                             class="outline contrast hp-submit"><input type="number"></form>
                 </div>
 
+                {%if entities[i]['specials'] != []%}
+                <details>
+                    <summary>Special Abilities</summary>
+                    {%for each in entities[i]['specials']%}
+                    <p><b>{{each.name}}</b> {{each.desc}}</p>
+                    {%endfor%}
+                </details>
+                {%endif%}
                 {% if entities[i]['actions'] != []%}
                 <details>
                     <summary>

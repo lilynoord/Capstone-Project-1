@@ -712,7 +712,10 @@ def generate_monster_dict(entity):
     for each in entitySpeeds:
         speeds.append(Speed.query.filter(Speed.id == each.speed_id).first())
     for each in entitySkills:
-        skills.append(Skills.query.filter(Skills.id == each.skills_id).first())
+        skills = Skills.query.filter(Skills.id == each.skills_id).first()
+
+        print(skills)
+
     for each in entitySpells:
         spells.append(Spell.query.filter(Spell.id == each.spell_id).first())
     return {
@@ -747,6 +750,13 @@ def generate_monster_dict(entity):
     
     
     """
+
+
+@app.route("/monster-details/<slug>", methods=["GET"])
+def show_monster_details(slug):
+    monster_data = get_instance("monsters", slug)
+    mods = get_saves(monster_data)
+    return render_template("monster-details.html", m=monster_data, mods=mods)
 
 
 @app.route("/games/combat/submit-combat/<int:combatId>", methods=["POST"])

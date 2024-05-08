@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{%block title%}Add Monster{%endblock%}
+{%block body%}
+<style>
+    .stat-grid {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+        grid-template-rows: auto auto;
+        grid-column-gap: 0%;
+        grid-row-gap: 0%;
+        justify-items: start;
+        align-items: start
+    }
+
+    hr {
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.842), rgba(0, 0, 0, 0));
+        height: 2px;
+        border: 1;
+
+    }
+
+    kbd {
+        font-size: 10px;
+        padding: 2px;
+        text-transform: uppercase;
+    }
+
+
+
+
+
+    section.stats {
+        animation: .25s ease-out 0s 1 SlideIn;
+    }
+
+    @keyframes SlideIn {
+        0% {
+            opacity: 0;
+
+
+        }
+
+        100% {
+            opacity: 1;
+
+
+        }
+    }
+</style>
+
+<section class="container-fluid">
+    {% for msg in get_flashed_messages() %}
+    <dialog open onclick="this.close()">
+        {{msg}}
+    </dialog>
+    {% endfor %}
+    <!-- Monster Details -->
+    {%if m != 'none'%}
+    <section class='stats' style="font-family: Georgia, serif">
+
+
+        <div class="grid">
+            <h1 style="font-family: Georgia, serif">{{m['name']}}</h1>
+        </div>
+        <p><em>{{m['type']}}, {{m['alignment']}}</em></p>
+
+        <hr>
+        <p>
+            <b>
+                Armor Class
+            </b>
+            {{m['armor_class']}}
+        </p>
+        <p>
+            <b>
+                Hit Points
+            </b>
+            {{m['hit_points']}} ({{m['hit_dice']}})
+        </p>
+        <p>
+            <b>
+                Speed
+            </b>
+            {%for s in m['speed']%}
+            <span>
+                {%if m['speed'][s] != true%}
+                {{s}} {{m['speed'][s]}}ft.
+                {%else%}
+                {{s}},
+                {%endif%}
+            </span>
+            {%endfor%}
+        </p>
+        <hr>
+        <table style="width:50%">
+            <tbody>
+                <tr>
+                    <td>STR</td>
+                    <td>DEX</td>
+                    <td>CON</td>
+                    <td>INT</td>
+                    <td>WIS</td>
+                    <td>CHA</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>{{m['strength']}}</td>
+                    <td>{{m['dexterity']}}</td>
+                    <td>{{m['constitution']}}</td>
+                    <td>{{m['intelligence']}}</td>
+                    <td>{{m['wisdom']}}</td>
+                    <td>{{m['charisma']}}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+
+        <hr>
+        <p>
+            <b>Saving Throws</b>
+            {%for save in mods['saves']%}
+            {{save}} {{mods['saves'][save]}}
+            {%endfor%}
+        </p>
+        <p>
+            <b>Skills</b>
+
+            {%for skill in mods['skills']%}
+            {{skill}} {{mods['skills'][skill]}}
+            {%endfor%}
+        </p>
+        {%if m['damage_vulnerabilities'] != ""%}<p></p><b>Damage Vulnerabilities</b> {{m['damage_vulnerabilities']}}</p>
+        {%endif%}
+        {%if m['damage_resistances'] != ""%}<p></p><b>Damage Resistances</b> {{m['damage_resistances']}}</p>
+        {%endif%}
+        {%if m['damage_immunities'] != ""%}<p></p><b>Damage Immunities</b> {{m['damage_immunities']}}</p>
+        {%endif%}
+        {%if m['condition_immunities'] != ""%}<p></p><b>Condition Immunities</b> {{m['condition_immunities']}}</p>
+        {%endif%}
+        {%if m['senses'] != ""%}<p></p><b>Senses</b> {{m['senses']}}</p>
+        {%endif%}
+        {%if m['languages'] != ""%}<p></p><b>Languages</b> {{m['languages']}}</p>
+        {%endif%}
+        <p><b>Challenge</b> {{m['challenge_rating']}}</p>
+
+
+    </section>
+    {%endif%}
+
+
+
+</section>
+{%endblock%}
