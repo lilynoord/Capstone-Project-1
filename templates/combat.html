@@ -27,6 +27,7 @@
                 <div class="grid">
                     <h3><a href="/monster-details/{{entities[i]['verbose'].slug}}"
                             target="_blank">{{entities[i]['verbose'].name}}</a></h3>
+                    <h5>Armor Class: {{entities[i]['verbose'].armor_class}}</h5>
                     <h5>Health: <span id="hp-{{i}}">
                             {{entities[i]['temp'].current_hit_points}} </span>/{{entities[i]['temp'].max_hit_points}}
                     </h5>
