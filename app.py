@@ -275,12 +275,79 @@ def commit_creature_to_game(gameId):
 
     game = Game.query.filter(Game.id == gameId).first()
     slug = request.form["slug"]
+    actions = {}
+    bonusActions = {}
+    reactions = {}
+    legendaryActions = {}
+    specials = {}
+    print(request.form)
+    for key in request.form.keys():
+        if key != "slug" and key != "custom-name":
+            keyS = key.split("-")
+            if keyS[0] == "actions":
+
+                if keyS[1] == "desc":
+                    actions[keyS[2]]["desc"] = request.form[key]
+                elif keyS[1] == "attackbonus":
+                    actions[keyS[2]]["attackbonus"] = request.form[key]
+                elif keyS[1] == "damagedice":
+                    actions[keyS[2]]["damagedice"] = request.form[key]
+                elif keyS[1] == "damagebonus":
+                    actions[keyS[2]]["damagebonus"] = request.form[key]
+                else:
+                    actions[keyS[1]] = {"name": request.form[key]}
+            elif keyS[0] == "bonusactions":
+                if keyS[1] == "desc":
+                    bonusActions[keyS[2]]["desc"] = request.form[key]
+                elif keyS[1] == "attackbonus":
+                    bonusActions[keyS[2]]["attackbonus"] = request.form[key]
+                elif keyS[1] == "damagedice":
+                    bonusActions[keyS[2]]["damagedice"] = request.form[key]
+                elif keyS[1] == "damagebonus":
+                    bonusActions[keyS[2]]["damagebonus"] = request.form[key]
+                else:
+                    bonusActions[keyS[1]] = {"name": request.form[key]}
+            elif keyS[0] == "reactions":
+                if keyS[1] == "desc":
+                    reactions[keyS[2]]["desc"] = request.form[key]
+                elif keyS[1] == "attackbonus":
+                    reactions[keyS[2]]["attackbonus"] = request.form[key]
+                elif keyS[1] == "damagedice":
+                    reactions[keyS[2]]["damagedice"] = request.form[key]
+                elif keyS[1] == "damagebonus":
+                    reactions[keyS[2]]["damagebonus"] = request.form[key]
+                else:
+                    reactions[keyS[1]] = {"name": request.form[key]}
+            elif keyS[0] == "legendaryactions":
+                if keyS[1] == "desc":
+                    legendaryActions[keyS[2]]["desc"] = request.form[key]
+                elif keyS[1] == "attackbonus":
+                    legendaryActions[keyS[2]]["attackbonus"] = request.form[key]
+                elif keyS[1] == "damagedice":
+                    legendaryActions[keyS[2]]["damagedice"] = request.form[key]
+                elif keyS[1] == "damagebonus":
+                    legendaryActions[keyS[2]]["damagebonus"] = request.form[key]
+                else:
+                    legendaryActions[keyS[1]] = {"name": request.form[key]}
+            elif keyS[0] == "specials":
+                if keyS[1] == "desc":
+                    specials[keyS[2]]["desc"] = request.form[key]
+                else:
+                    specials[keyS[1]] = {"name": request.form[key]}
 
     customName = request.form["custom-name"]
     if not slug:
         flash(f"Error adding monster slug: {slug}", "error")
     else:
-        new_monster = create_new_monster(slug, customName)
+        new_monster = create_new_monster(
+            slug,
+            customName,
+            actions,
+            bonusActions,
+            reactions,
+            legendaryActions,
+            specials,
+        )
         new_game_monster = GameMonster(game_id=gameId, monster_id=new_monster.id)
         db.session.add(new_game_monster)
         db.session.commit()
@@ -738,16 +805,32 @@ def submit_combat(combatId):
     return "True"
 
 
-def create_new_monster(slug, customName=None):
+def create_new_monster(
+    slug,
+    customName,
+    actions,
+    bonusActions,
+    reactions,
+    legendaryActions,
+    specials,
+):
     """
     Adds a new monster to the database. Don't forget to add a new games_monsters entry as well.
 
     Args:
         slug (str): the unique name to pass to the api to get this monster
     """
-
+    if customName == "":
+        customName = None
     new_mon, db_entries = new_monster(
-        session=db.session, slug=slug, customName=customName
+        session=db.session,
+        slug=slug,
+        customName=customName,
+        actions=actions,
+        bonusActions=bonusActions,
+        reactions=reactions,
+        legendaryActions=legendaryActions,
+        specials=specials,
     )
     print("Create_New_Monster: ", db_entries)
 

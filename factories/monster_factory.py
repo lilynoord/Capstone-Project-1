@@ -93,6 +93,7 @@ def action_factory(action: dict, action_type: str):
     """
     Generates new Action object.
     """
+
     name_split = action["name"].split("(")
     recharge = False
     x = None
@@ -203,27 +204,34 @@ def parse_spells(m):
     return spells
 
 
-def parse_actions(m):
+def parse_actions(
+    actionsData, bonusActionsData, reactionsData, legendaryActionsData, specialsData
+):
     actions = []
     bonus_actions = []
     reactions = []
     legendary_actions = []
     special_abilities = []
-    if m["actions"]:
-        for action in m["actions"]:
-            actions.append(action_factory(action, "Action"))
-    if m["bonus_actions"]:
-        for action in m["bonus_actions"]:
-            bonus_actions.append(action_factory(action, "Bonus Action"))
-    if m["reactions"]:
-        for action in m["reactions"]:
-            reactions.append(action_factory(action, "Reaction"))
-    if m["legendary_actions"]:
-        for action in m["legendary_actions"]:
-            legendary_actions.append(action_factory(action, "Legendary Action"))
-    if m["special_abilities"]:
-        for action in m["special_abilities"]:
-            special_abilities.append(action_factory(action, "Special"))
+    if actionsData != {}:
+        for action in actionsData:
+
+            actions.append(action_factory(actionsData[action], "Action"))
+    if bonusActionsData != {}:
+        for action in bonusActionsData:
+            bonus_actions.append(
+                action_factory(bonusActionsData[action], "Bonus Action")
+            )
+    if reactionsData != {}:
+        for action in reactionsData:
+            reactions.append(action_factory(reactionsData[action], "Reaction"))
+    if legendaryActionsData != {}:
+        for action in legendaryActionsData:
+            legendary_actions.append(
+                action_factory(legendaryActionsData[action], "Legendary Action")
+            )
+    if specialsData != {}:
+        for action in specialsData:
+            special_abilities.append(action_factory(specialsData[action], "Special"))
     return {
         "actions": actions,
         "bonus_actions": bonus_actions,
@@ -248,6 +256,11 @@ def parse_skills(m):
 
 def new_monster(
     session,
+    actions={},
+    bonusActions={},
+    reactions={},
+    legendaryActions={},
+    specials={},
     slug="",
     custom_monster=False,
     customName=None,
@@ -271,7 +284,7 @@ def new_monster(
         "skills": [],
         "speeds": [],
     }
-
+    print("================", actions)
     # If it's not a custom monster, then it should call the api and create a new set of entries for the database from that.
     if not custom_monster:
         # get monster json from api
@@ -282,7 +295,9 @@ def new_monster(
         new_monster = monster_factory(monster_json, customName)
         session.add(new_monster)
         spells = parse_spells(monster_json)
-        actions = parse_actions(monster_json)
+        actions = parse_actions(
+            actions, bonusActions, reactions, legendaryActions, specials
+        )
         speeds = parse_speeds(monster_json)
         skills = parse_skills(monster_json)
 
